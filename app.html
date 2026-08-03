@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeHash Cloud — Live App (Pre-Launch)</title>
+<meta name="description" content="Live Bitcoin network economics and CKPool solo-miner monitoring. Every number is live public API data or honestly zero.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e10; --panel:#14171b; --panel2:#1a1e23; --line:#242a31;
+  --honey:#f7b32b; --honey-dim:#a97c1d;
+  --live:#3ddc84; --warn:#f7b32b; --err:#e5484d; --demo:#7aa2f7;
+  --text:#e8eaed; --muted:#8b939e;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);font-size:14px;line-height:1.5;padding-bottom:76px}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--honey);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(12,14,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;letter-spacing:.02em}
+.hex{width:20px;height:20px;flex:none}
+.prelaunch{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:2px 6px}
+.refresh{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.refresh .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.refresh .dot.live{background:var(--live);box-shadow:0 0 6px var(--live)}
+.refresh .dot.err{background:var(--err)}
+.nav-links{display:flex;gap:12px;margin-left:8px;font-size:12px;font-weight:700}
+.nav-links a{color:var(--muted);text-decoration:none}
+.nav-links a:hover{color:var(--honey)}
+
+/* ---------- data provenance chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.1em;padding:1px 6px;border-radius:3px;vertical-align:middle}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.chip.live{color:var(--live);background:rgba(61,220,132,.08)}
+.chip.cached{color:var(--honey);background:rgba(247,179,43,.08)}
+.chip.err{color:var(--err);background:rgba(229,72,77,.1)}
+.chip.demo{color:var(--demo);background:rgba(122,162,247,.1)}
+.chip.off{color:var(--muted);background:rgba(139,147,158,.08)}
+
+/* ---------- layout ---------- */
+main{max-width:680px;margin:0 auto;padding:16px}
+.page{display:none}
+.page.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:20px 0 8px;display:flex;align-items:center;gap:8px}
+.section-label:first-child{margin-top:4px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:420px){.grid3{grid-template-columns:1fr 1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.card .k{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:4px}
+.card .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.01em}
+.card .v small{font-size:11px;color:var(--muted);font-weight:400}
+.card .sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
+.card.wide{grid-column:1/-1}
+.v.err{color:var(--err);font-size:12px;font-weight:400;font-family:var(--disp)}
+
+/* fee ladder */
+.fees{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.fee{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+.fee .fl{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em}
+.fee .fv{font-family:var(--mono);font-size:15px;font-weight:600;margin-top:2px}
+.fee .fu{font-size:9px;color:var(--muted)}
+
+/* block strip */
+.blocks{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.blk{flex:none;width:118px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px}
+.blk.proj{border-style:dashed;border-color:var(--honey-dim)}
+.blk .bh{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--honey)}
+.blk .bd{font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+th{text-align:left;color:var(--muted);font-weight:400;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+
+/* forms & buttons */
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:13px}
+.input::placeholder{color:#5a636e}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;transition:filter .15s}
+.btn:hover{filter:brightness(1.1)}
+.btn-honey{background:var(--honey);color:#141414}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn-demo{background:rgba(122,162,247,.14);border:1px solid var(--demo);color:var(--demo)}
+.btn-sm{padding:7px 12px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* notices */
+.notice{border:1px solid var(--line);border-left:3px solid var(--honey);background:var(--panel);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin:10px 0}
+.notice.errbox{border-left-color:var(--err)}
+.notice.demobox{border-left-color:var(--demo)}
+.notice.okbox{border-left-color:var(--live)}
+.notice b{color:var(--text)}
+.notice ol{margin:6px 0 0 16px;display:grid;gap:4px}
+.notice code{font-family:var(--mono);font-size:10.5px;background:var(--panel2);padding:1px 5px;border-radius:4px;color:var(--honey)}
+
+.demo-banner{display:none;position:sticky;top:49px;z-index:40;background:rgba(122,162,247,.12);border-bottom:1px solid var(--demo);color:var(--demo);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-align:center;padding:6px}
+body.demo .demo-banner{display:block}
+
+/* roadmap */
+.road{display:grid;gap:8px}
+.rd{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.rd .st{flex:none;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.1em;border-radius:3px;padding:2px 6px;margin-top:2px}
+.rd .st.done{color:var(--live);background:rgba(61,220,132,.08)}
+.rd .st.todo{color:var(--muted);background:rgba(139,147,158,.08)}
+.rd h4{font-size:13px;margin-bottom:2px}
+.rd p{font-size:11.5px;color:var(--muted)}
+
+/* bottom nav */
+nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(12,14,16,.95);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+.nv{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:9.5px;font-weight:600;letter-spacing:.04em;cursor:pointer;padding:4px 14px;border-radius:8px}
+.nv svg{width:19px;height:19px}
+.nv.active{color:var(--honey)}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+/* miner stats */
+.miner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:520px){.miner-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px">
+    <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
+    BeeHash</a>
+  </div>
+  <span class="prelaunch">PRE-LAUNCH</span>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="bch.html" style="color:#0ac18e">BCH</a>
+  </div>
+  <div class="refresh"><span class="dot" id="netDot"></span><span id="refreshLbl">connecting…</span></div>
+</header>
+
+<div class="demo-banner">DEMO DATA — NOT A REAL MINER. NOTHING ON THIS SCREEN IS EARNED.</div>
+
+<main>
+
+<!-- ================= CHAIN ================= -->
+<div class="page active" id="page-chain">
+  <div class="grid">
+    <div class="card"><div class="k">BTC price <span class="chip off" id="c-price">—</span></div><div class="v" id="v-price">—</div><div class="sub" id="s-price"></div></div>
+    <div class="card"><div class="k">Block height <span class="chip off" id="c-height">—</span></div><div class="v" id="v-height">—</div><div class="sub" id="s-height"></div></div>
+    <div class="card"><div class="k">Difficulty <span class="chip off" id="c-diff">—</span></div><div class="v" id="v-diff">—</div><div class="sub" id="s-diff"></div></div>
+    <div class="card"><div class="k">Network hashrate <span class="chip off" id="c-hash">—</span></div><div class="v" id="v-hash">—</div><div class="sub" id="s-hash"></div></div>
+  </div>
+
+  <div class="section-label">Fee market <span class="chip off" id="c-fees">—</span></div>
+  <div class="fees" id="feeGrid"></div>
+
+  <div class="section-label">Mempool <span class="chip off" id="c-mem">—</span></div>
+  <div class="grid3">
+    <div class="card"><div class="k">Pending TXs</div><div class="v" id="v-memcount">—</div></div>
+    <div class="card"><div class="k">Backlog</div><div class="v" id="v-memsize">—</div></div>
+    <div class="card"><div class="k">Depth</div><div class="v" id="v-memdepth">—</div><div class="sub">blocks to clear</div></div>
+  </div>
+
+  <div class="section-label">Projected next blocks <span class="chip off" id="c-proj">—</span></div>
+  <div class="blocks" id="projBlocks"></div>
+
+  <div class="section-label">Recent blocks <span class="chip off" id="c-blocks">—</span></div>
+  <div class="blocks" id="recentBlocks"></div>
+</div>
+
+<!-- ================= MONITOR ================= -->
+<div class="page" id="page-monitor">
+  <div class="section-label">CKPool solo miner monitor</div>
+  <div class="card wide">
+    <div class="field">
+      <label for="addrIn">BTC address (CKPool username)</label>
+      <input class="input" id="addrIn" placeholder="bc1q…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="proxyIn">CORS proxy (optional — your Cloudflare Worker URL)</label>
+      <input class="input" id="proxyIn" placeholder="https://your-worker.workers.dev/?url=" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="row">
+      <button class="btn btn-honey btn-sm" onclick="checkMiner()">Check miner</button>
+      <button class="btn btn-demo btn-sm" onclick="enterDemo()">Preview demo UI</button>
+      <button class="btn btn-ghost btn-sm" id="exitDemoBtn" style="display:none" onclick="exitDemo()">Exit demo</button>
+    </div>
+    <div class="notice" style="margin-top:10px;font-size:11px">
+      <b>Tip:</b> CKPool blocks cross-origin requests from browsers. If you don't have a proxy set up, open your CKPool stats directly at <code>solo.ckpool.org/users/YOUR-ADDRESS</code> in a new tab, or click <b>Preview demo UI</b> to see the dashboard layout.
+    </div>
+  </div>
+  <div id="minerError"></div>
+  <div id="minerOut"></div>
+</div>
+
+<!-- ================= ECONOMICS ================= -->
+<div class="page" id="page-econ">
+  <div class="section-label">Break-even calculator <span class="chip off" id="c-econ">—</span></div>
+  <div class="card wide">
+    <div class="grid">
+      <div class="field"><label for="eTh">Hashrate (TH/s)</label><input class="input" id="eTh" type="number" value="100" min="0" step="1"></div>
+      <div class="field"><label for="eW">Power draw (W)</label><input class="input" id="eW" type="number" value="3250" min="0" step="10"></div>
+      <div class="field"><label for="eKwh">Electricity ($/kWh)</label><input class="input" id="eKwh" type="number" value="0.08" min="0" step="0.01"></div>
+      <div class="field"><label for="eFee">Pool fee (%)</label><input class="input" id="eFee" type="number" value="2" min="0" max="100" step="0.5"></div>
+    </div>
+    <div class="grid3" id="econOut"></div>
+    <div class="notice" id="econNote" style="display:none"></div>
+  </div>
+
+  <div class="section-label">Hosting tier pricing <span class="chip off" id="c-tier">—</span></div>
+  <div class="card wide">
+    <div class="field"><label for="tPrice">Hosting price ($ / TH / month)</label><input class="input" id="tPrice" type="number" value="2.00" min="0" step="0.1"></div>
+    <div id="tierOut"></div>
+    <div class="notice">Revenue figures are <b>estimates from live network data</b>, before luck variance. Solo mining pays in full blocks or nothing — expected value ≠ guaranteed income.</div>
+  </div>
+</div>
+
+<!-- ================= LAUNCH ================= -->
+<div class="page" id="page-launch">
+  <div class="section-label">Where this actually stands</div>
+  <div class="road">
+    <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and miner monitoring run on public APIs. No fabricated numbers anywhere on this site.</p></div></div>
+    <div class="rd"><span class="st todo">NOT YET</span><div><h4>Real hashrate online</h4><p>When hardware is live, its CKPool address will be published here as an independently verifiable proof link.</p></div></div>
+    <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
+    <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Nothing is purchasable today. Payments open only after the two items above are done.</p></div></div>
+  </div>
+
+  <div class="section-label">Waitlist</div>
+  <div class="card wide">
+    <div class="field"><label for="wlEmail">Email</label><input class="input" id="wlEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+    <button class="btn btn-honey btn-sm" onclick="joinWaitlist()">Join waitlist</button>
+    <div id="wlMsg"></div>
+  </div>
+</div>
+
+</main>
+
+<nav>
+  <button class="nv active" data-page="chain" onclick="go('chain',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Chain</button>
+  <button class="nv" data-page="monitor" onclick="go('monitor',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Monitor</button>
+  <button class="nv" data-page="econ" onclick="go('econ',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M7 6.5h7.5a3 3 0 010 6H9a3 3 0 000 6h8"/></svg>Economics</button>
+  <button class="nv" data-page="launch" onclick="go('launch',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/><path d="M5 20h14" opacity=".4"/></svg>Launch</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   OPERATOR CONFIG — do these two steps after first deploy
+   ------------------------------------------------------------
+   A. Waitlist (same endpoint as index.html)
+      Formspree free form → paste endpoint below.
+   B. CKPool Monitor CORS proxy
+      Deploy worker.js to Cloudflare Workers (~5 min) → paste URL below
+      ending with ?url=  e.g. 'https://beehash-proxy.you.workers.dev/?url='
+      Until set, visitors can paste a proxy at runtime or use Preview demo UI.
+   ============================================================ */
+const FORM_ENDPOINT = '';   // e.g. 'https://formspree.io/f/abcdwxyz'
+const DEFAULT_PROXY = '';   // e.g. 'https://YOUR-NAME.workers.dev/?url='
+
+const MEMPOOL = 'https://mempool.space/api';
+const CACHE_KEY = 'bh_cache_v2';
+const CACHE_TTL = 60_000;           // serve from cache for 60s
+const REFRESH_EVERY = 60;           // seconds between live refreshes
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const S = {
+  price: null, heightNum: null, hashEH: null, diffT: null,
+  demo: false, countdown: REFRESH_EVERY, failures: 0, lastRefresh: 0
+};
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 0) => {
+  if (n == null || n === '' || Number.isNaN(n)) return '—';
+  return Number(n).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
+};
+
+function chip(id, state, label) {
+  const el = $(id); if (!el) return;
+  const names = { live: 'LIVE', cached: 'CACHED', err: 'ERROR', demo: 'DEMO', off: '—' };
+  el.className = 'chip ' + state;
+  el.textContent = label || names[state] || state.toUpperCase();
+}
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function ago(tsSec) {
+  if (!tsSec || tsSec <= 0) return '—';
+  const s = Math.max(0, Math.floor(Date.now() / 1000 - tsSec));
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ' + Math.floor((s % 3600) / 60) + 'm ago';
+  return Math.floor(s / 86400) + 'd ago';
+}
+
+async function fetchJSON(url, timeoutMs = 12000) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { signal: ctl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
+/* ---------- cache ---------- */
+function cacheGet() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (c && Date.now() - c.t < CACHE_TTL) return c.data;
+  } catch (e) {}
+  return null;
+}
+function cacheSet(data) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch (e) {}
+}
+
+/* ============================================================
+   CHAIN TAB — every panel loads and fails independently
+   ============================================================ */
+async function loadChain(useCache) {
+  // If cache is fresh, paint instantly
+  const cached = useCache ? cacheGet() : null;
+  if (cached) {
+    renderChain(cached, 'cached');
+  }
+
+  // Always fetch fresh in background (unless we just fetched < 5s ago)
+  if (Date.now() - S.lastRefresh < 5000) return;
+  S.lastRefresh = Date.now();
+
+  const jobs = {
+    price:  () => fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true')
+                    .then(d => ({ usd: d?.bitcoin?.usd, chg: d?.bitcoin?.usd_24h_change }))
+                    .catch(() => fetchJSON(MEMPOOL + '/v1/prices').then(d => ({ usd: d?.USD, chg: null }))),
+    height: () => fetchJSON(MEMPOOL + '/blocks/tip/height').then(h => {
+      if (typeof h === 'number') return h;
+      if (h && typeof h.height === 'number') return h.height;
+      throw new Error('bad height');
+    }),
+    diff:   () => fetchJSON(MEMPOOL + '/v1/difficulty-adjustment'),
+    hash:   () => fetchJSON(MEMPOOL + '/v1/mining/hashrate/3d'),
+    fees:   () => fetchJSON(MEMPOOL + '/v1/fees/recommended'),
+    mem:    () => fetchJSON(MEMPOOL + '/mempool'),
+    proj:   () => fetchJSON(MEMPOOL + '/v1/fees/mempool-blocks'),
+    blocks: () => fetchJSON(MEMPOOL + '/v1/blocks')
+  };
+
+  const keys = Object.keys(jobs);
+  const results = await Promise.allSettled(keys.map(k => jobs[k]()));
+  const data = {};
+  let okCount = 0;
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled') { data[keys[i]] = r.value; okCount++; }
+    else data[keys[i]] = null;
+  });
+
+  if (okCount > 0) cacheSet(data);
+  S.failures = okCount === 0 ? S.failures + 1 : 0;
+  renderChain(data, 'live');
+}
+
+function renderChain(d, mode) {
+  // price
+  if (d.price && d.price.usd != null) {
+    S.price = d.price.usd;
+    chip('c-price', mode); $('v-price').textContent = '$' + fmt(d.price.usd, d.price.usd > 1000 ? 0 : 2);
+    $('s-price').textContent = d.price.chg != null ? (d.price.chg >= 0 ? '+' : '') + d.price.chg.toFixed(2) + '% 24h' : '';
+  } else if (mode === 'live') { chip('c-price', 'err'); $('v-price').innerHTML = '<span class="err">unavailable</span>'; }
+
+  // height
+  if (d.height != null && typeof d.height === 'number') {
+    S.heightNum = d.height;
+    chip('c-height', mode); $('v-height').textContent = '#' + fmt(d.height);
+  } else if (mode === 'live') { chip('c-height', 'err'); $('v-height').innerHTML = '<span class="err">unavailable</span>'; }
+
+  // difficulty + adjustment
+  const curDiff = d.hash?.currentDifficulty;
+  if ((curDiff != null && curDiff > 0) || (d.diff && d.diff.difficultyChange != null)) {
+    chip('c-diff', mode);
+    S.diffT = (curDiff != null && curDiff > 0) ? curDiff / 1e12 : S.diffT;
+    $('v-diff').innerHTML = S.diffT ? fmt(S.diffT, 1) + ' <small>T</small>' : '—';
+    if (d.diff && d.diff.remainingBlocks != null) {
+      const ch = d.diff.difficultyChange;
+      $('s-diff').textContent = 'retarget in ' + fmt(d.diff.remainingBlocks) + ' blocks · est ' + (ch >= 0 ? '+' : '') + ch.toFixed(2) + '%';
+    } else { $('s-diff').textContent = ''; }
+  } else if (mode === 'live') { chip('c-diff', 'err'); $('v-diff').innerHTML = '<span class="err">unavailable</span>'; $('s-diff').textContent = ''; }
+
+  // hashrate
+  if (d.hash?.currentHashrate != null && d.hash.currentHashrate > 0) {
+    S.hashEH = d.hash.currentHashrate / 1e18;
+    chip('c-hash', mode);
+    $('v-hash').innerHTML = fmt(S.hashEH, 1) + ' <small>EH/s</small>';
+    $('s-hash').textContent = '3-day average';
+  } else if (mode === 'live') { chip('c-hash', 'err'); $('v-hash').innerHTML = '<span class="err">unavailable</span>'; $('s-hash').textContent = ''; }
+
+  // fees
+  if (d.fees && (d.fees.fastestFee != null || d.fees.hourFee != null)) {
+    chip('c-fees', mode);
+    const tiers = [
+      ['ECONOMY', d.fees.economyFee ?? d.fees.minimumFee ?? 0],
+      ['1 HOUR', d.fees.hourFee ?? 0],
+      ['30 MIN', d.fees.halfHourFee ?? 0],
+      ['FASTEST', d.fees.fastestFee ?? 0]
+    ];
+    $('feeGrid').innerHTML = tiers.map(([l, v]) =>
+      `<div class="fee"><div class="fl">${l}</div><div class="fv">${fmt(v)}</div><div class="fu">sat/vB</div></div>`).join('');
+  } else if (mode === 'live') { chip('c-fees', 'err'); $('feeGrid').innerHTML = '<div class="notice errbox" style="grid-column:1/-1;margin:0">Fee data unavailable — mempool.space unreachable.</div>'; }
+
+  // mempool
+  if (d.mem && d.mem.count != null) {
+    chip('c-mem', mode);
+    $('v-memcount').textContent = fmt(d.mem.count);
+    const vMB = (d.mem.vsize || 0) / 1e6;
+    $('v-memsize').innerHTML = fmt(vMB, 1) + ' <small>vMB</small>';
+    $('v-memdepth').textContent = '~' + fmt(Math.ceil(vMB));
+  } else if (mode === 'live') {
+    chip('c-mem', 'err');
+    ['v-memcount', 'v-memsize', 'v-memdepth'].forEach(id => $(id).innerHTML = '<span class="err">n/a</span>');
+  }
+
+  // projected blocks
+  if (d.proj && Array.isArray(d.proj) && d.proj.length > 0) {
+    chip('c-proj', mode);
+    $('projBlocks').innerHTML = d.proj.slice(0, 4).map((b, i) =>
+      `<div class="blk proj"><div class="bh">+${i + 1}</div><div class="bd">~${fmt(b.medianFee, 1)} sat/vB med<br>${fmt(b.nTx)} txs<br>${fmt((b.blockVSize || 0) / 1e6, 2)} vMB</div></div>`).join('');
+  } else if (mode === 'live') { chip('c-proj', 'err'); $('projBlocks').innerHTML = '<div class="notice errbox" style="margin:0">Projection unavailable.</div>'; }
+
+  // recent blocks
+  if (d.blocks && Array.isArray(d.blocks) && d.blocks.length > 0) {
+    chip('c-blocks', mode);
+    $('recentBlocks').innerHTML = d.blocks.slice(0, 8).map(b =>
+      `<div class="blk"><div class="bh">#${fmt(b.height)}</div><div class="bd">${ago(b.timestamp)}<br>${fmt(b.tx_count)} txs<br>${b.extras?.pool?.name || 'unknown pool'}</div></div>`).join('');
+  } else if (mode === 'live') { chip('c-blocks', 'err'); $('recentBlocks').innerHTML = '<div class="notice errbox" style="margin:0">Block feed unavailable.</div>'; }
+
+  renderEconomics();
+
+  // header status
+  const anyLive = ['price', 'height', 'fees', 'mem'].some(k => d[k] != null);
+  $('netDot').className = 'dot ' + (anyLive ? 'live' : 'err');
+}
+
+/* ============================================================
+   MONITOR TAB
+   ============================================================ */
+const DEMO_MINER = {
+  hashrate1m: '112T', hashrate5m: '109T', hashrate1hr: '104T', hashrate1d: '98.2T', hashrate7d: '96.7T',
+  lastshare: Math.floor(Date.now() / 1000) - 42, workers: 3, shares: 48211023347,
+  bestshare: 8123456789.4, bestever: 21987654321,
+  authorised: Math.floor(Date.now() / 1000) - 86400 * 19,
+  worker: [
+    { workername: 'demo.s21-rack1', hashrate1m: '58T', hashrate1hr: '55T', lastshare: Math.floor(Date.now() / 1000) - 42, bestever: 21987654321 },
+    { workername: 'demo.s21-rack2', hashrate1m: '39T', hashrate1hr: '36T', lastshare: Math.floor(Date.now() / 1000) - 61, bestever: 9812345678 },
+    { workername: 'demo.s19-backup', hashrate1m: '15T', hashrate1hr: '13T', lastshare: Math.floor(Date.now() / 1000) - 120, bestever: 1298765432 }
+  ]
+};
+
+function enterDemo() {
+  S.demo = true;
+  document.body.classList.add('demo');
+  $('exitDemoBtn').style.display = '';
+  $('minerError').innerHTML = '<div class="notice demobox"><b>Demo mode.</b> Sample data so you can see the dashboard layout. No miner is connected and nothing here is real or earned.</div>';
+  renderMiner(DEMO_MINER, true);
+}
+function exitDemo() {
+  S.demo = false;
+  document.body.classList.remove('demo');
+  $('exitDemoBtn').style.display = 'none';
+  $('minerError').innerHTML = '';
+  $('minerOut').innerHTML = '';
+}
+
+async function checkMiner() {
+  const addr = $('addrIn').value.trim();
+  if (!addr) return toast('Enter a BTC address');
+  if (S.demo) exitDemo();
+
+  const proxy = $('proxyIn').value.trim() || DEFAULT_PROXY;
+  localStorage.setItem('bh_proxy', $('proxyIn').value.trim());
+  localStorage.setItem('bh_addr', addr);
+
+  const target = 'https://solo.ckpool.org/users/' + encodeURIComponent(addr);
+  const url = proxy ? proxy + encodeURIComponent(target) : target;
+
+  $('minerError').innerHTML = '';
+  $('minerOut').innerHTML = '<div class="notice">Checking CKPool…</div>';
+
+  try {
+    const d = await fetchJSON(url, 15000);
+    if (d.error) throw new Error('pool: ' + d.error);
+    renderMiner(d, false);
+  } catch (e) {
+    $('minerOut').innerHTML = '';
+    const isNet = e.name === 'AbortError' || e instanceof TypeError || e.message.includes('fetch');
+    const is404 = e.message && (e.message.includes('404') || e.message.includes('Not Found'));
+    if (isNet && !proxy) {
+      $('minerError').innerHTML = `
+        <div class="notice errbox"><b>Blocked by CORS.</b> Your browser refused the direct call to solo.ckpool.org — that's a browser rule, not a pool outage. Three fixes:
+          <ol>
+            <li>Deploy <code>worker.js</code> to Cloudflare Workers (free, ~5 min) and paste the URL into the proxy field above.</li>
+            <li>Open <code>${target}</code> directly in a new tab — the raw stats load fine outside the app.</li>
+            <li>Set <code>DEFAULT_PROXY</code> in this file once your worker is live so visitors never see this.</li>
+          </ol>
+          <div style="margin-top:8px"><button class="btn btn-demo btn-sm" onclick="enterDemo()">Preview demo UI instead</button></div>
+        </div>`;
+    } else if (isNet && proxy) {
+      $('minerError').innerHTML = `<div class="notice errbox"><b>Proxy unreachable.</b> The request through <code>${proxy}</code> failed. Check the worker URL ends with <code>?url=</code> and the worker is deployed.</div>`;
+    } else if (is404) {
+      $('minerError').innerHTML = `<div class="notice errbox"><b>Address unknown to CKPool.</b> This address has never submitted a share to solo.ckpool.org. Check the address, or point a miner at <code>stratum+tcp://solo.ckpool.org:3333</code> first.</div>`;
+    } else {
+      $('minerError').innerHTML = `<div class="notice errbox"><b>Lookup failed:</b> ${e.message}</div>`;
+    }
+  }
+}
+
+function renderMiner(d, demo) {
+  const c = demo ? 'demo' : 'live';
+  const rates = [['1m', d.hashrate1m], ['5m', d.hashrate5m], ['1h', d.hashrate1hr], ['24h', d.hashrate1d], ['7d', d.hashrate7d]];
+  const workers = Array.isArray(d.worker) ? d.worker : [];
+
+  $('minerOut').innerHTML = `
+    <div class="section-label">Hashrate <span class="chip ${c}">${demo ? 'DEMO' : 'LIVE'}</span></div>
+    <div class="miner-grid">
+      ${rates.map(([l, v]) => `<div class="card"><div class="k">${l}</div><div class="v">${v != null ? v : '—'}<small> H/s</small></div></div>`).join('')}
+      <div class="card"><div class="k">Workers</div><div class="v">${fmt(d.workers)}</div></div>
+    </div>
+    <div class="section-label">Shares <span class="chip ${c}">${demo ? 'DEMO' : 'LIVE'}</span></div>
+    <div class="miner-grid">
+      <div class="card"><div class="k">Last share</div><div class="v" style="font-size:14px">${ago(d.lastshare)}</div></div>
+      <div class="card"><div class="k">Best share</div><div class="v" style="font-size:14px">${short(d.bestshare)}</div></div>
+      <div class="card"><div class="k">Best ever</div><div class="v" style="font-size:14px">${short(d.bestever)}</div></div>
+    </div>
+    ${workers.length ? `
+    <div class="section-label">Workers <span class="chip ${c}">${demo ? 'DEMO' : 'LIVE'}</span></div>
+    <div class="card wide" style="padding:4px 0;overflow-x:auto">
+      <table><thead><tr><th>Worker</th><th>1m</th><th>1h</th><th>Last share</th><th>Best ever</th></tr></thead>
+      <tbody>${workers.map(w => `<tr><td>${(w.workername || '').split('.').slice(1).join('.') || w.workername}</td><td>${w.hashrate1m ?? '—'}</td><td>${w.hashrate1hr ?? '—'}</td><td>${ago(w.lastshare)}</td><td>${short(w.bestever)}</td></tr>`).join('')}</tbody></table>
+    </div>` : ''}
+    ${demo ? '' : `<div class="notice">Independently verifiable: this exact data is public at <code>solo.ckpool.org/users/&lt;address&gt;</code>.</div>`}
+  `;
+}
+
+function short(n) {
+  if (n == null || n === '') return '—';
+  n = Number(n);
+  if (Number.isNaN(n)) return '—';
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'G';
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k';
+  return fmt(n);
+}
+
+/* ============================================================
+   ECONOMICS TAB — pure computation from live chain data
+   ============================================================ */
+function dailyBTC(th) {
+  if (!S.hashEH || S.hashEH <= 0) return null;
+  return (th / (S.hashEH * 1e6)) * 144 * 3.125;
+}
+
+function renderEconomics() {
+  const ready = S.hashEH && S.price && S.hashEH > 0 && S.price > 0;
+  chip('c-econ', ready ? 'live' : 'err');
+  chip('c-tier', ready ? 'live' : 'err');
+
+  const th = parseFloat($('eTh').value) || 0;
+  const w = parseFloat($('eW').value) || 0;
+  const kwh = parseFloat($('eKwh').value) || 0;
+  const fee = (parseFloat($('eFee').value) || 0) / 100;
+
+  if (!ready) {
+    $('econOut').innerHTML = '';
+    $('econNote').style.display = '';
+    $('econNote').innerHTML = '<b>Live data unavailable.</b> The calculator needs current network hashrate and BTC price — refresh once the connection is back. No stale guesses shown.';
+    $('tierOut').innerHTML = '';
+    return;
+  }
+  $('econNote').style.display = 'none';
+
+  const btcDay = (dailyBTC(th) || 0) * (1 - fee);
+  const revDay = btcDay * S.price;
+  const kwhDay = (w / 1000) * 24;
+  const costDay = kwhDay * kwh;
+  const profitDay = revDay - costDay;
+  const breakevenKwh = kwhDay > 0 ? revDay / kwhDay : 0;
+
+  const cell = (k, v, sub = '') => `<div class="card"><div class="k">${k}</div><div class="v" style="font-size:15px">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+  $('econOut').innerHTML =
+    cell('Revenue / day', '$' + fmt(revDay, 2), fmt(btcDay, 8) + ' BTC expected') +
+    cell('Power / day', '$' + fmt(costDay, 2), fmt(kwhDay, 1) + ' kWh') +
+    cell('Profit / day', (profitDay >= 0 ? '' : '−') + '$' + fmt(Math.abs(profitDay), 2), profitDay >= 0 ? 'margin ' + fmt(revDay > 0 ? profitDay / revDay * 100 : 0, 0) + '%' : 'underwater') +
+    cell('Break-even power', '$' + fmt(breakevenKwh, 3) + '/kWh', 'above this you lose money') +
+    cell('$/TH/day', '$' + fmt(th > 0 ? revDay / th : 0, 4), 'gross, before power') +
+    cell('Monthly profit', (profitDay >= 0 ? '' : '−') + '$' + fmt(Math.abs(profitDay) * 30, 2), '30-day run');
+
+  // tier pricing
+  const p = parseFloat($('tPrice').value) || 0;
+  const revTHmo = (dailyBTC(1) || 0) * S.price * 30;
+  const custMargin = revTHmo - p;
+  $('tierOut').innerHTML = `
+    <div class="grid3">
+      ${cell('Est. revenue', '$' + fmt(revTHmo, 2), 'per TH / month')}
+      ${cell('Your price', '$' + fmt(p, 2), 'per TH / month')}
+      ${cell('Customer margin', (custMargin >= 0 ? '' : '−') + '$' + fmt(Math.abs(custMargin), 2), custMargin >= 0 ? 'per TH / month' : 'customer loses money')}
+    </div>`;
+}
+
+['eTh', 'eW', 'eKwh', 'eFee', 'tPrice'].forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener('input', renderEconomics);
+});
+
+/* ============================================================
+   WAITLIST — never fakes success
+   ============================================================ */
+async function joinWaitlist() {
+  const email = $('wlEmail').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    $('wlMsg').innerHTML = '<div class="notice errbox"><b>Enter a valid email.</b></div>';
+    return;
+  }
+
+  if (FORM_ENDPOINT) {
+    try {
+      const r = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email, source: 'app-launch-tab' })
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      $('wlMsg').innerHTML = '<div class="notice okbox"><b>You're on the list.</b> Sent to the operator's inbox.</div>';
+      $('wlEmail').value = '';
+    } catch (e) {
+      $('wlMsg').innerHTML = '<div class="notice errbox"><b>Send failed.</b> The form backend didn't accept the request — try again in a minute.</div>';
+    }
+  } else {
+    const list = JSON.parse(localStorage.getItem('bh_waitlist') || '[]');
+    if (!list.includes(email)) { list.push(email); localStorage.setItem('bh_waitlist', JSON.stringify(list)); }
+    $('wlMsg').innerHTML = '<div class="notice"><b>Saved on this device only.</b> The operator hasn't connected a form backend yet, so this stays in your browser — it was not sent anywhere. (Operator: set <code>FORM_ENDPOINT</code> to make this real.)</div>';
+  }
+}
+
+/* ============================================================
+   NAV + REFRESH LOOP
+   ============================================================ */
+function go(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $('page-' + page).classList.add('active');
+  document.querySelectorAll('.nv').forEach(n => n.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  else document.querySelector('.nv[data-page="' + page + '"]').classList.add('active');
+}
+
+function tick() {
+  S.countdown--;
+  if (S.countdown <= 0) {
+    S.countdown = REFRESH_EVERY;
+    loadChain(true); // allow cache for instant paint, but loadChain will still fetch fresh
+  }
+  $('refreshLbl').textContent = S.failures > 1 ? 'offline · retry ' + S.countdown + 's' : 'refresh ' + S.countdown + 's';
+}
+
+(function init() {
+  $('proxyIn').value = localStorage.getItem('bh_proxy') || '';
+  $('addrIn').value = localStorage.getItem('bh_addr') || '';
+  loadChain(true);
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
