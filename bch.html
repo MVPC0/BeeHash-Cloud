@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BeeHash — SoloBCH (Pre-Launch)</title>
-<meta name="description" content="Bitcoin Cash solo mining rental — pre-launch. Live network data, honest odds, nothing purchasable yet.">
+<title>BeeHash Cloud — BCH Hashrate (Pre-Launch)</title>
+<meta name="description" content="Bitcoin Cash hashrate hosting — pre-launch. Choose solo or shared destination pools. Live network data, honest odds, nothing purchasable yet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{color-scheme:dark}
 body{background:var(--bg);color:var(--text);font-family:var(--disp);font-size:14px;line-height:1.5}
-button,input{font-family:inherit;font-size:inherit;color:inherit}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--bch);outline-offset:2px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -46,6 +46,10 @@ main{max-width:680px;margin:0 auto;padding:16px}
 h1{font-size:clamp(24px,6vw,34px);line-height:1.15;letter-spacing:-.02em}
 h1 em{font-style:normal;color:var(--bch)}
 .sub{color:var(--muted);font-size:13.5px;max-width:56ch;margin-top:10px}
+.hero-art{margin:18px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.hero-art img{display:block;width:100%;height:auto}
+.hero-art .cap{font-family:var(--mono);font-size:10px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line);line-height:1.45}
+.hero-art .cap b{color:var(--honey)}
 
 .section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:22px 0 8px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -101,7 +105,7 @@ footer a{color:var(--muted)}
 <header>
   <div class="logo"><a href="index.html">
     <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#0ac18e" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#0ac18e" opacity=".35"/></svg>
-    SoloBCH</a>
+    BeeHash BCH</a>
   </div>
   <span class="tag">PRE-LAUNCH</span>
   <nav class="hnav"><a href="index.html">Home</a><a href="app.html">BTC app</a></nav>
@@ -110,8 +114,12 @@ footer a{color:var(--muted)}
 <main>
 
 <section class="hero">
-  <h1>Bitcoin Cash solo mining. <em>Better lottery odds,</em> same honest math.</h1>
-  <p class="sub">BCH runs the same SHA-256 hardware against a network hundreds of times smaller than Bitcoin's — so per terahash, a solo block is far more reachable. Every number below is live network data. Nothing here is purchasable yet, and this page says so instead of pretending.</p>
+  <div class="hero-art">
+    <img src="brand-hero.png" width="1200" height="675" alt="BeeHash Cloud brand" loading="lazy">
+    <div class="cap"><b>Cloud hashrate vision.</b> Destination pool is yours to choose. Live only after public proof — PRE-LAUNCH.</div>
+  </div>
+  <h1>Bitcoin Cash hashrate. <em>Your pool, your rules</em> — solo lottery or shared payouts.</h1>
+  <p class="sub">Same SHA-256 hardware as Bitcoin, against a much smaller network. Customers will choose the destination pool: solo (full block to their address) or shared (steady proportional payouts). Every number below is live network data. Nothing is purchasable yet.</p>
 </section>
 
 <div class="section-label">BCH network — live <span class="chip off" id="c-net">—</span></div>
@@ -136,6 +144,38 @@ footer a{color:var(--muted)}
 
 <div class="section-label">Rental plans — indicative pricing</div>
 <div class="notice"><b>Not purchasable yet.</b> Prices below are the planned tiers so you can judge the economics before launch. Payments open only after real hashrate is online with a public proof link, and legal review is done — same gates as the <a href="index.html" style="color:var(--honey)">main roadmap</a>.</div>
+
+<div class="section-label">Destination pool <span class="chip off">PLANNED</span></div>
+<div class="card wide">
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">BeeHash Cloud is not a single pool. When rentals open, rented SHA-256 hashrate is pointed at <b style="color:var(--text)">whichever pool you select</b> — solo lottery or shared income. You keep the wallet; we point the hash.</p>
+  <div class="field">
+    <label for="poolPick">Preferred mining pool</label>
+    <select class="input" id="poolPick" onchange="onPoolPick()">
+      <option value="2miners-solo">Solo · 2Miners — full block to your address (~1.5% on find)</option>
+      <option value="mole-solo">Solo · MolePool — full block to your address (~1.5% on find)</option>
+      <option value="hmpool-shared">Shared · HashedMax — PPLNS + finder/loyalty (steadier small payouts)</option>
+    </select>
+  </div>
+  <div id="poolPickDetail" class="notice" style="margin-top:8px"></div>
+  <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px">Selection is saved in this browser only until payments exist. Nothing is rented yet.</p>
+</div>
+
+<div class="section-label">Proof of work — both solo pools</div>
+<div class="card wide">
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Anyone can verify an address on either solo pool. Enter a BCH address (yours or a customer’s) and open the public stats page. BeeHash only claims hashrate that these links can show.</p>
+  <div class="field">
+    <label for="proofAddr">BCH address</label>
+    <input class="input" id="proofAddr" placeholder="bitcoincash:q… or legacy" autocomplete="off" spellcheck="false">
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+    <button type="button" class="btn" onclick="openProof('2miners')">Open 2Miners proof</button>
+    <button type="button" class="btn ghost" onclick="openProof('mole')">Open MolePool proof</button>
+  </div>
+  <div id="proofLinks" style="margin-top:10px"></div>
+  <div class="notice" style="margin-top:10px">
+    <b>Operator proof (when live):</b> publish your solo worker URL here after shares appear — e.g. 2Miners account page and MolePool stats for the same address. Until then, hosted hashrate on the landing page stays <b>0</b>.
+  </div>
+</div>
 
 <div class="section-label">Recent BCH blocks — whole network <span class="chip off" id="c-blocks">—</span></div>
 <div class="card wide" id="blocksList" style="padding:4px 12px"></div>
@@ -330,6 +370,74 @@ function renderOdds() {
 /* ============================================================
    INIT
    ============================================================ */
+
+/* ============================================================
+   POOL PICK + PROOF LINKS
+   ============================================================ */
+const POOLS = {
+  '2miners-solo': {
+    name: '2Miners BCH Solo',
+    type: 'SOLO',
+    stratum: 'stratum+tcp://solo-bch.2miners.com:9393',
+    fee: '~1.5% only if you find a block',
+    blurb: 'Winner-take-all. Your address is the worker. Best for lottery-style solo and public proof pages.'
+  },
+  'mole-solo': {
+    name: 'MolePool BCH Solo',
+    type: 'SOLO',
+    stratum: 'stratum+tcp://bch.molepool.com:3333',
+    fee: '~1.5% only if you find a block',
+    blurb: 'Winner-take-all. Confirm the live stratum URL on molepool.com before connecting. Good public account stats.'
+  },
+  'hmpool-shared': {
+    name: 'HashedMax BCH (shared)',
+    type: 'SHARED',
+    stratum: 'stratum+tcp://bch.hmpool.io:3337',
+    fee: 'Hybrid PPLNS + finder/loyalty (see pool docs)',
+    blurb: 'Steady proportional payouts — not full-block solo. Useful as failover or for very small hashrate cashflow.'
+  }
+};
+
+function onPoolPick() {
+  const id = $('poolPick').value;
+  const p = POOLS[id];
+  localStorage.setItem('bh_bch_pool_pref', id);
+  $('poolPickDetail').innerHTML =
+    '<b>' + p.name + '</b> · <span style="color:var(--bch)">' + p.type + '</span><br>' +
+    'Stratum: <code>' + p.stratum + '</code><br>' +
+    'Fee: ' + p.fee + '<br>' + p.blurb;
+}
+
+function openProof(which) {
+  const addr = ($('proofAddr').value || '').trim();
+  if (!addr || addr.length < 15) {
+    toast('Enter a BCH address first');
+    return;
+  }
+  localStorage.setItem('bh_bch_proof_addr', addr);
+  const enc = encodeURIComponent(addr);
+  // Public pages — pools may redirect; user can still verify in browser
+  const urls = {
+    '2miners': 'https://solo-bch.2miners.com/account/' + enc,
+    'mole': 'https://bch.molepool.com/#/account/' + enc
+  };
+  const labels = { '2miners': '2Miners Solo', 'mole': 'MolePool Solo' };
+  const url = urls[which];
+  $('proofLinks').innerHTML =
+    '<div class="notice okbox" style="border-left-color:var(--bch)">' +
+    '<b>' + labels[which] + ' proof link</b><br>' +
+    '<a href="' + url + '" target="_blank" rel="noopener" style="color:var(--bch);word-break:break-all">' + url + '</a><br>' +
+    '<span style="font-size:11px">Opens the pool’s public account page for this address. If the pool shows hashrate/shares, that is independent proof.</span></div>';
+  window.open(url, '_blank', 'noopener');
+}
+
+
+  const pref = localStorage.getItem('bh_bch_pool_pref');
+  if (pref && POOLS[pref] && $('poolPick')) { $('poolPick').value = pref; }
+  if ($('poolPick')) onPoolPick();
+  const pa = localStorage.getItem('bh_bch_proof_addr');
+  if (pa && $('proofAddr')) $('proofAddr').value = pa;
+
 loadBCH();
 setInterval(() => { localStorage.removeItem(CACHE_KEY); loadBCH(); }, 60000);
 </script>

@@ -235,6 +235,35 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(12,14,16,.
     <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Nothing is purchasable today. Payments open only after the two items above are done.</p></div></div>
   </div>
 
+  <div class="section-label">Customer pool choice <span class="chip off">PLANNED</span></div>
+  <div class="card wide">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">BeeHash Cloud points rented hashrate at the pool the customer chooses — not a locked-in house pool. Solo = full block on find. Shared = proportional payouts (e.g. HashedMax).</p>
+    <div class="field">
+      <label for="appPoolPick">Preferred pool (saved in this browser)</label>
+      <select class="input" id="appPoolPick" onchange="onAppPoolPick()">
+        <option value="2miners-solo">Solo · 2Miners BCH (~1.5% on find)</option>
+        <option value="mole-solo">Solo · MolePool BCH (~1.5% on find)</option>
+        <option value="hmpool-shared">Shared · HashedMax BCH (PPLNS hybrid)</option>
+        <option value="ckpool-btc">Solo · CKPool BTC (2% on find — harder odds)</option>
+      </select>
+    </div>
+    <div id="appPoolDetail" class="notice" style="margin-top:8px"></div>
+  </div>
+
+  <div class="section-label">Proof of work — dual solo links</div>
+  <div class="card wide">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Verify any address on both major BCH solo pools. Operator proof goes live only when these pages show real shares for BeeHash hardware.</p>
+    <div class="field">
+      <label for="appProofAddr">BCH address</label>
+      <input class="input" id="appProofAddr" placeholder="bitcoincash:q…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="row" style="margin-top:4px">
+      <button type="button" class="btn btn-honey btn-sm" onclick="openAppProof('2miners')">2Miners proof</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="openAppProof('mole')">MolePool proof</button>
+    </div>
+    <div id="appProofOut" style="margin-top:10px"></div>
+  </div>
+
   <div class="section-label">Waitlist</div>
   <div class="card wide">
     <div class="field"><label for="wlEmail">Email</label><input class="input" id="wlEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
@@ -679,7 +708,41 @@ function tick() {
   $('refreshLbl').textContent = S.failures > 1 ? 'offline · retry ' + S.countdown + 's' : 'refresh ' + S.countdown + 's';
 }
 
+
+/* Pool preference + dual proof (Launch tab) */
+const APP_POOLS = {
+  '2miners-solo': { name: '2Miners BCH Solo', stratum: 'stratum+tcp://solo-bch.2miners.com:9393', note: 'Full block to customer address on find.' },
+  'mole-solo': { name: 'MolePool BCH Solo', stratum: 'stratum+tcp://bch.molepool.com:3333', note: 'Confirm live port on molepool.com. Full block on find.' },
+  'ckpool-btc': { name: 'CKPool BTC Solo', stratum: 'stratum+tcp://solo.ckpool.org:3333', note: 'Bitcoin solo lottery — much harder odds than BCH.' },
+  'hmpool-shared': { name: 'HashedMax BCH shared', stratum: 'stratum+tcp://bch.hmpool.io:3337', note: 'Shared PPLNS — not full-block solo.' }
+};
+function onAppPoolPick() {
+  const id = $('appPoolPick')?.value; if (!id) return;
+  const p = APP_POOLS[id];
+  localStorage.setItem('bh_pool_pref', id);
+  const el = $('appPoolDetail');
+  if (el) el.innerHTML = '<b>' + p.name + '</b><br><code>' + p.stratum + '</code><br>' + p.note;
+}
+function openAppProof(which) {
+  const addr = ($('appProofAddr')?.value || '').trim();
+  if (!addr || addr.length < 15) return toast('Enter a BCH address');
+  localStorage.setItem('bh_bch_proof_addr', addr);
+  const enc = encodeURIComponent(addr);
+  const url = which === 'mole'
+    ? 'https://bch.molepool.com/#/account/' + enc
+    : 'https://solo-bch.2miners.com/account/' + enc;
+  const label = which === 'mole' ? 'MolePool' : '2Miners';
+  const out = $('appProofOut');
+  if (out) out.innerHTML = '<div class="notice"><b>' + label + ' proof</b><br><a href="' + url + '" target="_blank" rel="noopener" style="color:var(--honey);word-break:break-all">' + url + '</a></div>';
+  window.open(url, '_blank', 'noopener');
+}
+
 (function init() {
+  const pref = localStorage.getItem('bh_pool_pref');
+  if (pref && APP_POOLS[pref] && $('appPoolPick')) { $('appPoolPick').value = pref; }
+  onAppPoolPick();
+  const pa = localStorage.getItem('bh_bch_proof_addr');
+  if (pa && $('appProofAddr')) $('appProofAddr').value = pa;
   $('proxyIn').value = localStorage.getItem('bh_proxy') || '';
   $('addrIn').value = localStorage.getItem('bh_addr') || '';
   loadChain(true);
