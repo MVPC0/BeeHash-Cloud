@@ -204,54 +204,10 @@ footer a{color:var(--muted)}
 </div>
 
 <div class="section-label">Destination — where rented hash goes</div>
-<div class="card wide">
-  <div class="field">
-    <label for="destMode">Routing mode</label>
-    <select class="input" id="destMode" onchange="onDestMode()">
-      <option value="preset">Preset pool (recommended)</option>
-      <option value="custom">Custom stratum (advanced)</option>
-    </select>
-  </div>
-
-  <div id="presetBox">
-    <div class="field">
-      <label for="presetPool">Destination pool</label>
-      <select class="input" id="presetPool" onchange="onPreset()">
-        <option value="2miners-bch">Solo · 2Miners BCH — full block to your address</option>
-        <option value="mole-bch">Solo · MolePool BCH — full block to your address</option>
-        <option value="ckpool-btc">Solo · CKPool BTC — full block to your address</option>
-        <option value="hmpool-bch">Shared · HashedMax BCH — PPLNS hybrid</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="presetWorker">Your wallet / worker</label>
-      <input class="input" id="presetWorker" placeholder="bitcoincash:q… or bc1q…  ·  optional .workername" autocomplete="off" spellcheck="false">
-    </div>
-    <div id="presetDetail" class="notice"></div>
-  </div>
-
-  <div id="customBox" style="display:none">
-    <div class="field">
-      <label for="customUrl">Stratum URL</label>
-      <input class="input" id="customUrl" placeholder="stratum+tcp://pool.example.com:3333" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="field">
-      <label for="customWorker">Worker</label>
-      <input class="input" id="customWorker" placeholder="wallet.worker1" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="field">
-      <label for="customPass">Password</label>
-      <input class="input" id="customPass" placeholder="x" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="notice"><b>Advanced.</b> BeeHash will route rented SHA-256 power to this exact stratum login. You are responsible for the destination pool’s terms, fees, and wallet correctness. Live delivery checks still apply on our side (outbound accepted work).</div>
-  </div>
-
-  <div class="row" style="margin-top:8px">
-    <button type="button" class="btn btn-sm" onclick="saveRoute()">Save route preference</button>
-    <button type="button" class="btn ghost btn-sm" onclick="clearRoute()">Clear</button>
-  </div>
-  <div id="routeMsg"></div>
-  <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px">Saved in this browser only. Orders are not open until hashrate is proven online and payments are enabled.</p>
+<div class="notice">
+  <b>Configured in the dashboard after sign-up.</b> Boost (rental) lets you pick a preset solo/shared pool or paste a custom stratum + worker + password. That UI is on the <b>Boost</b> tab next to miner stats — not on this public page.
+  <br><br>
+  <a class="btn btn-sm" href="dashboard.html?tab=boost">Open dashboard → Boost</a>
 </div>
 
 <div class="section-label">How rental delivery works</div>
@@ -356,119 +312,7 @@ footer a{color:var(--muted)}
 <div class="toast" id="toast"></div>
 
 <script>
-const PRESETS = {
-  '2miners-bch': {
-    name: '2Miners BCH Solo',
-    stratum: 'stratum+tcp://solo-bch.2miners.com:9393',
-    pass: 'x',
-    note: 'Solo lottery on Bitcoin Cash. Worker = your BCH address (optional .name). Fee typically on block find only.'
-  },
-  'mole-bch': {
-    name: 'MolePool BCH Solo',
-    stratum: 'stratum+tcp://bch.molepool.com:3333',
-    pass: 'x',
-    note: 'Solo lottery on BCH. Confirm current stratum on molepool.com before go-live.'
-  },
-  'ckpool-btc': {
-    name: 'CKPool BTC Solo',
-    stratum: 'stratum+tcp://solo.ckpool.org:3333',
-    pass: 'x',
-    note: 'Bitcoin solo — much harder odds per TH than BCH. Worker = your BTC address.'
-  },
-  'hmpool-bch': {
-    name: 'HashedMax BCH Shared',
-    stratum: 'stratum+tcp://bch.hmpool.io:3337',
-    pass: 'x',
-    note: 'Shared PPLNS + finder/loyalty style rewards — steadier small payouts, not full-block solo.'
-  }
-};
 
-/* Dual pricing: ONE-TIME (upfront term) + SUBSCRIPTION (auto-renew style). ~bit under market. PRE-LAUNCH only. */
-const TIERS = [
-  { th: 1,   label: 'Core',
-    sub:  { week: 7.99,  month: 24.99,  year: 214.99 },
-    once: { week: 10.99, month: 29.99,  year: 249.99 },
-    features: ['1 TH/s SHA-256', 'Preset or custom stratum', 'Live delivery checks'] },
-  { th: 2,   label: 'Plus',
-    sub:  { week: 14.99, month: 46.99,  year: 399.99 },
-    once: { week: 19.99, month: 52.99,  year: 449.99 },
-    features: ['2 TH/s SHA-256', 'Preset or custom stratum', 'Live delivery checks'] },
-  { th: 5,   label: 'Pro',
-    sub:  { week: 35.99, month: 89.99,  year: 749.99 },
-    once: { week: 42.99, month: 104.99, year: 899.99 },
-    features: ['5 TH/s SHA-256', 'ASICBoost fleet path', 'Solo or shared destination'] },
-  { th: 10,  label: 'Ultra',
-    sub:  { week: 62.99, month: 179.99, year: 1499.99 },
-    once: { week: 74.99, month: 209.99, year: 1749.99 },
-    features: ['10 TH/s SHA-256', 'Priority routing', 'Custom stratum OK'] },
-  { th: 25,  label: 'Max',
-    sub:  { week: 129.99, month: 349.99, year: 2899.99 },
-    once: { week: 149.99, month: 374.99, year: 3199.99 },
-    features: ['25 TH/s SHA-256', 'Stronger BCH solo odds', 'Volume $/TH'] },
-  { th: 50,  label: 'Epic',
-    sub:  { week: 149.99, month: 449.99, year: 3699.99 },
-    once: { week: 179.99, month: 524.99, year: 4299.99 },
-    features: ['50 TH/s SHA-256', 'Best mid-size value', 'Multi-destination ready'] },
-  { th: 100, label: 'Fleet',
-    sub:  { week: 259.99, month: 799.99, year: 6499.99 },
-    once: { week: 299.99, month: 879.99, year: 7499.99 },
-    features: ['100 TH/s SHA-256', 'Fleet slice', 'Operator-grade routing'] },
-  { th: 200, label: 'Rack',
-    sub:  { week: 449.99, month: 1399.99, year: 10999.99 },
-    once: { week: 499.99, month: 1499.99, year: 12499.99 },
-    features: ['200 TH/s SHA-256', 'Rack-scale rental', 'Lowest $/TH on sheet'] }
-];
-
-
-const $ = id => document.getElementById(id);
-function toast(m) {
-  const t = $('toast'); t.textContent = m; t.classList.add('show');
-  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-function onDestMode() {
-  const custom = $('destMode').value === 'custom';
-  $('presetBox').style.display = custom ? 'none' : 'block';
-  $('customBox').style.display = custom ? 'block' : 'none';
-}
-
-function onPreset() {
-  const p = PRESETS[$('presetPool').value];
-  $('presetDetail').innerHTML =
-    '<b>' + p.name + '</b><br>Target stratum: <code>' + p.stratum + '</code><br>' + p.note;
-}
-
-function saveRoute() {
-  const mode = $('destMode').value;
-  let data;
-  if (mode === 'custom') {
-    const url = $('customUrl').value.trim();
-    const worker = $('customWorker').value.trim();
-    const pass = $('customPass').value.trim() || 'x';
-    if (!url || !worker) {
-      $('routeMsg').innerHTML = '<div class="notice errbox"><b>Need stratum URL and worker.</b></div>';
-      return;
-    }
-    data = { mode, url, worker, pass };
-  } else {
-    const pool = $('presetPool').value;
-    const worker = $('presetWorker').value.trim();
-    if (!worker) {
-      $('routeMsg').innerHTML = '<div class="notice errbox"><b>Enter your wallet / worker.</b></div>';
-      return;
-    }
-    data = { mode, pool, worker, preset: PRESETS[pool] };
-  }
-  localStorage.setItem('bh_rental_route', JSON.stringify(data));
-  $('routeMsg').innerHTML = '<div class="notice okbox"><b>Route preference saved on this device.</b> Not an order — checkout is closed until fleet proof + payments.</div>';
-  toast('Route preference saved');
-}
-
-function clearRoute() {
-  localStorage.removeItem('bh_rental_route');
-  $('routeMsg').innerHTML = '';
-  toast('Cleared');
-}
 
 function renderTiers() {
   const mode = window._priceMode || 'sub';
@@ -508,33 +352,12 @@ function renderPriceSheet() {
   ).join('');
 }
 
-function loadSaved() {
-  try {
-    const raw = localStorage.getItem('bh_rental_route');
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (d.mode === 'custom') {
-      $('destMode').value = 'custom';
-      onDestMode();
-      $('customUrl').value = d.url || '';
-      $('customWorker').value = d.worker || '';
-      $('customPass').value = d.pass || 'x';
-    } else if (d.pool) {
-      $('destMode').value = 'preset';
-      onDestMode();
-      $('presetPool').value = d.pool;
-      $('presetWorker').value = d.worker || '';
-      onPreset();
-    }
-  } catch (e) {}
-}
+
 
 window._priceMode = 'sub';
 setPriceMode('sub');
 renderPriceSheet();
-onPreset();
-onDestMode();
-loadSaved();
+
 </script>
 </body>
 </html>
