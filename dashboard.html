@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeHash Dashboard — Miner Stats + Boost</title>
+<meta name="description" content="Signed-in BeeHash dashboard. Miner stats and Boost hashrate rental — available after signup. Pre-launch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e10; --panel:#14171b; --panel2:#1a1e23; --line:#242a31;
+  --honey:#f7b32b; --honey-dim:#a97c1d;
+  --live:#3ddc84; --err:#e5484d; --muted:#8b939e; --text:#e8eaed;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);font-size:14px;line-height:1.5;min-height:100dvh}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--honey);outline-offset:2px;border-radius:4px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+header{position:sticky;top:0;z-index:50;background:rgba(12,14,16,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.logo a{color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px}
+.tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:2px 6px}
+.hnav{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:12px;font-weight:700}
+.hnav a{color:var(--muted);text-decoration:none}
+.hnav a:hover{color:var(--honey)}
+.user-pill{font-family:var(--mono);font-size:10px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+main{max-width:720px;margin:0 auto;padding:14px 14px 80px}
+
+/* Auth */
+.auth-wrap{max-width:400px;margin:40px auto;padding:0 8px}
+.auth-wrap h1{font-size:24px;margin-bottom:8px}
+.auth-wrap .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.tabs-auth{display:flex;gap:6px;margin-bottom:14px}
+.tabs-auth button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-weight:700;cursor:pointer}
+.tabs-auth button.on{background:var(--honey);color:#141414;border-color:var(--honey)}
+
+/* App shell after login */
+.app-tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px}
+.app-tabs button{flex:1;padding:10px 8px;border:none;border-radius:8px;background:transparent;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.app-tabs button.on{background:var(--panel2);color:var(--honey)}
+.panel{display:none}
+.panel.on{display:block}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.card.wide{}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:520px){.grid2,.grid3{grid-template-columns:1fr}}
+.k{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.v{font-family:var(--mono);font-size:18px;font-weight:600;margin-top:2px}
+.v small{font-size:11px;color:var(--muted);font-weight:400}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin:16px 0 8px}
+
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:13px}
+.input::placeholder{color:#5a636e}
+select.input{cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:8px;padding:11px 16px;font-weight:700;font-size:13px;cursor:pointer;background:var(--honey);color:#141414}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:8px 12px;font-size:12px}
+.btn-block{width:100%}
+
+.notice{border:1px solid var(--line);border-left:3px solid var(--honey);background:var(--panel);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin:8px 0;line-height:1.5}
+.notice b{color:var(--text)}
+.notice.err{border-left-color:var(--err)}
+.notice.ok{border-left-color:var(--live)}
+.notice code{font-family:var(--mono);font-size:10.5px;color:var(--honey);background:var(--panel2);padding:1px 5px;border-radius:4px}
+
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.08em;padding:2px 6px;border-radius:3px}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.chip.off{color:var(--muted);background:rgba(139,147,158,.1)}
+.chip.live{color:var(--live);background:rgba(61,220,132,.1)}
+.chip.plan{color:var(--honey);background:rgba(247,179,43,.1)}
+
+/* Gauge */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:12px 0}
+.gauge{width:160px;height:90px}
+.gauge-val{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:-8px}
+.gauge-val small{font-size:12px;color:var(--muted)}
+
+.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.stat-row:last-child{border-bottom:none}
+.stat-row span:last-child{font-family:var(--mono);color:var(--muted)}
+
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:640px){.tiers{grid-template-columns:repeat(4,1fr)}}
+.tier{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;cursor:pointer}
+.tier:hover,.tier.on{border-color:rgba(247,179,43,.45)}
+.tier .tn{font-size:12px;font-weight:700}
+.tier .th{font-family:var(--mono);font-size:20px;color:var(--honey);font-weight:700}
+.tier .th small{font-size:10px;color:var(--muted)}
+.tier .tp{font-family:var(--mono);font-size:12px;margin-top:4px}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:8px 10px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+.gate-banner{background:rgba(247,179,43,.08);border:1px solid rgba(247,179,43,.3);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.gate-banner b{color:var(--honey)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
+      BeeHash
+    </a>
+  </div>
+  <span class="tag">PRE-LAUNCH</span>
+  <nav class="hnav">
+    <a href="index.html">Home</a>
+    <a href="rent.html">Rent info</a>
+    <span class="user-pill" id="userPill"></span>
+    <button type="button" class="btn ghost btn-sm" id="btnLogout" style="display:none" onclick="logout()">Log out</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ========== AUTH (before signup) ========== -->
+<section id="authView" class="auth-wrap">
+  <h1>Dashboard access</h1>
+  <p class="sub">Miner stats and <b style="color:var(--text)">Boost</b> (rented hashrate) are only available after you create an account. Local demo accounts for pre-launch — nothing is billed.</p>
+  <div class="tabs-auth">
+    <button type="button" class="on" id="tabLogin" onclick="setAuthTab('login')">Log in</button>
+    <button type="button" id="tabReg" onclick="setAuthTab('reg')">Sign up</button>
+  </div>
+  <div class="card">
+    <div class="field"><label for="authEmail">Email</label><input class="input" id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+    <div class="field"><label for="authPass">Password</label><input class="input" id="authPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button type="button" class="btn btn-block" id="authSubmit" onclick="doAuth()">Log in</button>
+    <div id="authMsg"></div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">Accounts are stored in this browser only (demo). Real backend comes after fleet proof.</p>
+</section>
+
+<!-- ========== DASHBOARD (after signup) ========== -->
+<section id="dashView" style="display:none">
+  <div class="gate-banner"><b>Pre-launch dashboard.</b> Stats stay honest (zeros / demo until hardware proof). Boost orders stay closed until public hashrate proof + payments.</div>
+
+  <div class="app-tabs">
+    <button type="button" class="on" data-tab="stats" onclick="gotoTab('stats')">Miners</button>
+    <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
+    <button type="button" data-tab="account" onclick="gotoTab('account')">Account</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="panel on" id="panel-stats">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="k">Active hashrate</div>
+        <span class="chip off" id="hashChip">OFFLINE</span>
+      </div>
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 160 90">
+          <path d="M10 80 A70 70 0 0 1 150 80" fill="none" stroke="#242a31" stroke-width="12" stroke-linecap="round"/>
+          <path id="gaugeArc" d="M10 80 A70 70 0 0 1 10 80" fill="none" stroke="#f7b32b" stroke-width="12" stroke-linecap="round"/>
+        </svg>
+        <div class="gauge-val" id="gaugeVal">0.00 <small>TH/s</small></div>
+      </div>
+      <div class="grid3">
+        <div><div class="k">Base</div><div class="v" id="vBase">0 <small>TH</small></div></div>
+        <div><div class="k">Boost</div><div class="v" id="vBoost">0 <small>TH</small></div></div>
+        <div><div class="k">Total</div><div class="v" id="vTotal">0 <small>TH</small></div></div>
+      </div>
+    </div>
+
+    <div class="section-label">Miner UI</div>
+    <div class="card">
+      <div class="stat-row"><span>Status</span><span id="mStatus">No active rental</span></div>
+      <div class="stat-row"><span>Accepted shares</span><span id="mShares">—</span></div>
+      <div class="stat-row"><span>Rejected</span><span id="mReject">—</span></div>
+      <div class="stat-row"><span>Destination</span><span id="mDest">—</span></div>
+      <div class="stat-row"><span>Last share</span><span id="mLast">—</span></div>
+      <div class="stat-row"><span>Delivery check</span><span id="mDelivery">Waiting for fleet</span></div>
+    </div>
+    <div class="notice">When Boost is active, this panel shows live delivery toward your chosen pool. Until BeeHash publishes public proof of hashrate, totals stay at <b>0</b>.</div>
+    <button type="button" class="btn btn-block" onclick="gotoTab('boost')">Open Boost →</button>
+  </div>
+
+  <!-- BOOST (rental) — only after signup -->
+  <div class="panel" id="panel-boost">
+    <div class="section-label">Boost hashrate <span class="chip plan">RENTAL</span></div>
+    <div class="notice"><b>Boost is separate from normal solo-miner ports.</b> Rented SHA-256 power is routed on a dedicated lane to your preset pool or custom stratum. Only visible here after sign-up.</div>
+
+    <div class="row" style="margin-bottom:10px">
+      <button type="button" class="btn btn-sm" id="btnSub" onclick="setPriceMode('sub')">Subscription</button>
+      <button type="button" class="btn ghost btn-sm" id="btnOnce" onclick="setPriceMode('once')">One-time</button>
+    </div>
+    <p id="priceModeNote" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px"></p>
+    <div class="tiers" id="tierGrid"></div>
+
+    <div class="section-label">Mining destination</div>
+    <div class="card">
+      <div class="field">
+        <label for="destMode">Routing mode</label>
+        <select class="input" id="destMode" onchange="onDestMode()">
+          <option value="preset">Preset pool (recommended)</option>
+          <option value="custom">Custom stratum (advanced)</option>
+        </select>
+      </div>
+      <div id="presetBox">
+        <div class="field">
+          <label for="presetPool">Destination pool</label>
+          <select class="input" id="presetPool" onchange="onPreset()">
+            <option value="2miners-bch">Solo · 2Miners BCH</option>
+            <option value="mole-bch">Solo · MolePool BCH</option>
+            <option value="ckpool-btc">Solo · CKPool BTC</option>
+            <option value="hmpool-bch">Shared · HashedMax BCH</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="presetWorker">Payout / worker address</label>
+          <input class="input" id="presetWorker" placeholder="bitcoincash:q… or bc1q…" autocomplete="off" spellcheck="false">
+        </div>
+        <div id="presetDetail" class="notice"></div>
+      </div>
+      <div id="customBox" style="display:none">
+        <div class="field"><label for="customUrl">Stratum URL</label><input class="input" id="customUrl" placeholder="stratum+tcp://pool.example.com:3333"></div>
+        <div class="field"><label for="customWorker">Worker</label><input class="input" id="customWorker" placeholder="wallet.worker1"></div>
+        <div class="field"><label for="customPass">Password</label><input class="input" id="customPass" placeholder="x" value="x"></div>
+      </div>
+    </div>
+
+    <div class="section-label">Term</div>
+    <div class="card">
+      <div class="field">
+        <label for="termPick">Runtime</label>
+        <select class="input" id="termPick">
+          <option value="week">Weekly</option>
+          <option value="month" selected>Monthly</option>
+          <option value="year">Annual</option>
+        </select>
+      </div>
+      <div class="notice" id="orderSummary"><b>Select a Boost size above.</b></div>
+      <button type="button" class="btn btn-block" disabled id="btnOrder" title="Not for sale yet">Create Boost order — closed</button>
+      <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;text-align:center">Checkout opens only after live fleet proof + payments. Saving destination does not charge you.</p>
+      <button type="button" class="btn ghost btn-block btn-sm" style="margin-top:8px" onclick="saveBoostPref()">Save Boost preference</button>
+      <div id="boostMsg"></div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="panel" id="panel-account">
+    <div class="card">
+      <div class="k">Signed in as</div>
+      <div class="v" style="font-size:14px;word-break:break-all" id="acctEmail">—</div>
+    </div>
+    <div class="card">
+      <div class="stat-row"><span>Base plan</span><span>None (pre-launch)</span></div>
+      <div class="stat-row"><span>Active Boost</span><span id="acctBoost">0 TH</span></div>
+      <div class="stat-row"><span>Orders</span><span>0</span></div>
+    </div>
+    <button type="button" class="btn ghost btn-block" onclick="logout()">Log out</button>
+  </div>
+</section>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const USERS_KEY = 'bh_dash_users';
+const SESSION_KEY = 'bh_dash_session';
+const BOOST_KEY = 'bh_boost_pref';
+
+const PRESETS = {
+  '2miners-bch': { name: '2Miners BCH Solo', stratum: 'stratum+tcp://solo-bch.2miners.com:9393', note: 'Full block to your BCH address on find.' },
+  'mole-bch': { name: 'MolePool BCH Solo', stratum: 'stratum+tcp://bch.molepool.com:3333', note: 'Confirm live port on molepool.com.' },
+  'ckpool-btc': { name: 'CKPool BTC Solo', stratum: 'stratum+tcp://solo.ckpool.org:3333', note: 'Bitcoin solo — harder odds per TH.' },
+  'hmpool-bch': { name: 'HashedMax BCH Shared', stratum: 'stratum+tcp://bch.hmpool.io:3337', note: 'Shared PPLNS-style rewards.' }
+};
+
+const TIERS = [
+  { th: 1, label: 'Core', sub: { week: 7.99, month: 24.99, year: 214.99 }, once: { week: 10.99, month: 29.99, year: 249.99 } },
+  { th: 2, label: 'Plus', sub: { week: 14.99, month: 46.99, year: 399.99 }, once: { week: 19.99, month: 52.99, year: 449.99 } },
+  { th: 5, label: 'Pro', sub: { week: 35.99, month: 89.99, year: 749.99 }, once: { week: 42.99, month: 104.99, year: 899.99 } },
+  { th: 10, label: 'Ultra', sub: { week: 62.99, month: 179.99, year: 1499.99 }, once: { week: 74.99, month: 209.99, year: 1749.99 } },
+  { th: 25, label: 'Max', sub: { week: 129.99, month: 349.99, year: 2899.99 }, once: { week: 149.99, month: 374.99, year: 3199.99 } },
+  { th: 50, label: 'Epic', sub: { week: 149.99, month: 449.99, year: 3699.99 }, once: { week: 179.99, month: 524.99, year: 4299.99 } },
+  { th: 100, label: 'Fleet', sub: { week: 259.99, month: 799.99, year: 6499.99 }, once: { week: 299.99, month: 879.99, year: 7499.99 } },
+  { th: 200, label: 'Rack', sub: { week: 449.99, month: 1399.99, year: 10999.99 }, once: { week: 499.99, month: 1499.99, year: 12499.99 } }
+];
+
+const $ = id => document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2800);}
+
+let authMode = 'login';
+let selectedTh = null;
+window._priceMode = 'sub';
+
+function setAuthTab(m) {
+  authMode = m;
+  $('tabLogin').classList.toggle('on', m === 'login');
+  $('tabReg').classList.toggle('on', m === 'reg');
+  $('authSubmit').textContent = m === 'login' ? 'Log in' : 'Create account';
+  $('authMsg').innerHTML = '';
+}
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch { return {}; }
+}
+function setUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+
+function doAuth() {
+  const email = ($('authEmail').value || '').trim().toLowerCase();
+  const pass = $('authPass').value || '';
+  if (!email || !email.includes('@') || pass.length < 4) {
+    $('authMsg').innerHTML = '<div class="notice err"><b>Need a valid email and password (4+ chars).</b></div>';
+    return;
+  }
+  const users = getUsers();
+  if (authMode === 'reg') {
+    if (users[email]) {
+      $('authMsg').innerHTML = '<div class="notice err"><b>Account exists — log in instead.</b></div>';
+      return;
+    }
+    // demo only — not real security
+    users[email] = { pass: btoa(pass), created: Date.now() };
+    setUsers(users);
+    localStorage.setItem(SESSION_KEY, email);
+    toast('Account created');
+    showDash(email);
+  } else {
+    if (!users[email] || users[email].pass !== btoa(pass)) {
+      $('authMsg').innerHTML = '<div class="notice err"><b>Wrong email or password.</b></div>';
+      return;
+    }
+    localStorage.setItem(SESSION_KEY, email);
+    toast('Logged in');
+    showDash(email);
+  }
+}
+
+function logout() {
+  localStorage.removeItem(SESSION_KEY);
+  $('dashView').style.display = 'none';
+  $('authView').style.display = 'block';
+  $('btnLogout').style.display = 'none';
+  $('userPill').textContent = '';
+  toast('Logged out');
+}
+
+function showDash(email) {
+  $('authView').style.display = 'none';
+  $('dashView').style.display = 'block';
+  $('btnLogout').style.display = 'inline-flex';
+  $('userPill').textContent = email;
+  $('acctEmail').textContent = email;
+  renderStats();
+  setPriceMode('sub');
+  onPreset();
+  onDestMode();
+  loadBoostPref();
+  // deep link ?tab=boost
+  const tab = new URLSearchParams(location.search).get('tab');
+  if (tab === 'boost' || tab === 'account') gotoTab(tab);
+}
+
+function gotoTab(name) {
+  document.querySelectorAll('.app-tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + name));
+}
+
+function renderStats() {
+  // Honest zeros until real boost/fleet
+  let boostTh = 0;
+  try {
+    const p = JSON.parse(localStorage.getItem(BOOST_KEY) || 'null');
+    // preference only — not an active paid boost
+  } catch {}
+  const base = 0, boost = 0, total = base + boost;
+  $('vBase').innerHTML = base + ' <small>TH</small>';
+  $('vBoost').innerHTML = boost + ' <small>TH</small>';
+  $('vTotal').innerHTML = total + ' <small>TH</small>';
+  $('gaugeVal').innerHTML = total.toFixed(2) + ' <small>TH/s</small>';
+  $('acctBoost').textContent = boost + ' TH';
+  $('hashChip').textContent = total > 0 ? 'LIVE' : 'OFFLINE';
+  $('hashChip').className = 'chip ' + (total > 0 ? 'live' : 'off');
+}
+
+function setPriceMode(mode) {
+  window._priceMode = mode;
+  const sub = mode === 'sub';
+  $('btnSub').className = sub ? 'btn btn-sm' : 'btn ghost btn-sm';
+  $('btnOnce').className = !sub ? 'btn btn-sm' : 'btn ghost btn-sm';
+  $('priceModeNote').textContent = sub
+    ? 'Subscription rates (auto-renew when live).'
+    : 'One-time term rates (no auto-renew).';
+  renderTiers();
+  updateOrderSummary();
+}
+
+function renderTiers() {
+  const mode = window._priceMode || 'sub';
+  $('tierGrid').innerHTML = TIERS.map(t => {
+    const p = t[mode];
+    const on = selectedTh === t.th ? ' on' : '';
+    return `<div class="tier${on}" onclick="selectTier(${t.th})">
+      <div class="tn">${t.label}</div>
+      <div class="th">${t.th} <small>TH</small></div>
+      <div class="tp">$${p.month.toFixed(2)}/mo</div>
+    </div>`;
+  }).join('');
+}
+
+function selectTier(th) {
+  selectedTh = th;
+  renderTiers();
+  updateOrderSummary();
+}
+
+function updateOrderSummary() {
+  const el = $('orderSummary');
+  if (!selectedTh) {
+    el.innerHTML = '<b>Select a Boost size above.</b>';
+    return;
+  }
+  const t = TIERS.find(x => x.th === selectedTh);
+  const mode = window._priceMode || 'sub';
+  const term = $('termPick').value;
+  const price = t[mode][term];
+  const termLabel = { week: 'week', month: 'month', year: 'year' }[term];
+  const kind = mode === 'sub' ? 'subscription' : 'one-time';
+  el.innerHTML = `<b>Boost ${selectedTh} TH/s</b> · ${kind} · ${termLabel}<br>Price: <b style="color:var(--honey)">$${price.toFixed(2)}</b> · not chargeable yet (pre-launch)`;
+}
+
+$('termPick')?.addEventListener?.('change', updateOrderSummary);
+document.addEventListener('change', e => { if (e.target && e.target.id === 'termPick') updateOrderSummary(); });
+
+function onDestMode() {
+  const custom = $('destMode').value === 'custom';
+  $('presetBox').style.display = custom ? 'none' : 'block';
+  $('customBox').style.display = custom ? 'block' : 'none';
+}
+function onPreset() {
+  const p = PRESETS[$('presetPool').value];
+  $('presetDetail').innerHTML = '<b>' + p.name + '</b><br><code>' + p.stratum + '</code><br>' + p.note;
+}
+
+function saveBoostPref() {
+  const mode = $('destMode').value;
+  const data = {
+    priceMode: window._priceMode,
+    th: selectedTh,
+    term: $('termPick').value,
+    destMode: mode
+  };
+  if (mode === 'custom') {
+    data.url = $('customUrl').value.trim();
+    data.worker = $('customWorker').value.trim();
+    data.pass = $('customPass').value.trim() || 'x';
+    if (!data.url || !data.worker) {
+      $('boostMsg').innerHTML = '<div class="notice err"><b>Need stratum URL and worker.</b></div>';
+      return;
+    }
+  } else {
+    data.pool = $('presetPool').value;
+    data.worker = $('presetWorker').value.trim();
+    if (!data.worker) {
+      $('boostMsg').innerHTML = '<div class="notice err"><b>Enter payout / worker address.</b></div>';
+      return;
+    }
+  }
+  localStorage.setItem(BOOST_KEY, JSON.stringify(data));
+  $('boostMsg').innerHTML = '<div class="notice ok"><b>Boost preference saved</b> on this device. Not an order — checkout is closed.</div>';
+  toast('Boost preference saved');
+  if (data.worker) $('mDest').textContent = (data.pool || 'custom') + ' · ' + data.worker.slice(0, 12) + '…';
+}
+
+function loadBoostPref() {
+  try {
+    const d = JSON.parse(localStorage.getItem(BOOST_KEY) || 'null');
+    if (!d) return;
+    if (d.priceMode) setPriceMode(d.priceMode);
+    if (d.th) { selectedTh = d.th; renderTiers(); }
+    if (d.term) $('termPick').value = d.term;
+    if (d.destMode) { $('destMode').value = d.destMode; onDestMode(); }
+    if (d.pool) { $('presetPool').value = d.pool; onPreset(); }
+    if (d.worker && d.destMode !== 'custom') $('presetWorker').value = d.worker;
+    if (d.url) $('customUrl').value = d.url;
+    if (d.worker && d.destMode === 'custom') $('customWorker').value = d.worker;
+    updateOrderSummary();
+  } catch {}
+}
+
+// boot
+(function () {
+  const session = localStorage.getItem(SESSION_KEY);
+  if (session) showDash(session);
+})();
+</script>
+</body>
+</html>
