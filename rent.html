@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rent Bitcoin Hashrate — SHA-256 Solo Mining Rental | BeeHash Cloud</title>
+<meta name="description" content="Rent SHA-256 mining power for solo mining. Automatic routing, live delivery checks, ASICBoost compatible. Point rented hashrate at BeeHash solo ports or your own custom stratum.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e10; --panel:#14171b; --panel2:#1a1e23; --line:#242a31;
+  --honey:#f7b32b; --honey-dim:#a97c1d;
+  --live:#3ddc84; --err:#e5484d; --demo:#7aa2f7;
+  --text:#e8eaed; --muted:#8b939e;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);font-size:14px;line-height:1.5}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--honey);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+header{position:sticky;top:0;z-index:50;background:rgba(12,14,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px}
+.logo a{color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px}
+.hex{width:20px;height:20px;flex:none}
+.tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:2px 6px}
+.hnav{margin-left:auto;display:flex;gap:12px;font-size:12px;font-weight:700;flex-wrap:wrap}
+.hnav a{color:var(--muted);text-decoration:none}
+.hnav a:hover,.hnav a.on{color:var(--honey)}
+
+main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.1em;padding:1px 6px;border-radius:3px;vertical-align:middle}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.chip.live{color:var(--live);background:rgba(61,220,132,.08)}
+.chip.off{color:var(--muted);background:rgba(139,147,158,.08)}
+.chip.plan{color:var(--honey);background:rgba(247,179,43,.1)}
+
+.hero{padding:24px 0 8px}
+h1{font-size:clamp(26px,6vw,36px);line-height:1.12;letter-spacing:-.02em;font-weight:700;max-width:18ch}
+h1 em{font-style:normal;color:var(--honey)}
+.sub{color:var(--muted);font-size:14px;max-width:56ch;margin-top:12px;line-height:1.55}
+
+.section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:28px 0 10px;display:flex;align-items:center;gap:8px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:520px){.grid,.grid3{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card.wide{grid-column:1/-1}
+.card .k{font-size:11px;color:var(--muted);margin-bottom:4px}
+.card .v{font-family:var(--mono);font-size:16px;font-weight:600}
+.card .v small{font-size:11px;color:var(--muted);font-weight:400}
+.card h3{font-size:14px;margin-bottom:6px}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.55}
+
+.feat{display:grid;gap:8px}
+.feat-row{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.feat-ico{flex:none;width:36px;height:36px;border-radius:10px;background:rgba(247,179,43,.12);display:flex;align-items:center;justify-content:center;font-size:16px}
+.feat-row h4{font-size:13.5px;margin-bottom:3px}
+.feat-row p{font-size:12px;color:var(--muted);line-height:1.5}
+
+.ports{display:grid;gap:8px}
+.port{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.port.rental{border-color:rgba(247,179,43,.35)}
+.port .pl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.port .pu{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--honey);word-break:break-all}
+.port .pd{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:13px}
+.input::placeholder{color:#5a636e}
+select.input{cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:8px;padding:11px 16px;font-weight:700;font-size:13px;cursor:pointer;background:var(--honey);color:#141414}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:8px 12px;font-size:12px}
+
+.notice{border:1px solid var(--line);border-left:3px solid var(--honey);background:var(--panel);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin:10px 0;line-height:1.55}
+.notice.errbox{border-left-color:var(--err)}
+.notice.okbox{border-left-color:var(--live)}
+.notice b{color:var(--text)}
+.notice code{font-family:var(--mono);font-size:10.5px;background:var(--panel2);padding:1px 5px;border-radius:4px;color:var(--honey)}
+
+.steps{counter-reset:s;display:grid;gap:8px}
+.step{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.step::before{counter-increment:s;content:counter(s);flex:none;width:28px;height:28px;border-radius:8px;background:rgba(247,179,43,.15);color:var(--honey);font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h4{font-size:13.5px;margin-bottom:3px}
+.step p{font-size:12px;color:var(--muted);line-height:1.5}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:560px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.tier.hot{border-color:rgba(247,179,43,.4)}
+.tier .tn{font-size:13px;font-weight:700;margin-bottom:4px}
+.tier .th{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--honey)}
+.tier .th small{font-size:12px;color:var(--muted);font-weight:500}
+.tier .tp{font-family:var(--mono);font-size:14px;margin:8px 0 4px}
+.tier .td{font-size:11px;color:var(--muted)}
+.tier ul{list-style:none;text-align:left;margin:12px 0;font-size:12px;color:var(--muted)}
+.tier ul li{padding:4px 0;display:flex;gap:6px}
+.tier ul li::before{content:'✓';color:var(--live);font-weight:700}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--line)}
+td{padding:10px 12px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+
+footer{border-top:1px solid var(--line);margin-top:40px;padding:18px 16px 32px;font-size:11.5px;color:var(--muted);text-align:center}
+footer a{color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="index.html">
+    <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
+    BeeHash</a>
+  </div>
+  <span class="tag">PRE-LAUNCH</span>
+  <nav class="hnav">
+    <a href="index.html">Home</a>
+    <a href="app.html">App</a>
+    <a href="bch.html">BCH</a>
+    <a href="rent.html" class="on">Rent</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>Rent <em>Bitcoin hashrate.</em> Point it anywhere.</h1>
+  <p class="sub">SHA-256 mining power for solo miners and ASIC operators. Rented hash uses a <b style="color:var(--text)">dedicated rental stratum</b> — separate from normal solo-miner ports — with automatic routing, live delivery checks, and ASICBoost support. Advanced users send hash to any custom stratum with their own worker and password.</p>
+</section>
+
+<div class="section-label">Built for rented hash <span class="chip plan">PRODUCT</span></div>
+<div class="feat">
+  <div class="feat-row">
+    <div class="feat-ico">🔀</div>
+    <div>
+      <h4>Automatic routing</h4>
+      <p>Hash is steered to the destination you choose at order time: BeeHash solo lanes, a partner pool, or your own stratum. No manual re-pointing of physical machines on your side.</p>
+    </div>
+  </div>
+  <div class="feat-row">
+    <div class="feat-ico">📡</div>
+    <div>
+      <h4>Live delivery checks</h4>
+      <p>While a rental is active, BeeHash monitors accepted shares / effective hashrate toward your target. You can verify independently on the destination pool’s public stats whenever the pool exposes them.</p>
+    </div>
+  </div>
+  <div class="feat-row">
+    <div class="feat-ico">⚡</div>
+    <div>
+      <h4>ASICBoost compatible</h4>
+      <p>Rental fleet and stratum path support ASICBoost-capable SHA-256 hardware. Same algorithm family as normal BTC/BCH ASICs — optimized for stable delivery of rented TH/s.</p>
+    </div>
+  </div>
+  <div class="feat-row">
+    <div class="feat-ico">🛠️</div>
+    <div>
+      <h4>Custom stratum (advanced)</h4>
+      <p>Paste any stratum host:port, worker name, and password. Rented power is routed to <em>your</em> pool account — ideal for operators who already run solo software, private pools, or multi-coin proxies.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Ports — rental vs normal solo</div>
+<div class="notice"><b>Separate lanes on purpose.</b> Normal solo-miner ports are for people pointing their own machines. Rental delivery uses a dedicated path so rented TH is metered, routed, and checked without mixing into hobby solo traffic.</div>
+<div class="ports">
+  <div class="port rental">
+    <div class="pl">Rental delivery · dedicated</div>
+    <div class="pu">stratum+tcp://rent.beehash.cloud:3333</div>
+    <div class="pd">Internal / operator path for rented SHA-256 power. Customers never point ASICs here — BeeHash routes hash to the destination you configure (pool preset or custom stratum). Port shown as design target; live endpoint published when fleet is online.</div>
+  </div>
+  <div class="port">
+    <div class="pl">Normal solo miner · your hardware</div>
+    <div class="pu">stratum+tcp://solo.ckpool.org:3333</div>
+    <div class="pd">Example public solo port for operators mining with their own ASICs (BTC). Not the rental delivery lane. Use this class of endpoint when you own the machines.</div>
+  </div>
+  <div class="port">
+    <div class="pl">BCH solo examples · your hardware or destination</div>
+    <div class="pu">solo-bch.2miners.com:9393 · bch.molepool.com</div>
+    <div class="pd">Typical BCH solo destinations you can select for rented hash — or point your own ASICs at directly. Full block to the worker address on find (pool fee on find).</div>
+  </div>
+</div>
+
+<div class="section-label">Destination — where rented hash goes</div>
+<div class="card wide">
+  <div class="field">
+    <label for="destMode">Routing mode</label>
+    <select class="input" id="destMode" onchange="onDestMode()">
+      <option value="preset">Preset pool (recommended)</option>
+      <option value="custom">Custom stratum (advanced)</option>
+    </select>
+  </div>
+
+  <div id="presetBox">
+    <div class="field">
+      <label for="presetPool">Destination pool</label>
+      <select class="input" id="presetPool" onchange="onPreset()">
+        <option value="2miners-bch">Solo · 2Miners BCH — full block to your address</option>
+        <option value="mole-bch">Solo · MolePool BCH — full block to your address</option>
+        <option value="ckpool-btc">Solo · CKPool BTC — full block to your address</option>
+        <option value="hmpool-bch">Shared · HashedMax BCH — PPLNS hybrid</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="presetWorker">Your wallet / worker</label>
+      <input class="input" id="presetWorker" placeholder="bitcoincash:q… or bc1q…  ·  optional .workername" autocomplete="off" spellcheck="false">
+    </div>
+    <div id="presetDetail" class="notice"></div>
+  </div>
+
+  <div id="customBox" style="display:none">
+    <div class="field">
+      <label for="customUrl">Stratum URL</label>
+      <input class="input" id="customUrl" placeholder="stratum+tcp://pool.example.com:3333" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="customWorker">Worker</label>
+      <input class="input" id="customWorker" placeholder="wallet.worker1" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="customPass">Password</label>
+      <input class="input" id="customPass" placeholder="x" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="notice"><b>Advanced.</b> BeeHash will route rented SHA-256 power to this exact stratum login. You are responsible for the destination pool’s terms, fees, and wallet correctness. Live delivery checks still apply on our side (outbound accepted work).</div>
+  </div>
+
+  <div class="row" style="margin-top:8px">
+    <button type="button" class="btn btn-sm" onclick="saveRoute()">Save route preference</button>
+    <button type="button" class="btn ghost btn-sm" onclick="clearRoute()">Clear</button>
+  </div>
+  <div id="routeMsg"></div>
+  <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px">Saved in this browser only. Orders are not open until hashrate is proven online and payments are enabled.</p>
+</div>
+
+<div class="section-label">How rental delivery works</div>
+<div class="steps">
+  <div class="step">
+    <div>
+      <h4>Choose TH/s and term</h4>
+      <p>Pick a hashrate size and duration. Capacity is capped by real fleet size — BeeHash will not sell more TH than public proof supports.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div>
+      <h4>Set destination</h4>
+      <p>Preset solo/shared pool or custom stratum + worker + password. Automatic routing binds your order to that target.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div>
+      <h4>Pay → hash routes</h4>
+      <p>After payment confirmation, rented power is delivered on the rental lane and routed to your destination. You do not reconfigure physical ASICs.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div>
+      <h4>Live delivery checks</h4>
+      <p>Monitor effective hashrate and share acceptance toward your target. Cross-check on the destination pool’s public page when available.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Indicative tiers <span class="chip off">NOT FOR SALE YET</span></div>
+<div class="notice"><b>Pre-launch pricing only.</b> These numbers are so operators can judge economics. Checkout stays closed until (1) public pool proof of live hashrate and (2) legal/entity review.</div>
+<div class="tiers" id="tierGrid"></div>
+
+<div class="section-label">Rental vs pointing your own ASIC</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th></th><th>Rent from BeeHash</th><th>Your own ASIC</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Who owns hardware</td><td>BeeHash fleet</td><td>You</td></tr>
+      <tr><td>Stratum you configure</td><td>Destination only (preset or custom)</td><td>Any pool port on the miner</td></tr>
+      <tr><td>Delivery path</td><td>Dedicated rental lane + routing</td><td>Direct miner → pool</td></tr>
+      <tr><td>ASICBoost</td><td>Supported on fleet</td><td>Depends on your unit</td></tr>
+      <tr><td>Live checks</td><td>BeeHash delivery monitor + pool stats</td><td>Pool dashboard / your firmware</td></tr>
+      <tr><td>Best for</td><td>Time-boxed SHA-256 power, solo lottery trials</td><td>Long-term ownership, full control</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section-label">Solo mining rental — honest math</div>
+<div class="card wide">
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:10px">Rented solo hashrate is still a <b style="color:var(--text)">lottery</b> against the network. Expected value is not a promise of income. Use the live calculators on the <a href="app.html" style="color:var(--honey)">App</a> and <a href="bch.html" style="color:var(--honey)">BCH</a> pages for current odds.</p>
+  <div class="row">
+    <a class="btn ghost btn-sm" href="app.html">BTC economics</a>
+    <a class="btn ghost btn-sm" href="bch.html">BCH odds + pools</a>
+    <a class="btn ghost btn-sm" href="index.html#waitlist">Join waitlist</a>
+  </div>
+</div>
+
+<div class="section-label">Status</div>
+<div class="road" style="display:grid;gap:8px">
+  <div class="feat-row"><div class="feat-ico" style="font-size:11px;font-family:var(--mono);color:var(--live)">DONE</div><div><h4>Product design</h4><p>Rental lane separate from normal solo ports · preset + custom stratum · delivery checks · ASICBoost.</p></div></div>
+  <div class="feat-row"><div class="feat-ico" style="font-size:11px;font-family:var(--mono);color:var(--muted)">TODO</div><div><h4>Live fleet + public proof</h4><p>Hosted TH stays 0 until pool pages show real shares for operator addresses.</p></div></div>
+  <div class="feat-row"><div class="feat-ico" style="font-size:11px;font-family:var(--mono);color:var(--muted)">TODO</div><div><h4>Checkout</h4><p>Payments open only after proof + legal. No pre-orders that invent capacity.</p></div></div>
+</div>
+
+</main>
+
+<footer>
+  © 2026 BeeHash Cloud — pre-launch · <a href="index.html">Home</a> · <a href="app.html">App</a> · <a href="bch.html">BCH</a><br>
+  Rent Bitcoin hashrate / SHA-256 mining power — nothing purchasable on this page yet. Solo mining is a lottery.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PRESETS = {
+  '2miners-bch': {
+    name: '2Miners BCH Solo',
+    stratum: 'stratum+tcp://solo-bch.2miners.com:9393',
+    pass: 'x',
+    note: 'Solo lottery on Bitcoin Cash. Worker = your BCH address (optional .name). Fee typically on block find only.'
+  },
+  'mole-bch': {
+    name: 'MolePool BCH Solo',
+    stratum: 'stratum+tcp://bch.molepool.com:3333',
+    pass: 'x',
+    note: 'Solo lottery on BCH. Confirm current stratum on molepool.com before go-live.'
+  },
+  'ckpool-btc': {
+    name: 'CKPool BTC Solo',
+    stratum: 'stratum+tcp://solo.ckpool.org:3333',
+    pass: 'x',
+    note: 'Bitcoin solo — much harder odds per TH than BCH. Worker = your BTC address.'
+  },
+  'hmpool-bch': {
+    name: 'HashedMax BCH Shared',
+    stratum: 'stratum+tcp://bch.hmpool.io:3337',
+    pass: 'x',
+    note: 'Shared PPLNS + finder/loyalty style rewards — steadier small payouts, not full-block solo.'
+  }
+};
+
+const TIERS = [
+  { th: 10,  label: 'Starter',  day: 8,  week: 48,  features: ['SHA-256 rental lane', 'Preset or custom stratum', 'Live delivery checks'] },
+  { th: 50,  label: 'Operator', day: 35, week: 199, features: ['Priority routing', 'ASICBoost fleet', 'Pool + custom destinations'] },
+  { th: 100, label: 'Fleet',    day: 65, week: 379, features: ['Highest TH slices', 'Multi-destination ready', 'Support channel (at launch)'] }
+];
+
+const $ = id => document.getElementById(id);
+function toast(m) {
+  const t = $('toast'); t.textContent = m; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function onDestMode() {
+  const custom = $('destMode').value === 'custom';
+  $('presetBox').style.display = custom ? 'none' : 'block';
+  $('customBox').style.display = custom ? 'block' : 'none';
+}
+
+function onPreset() {
+  const p = PRESETS[$('presetPool').value];
+  $('presetDetail').innerHTML =
+    '<b>' + p.name + '</b><br>Target stratum: <code>' + p.stratum + '</code><br>' + p.note;
+}
+
+function saveRoute() {
+  const mode = $('destMode').value;
+  let data;
+  if (mode === 'custom') {
+    const url = $('customUrl').value.trim();
+    const worker = $('customWorker').value.trim();
+    const pass = $('customPass').value.trim() || 'x';
+    if (!url || !worker) {
+      $('routeMsg').innerHTML = '<div class="notice errbox"><b>Need stratum URL and worker.</b></div>';
+      return;
+    }
+    data = { mode, url, worker, pass };
+  } else {
+    const pool = $('presetPool').value;
+    const worker = $('presetWorker').value.trim();
+    if (!worker) {
+      $('routeMsg').innerHTML = '<div class="notice errbox"><b>Enter your wallet / worker.</b></div>';
+      return;
+    }
+    data = { mode, pool, worker, preset: PRESETS[pool] };
+  }
+  localStorage.setItem('bh_rental_route', JSON.stringify(data));
+  $('routeMsg').innerHTML = '<div class="notice okbox"><b>Route preference saved on this device.</b> Not an order — checkout is closed until fleet proof + payments.</div>';
+  toast('Route preference saved');
+}
+
+function clearRoute() {
+  localStorage.removeItem('bh_rental_route');
+  $('routeMsg').innerHTML = '';
+  toast('Cleared');
+}
+
+function renderTiers() {
+  $('tierGrid').innerHTML = TIERS.map((t, i) => `
+    <div class="tier ${i === 1 ? 'hot' : ''}">
+      <div class="tn">${t.label}</div>
+      <div class="th">${t.th} <small>TH/s</small></div>
+      <div class="tp">~$${t.day}<small>/day</small></div>
+      <div class="td">~$${t.week} / 7 days · indicative</div>
+      <ul>${t.features.map(f => '<li>' + f + '</li>').join('')}</ul>
+      <button class="btn btn-sm" disabled title="Not for sale yet">Rent — closed</button>
+    </div>
+  `).join('');
+}
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem('bh_rental_route');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.mode === 'custom') {
+      $('destMode').value = 'custom';
+      onDestMode();
+      $('customUrl').value = d.url || '';
+      $('customWorker').value = d.worker || '';
+      $('customPass').value = d.pass || 'x';
+    } else if (d.pool) {
+      $('destMode').value = 'preset';
+      onDestMode();
+      $('presetPool').value = d.pool;
+      $('presetWorker').value = d.worker || '';
+      onPreset();
+    }
+  } catch (e) {}
+}
+
+renderTiers();
+onPreset();
+onDestMode();
+loadSaved();
+</script>
+</body>
+</html>
