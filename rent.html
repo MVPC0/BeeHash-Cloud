@@ -95,8 +95,9 @@ select.input{cursor:pointer}
 .step h4{font-size:13.5px;margin-bottom:3px}
 .step p{font-size:12px;color:var(--muted);line-height:1.5}
 
-.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-@media(max-width:560px){.tiers{grid-template-columns:1fr}}
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:800px){.tiers{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:420px){.tiers{grid-template-columns:1fr}}
 .tier{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
 .tier.hot{border-color:rgba(247,179,43,.4)}
 .tier .tn{font-size:13px;font-weight:700;margin-bottom:4px}
@@ -274,9 +275,35 @@ footer a{color:var(--muted)}
   </div>
 </div>
 
-<div class="section-label">Indicative tiers <span class="chip off">NOT FOR SALE YET</span></div>
-<div class="notice"><b>Pre-launch pricing only.</b> These numbers are so operators can judge economics. Checkout stays closed until (1) public pool proof of live hashrate and (2) legal/entity review.</div>
+<div class="section-label">Pricing <span class="chip off">NOT FOR SALE YET</span></div>
+<div class="notice"><b>Two ways to pay (when live):</b> <b style="color:var(--text)">Subscription</b> (auto-renew, lower rate) or <b style="color:var(--text)">One-time</b> (pay the term upfront, no renew). Both lists sit a bit under typical BCH cloud stickers. Checkout stays closed until public hashrate proof + legal review. Solo is a lottery — price ≠ expected profit.</div>
+
+<div class="row" style="margin-bottom:12px">
+  <button type="button" class="btn btn-sm" id="btnSub" onclick="setPriceMode('sub')">Subscription</button>
+  <button type="button" class="btn ghost btn-sm" id="btnOnce" onclick="setPriceMode('once')">One-time</button>
+</div>
+<p id="priceModeNote" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px"></p>
 <div class="tiers" id="tierGrid"></div>
+
+<div class="section-label">Full price sheet ($)</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>TH/s</th>
+        <th colspan="3" style="text-align:center;border-bottom:1px solid var(--line)">Subscription</th>
+        <th colspan="3" style="text-align:center;border-bottom:1px solid var(--line)">One-time</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Week</th><th>Month</th><th>Year</th>
+        <th>Week</th><th>Month</th><th>Year</th>
+      </tr>
+    </thead>
+    <tbody id="priceSheet"></tbody>
+  </table>
+</div>
+<p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin:8px 0 0">Indicative · not an offer. Sub ≈ auto-renew; one-time ≈ single term payment. Larger TH → lower $/TH.</p>
 
 <div class="section-label">Rental vs pointing your own ASIC</div>
 <div class="table-wrap">
@@ -349,11 +376,42 @@ const PRESETS = {
   }
 };
 
+/* Dual pricing: ONE-TIME (upfront term) + SUBSCRIPTION (auto-renew style). ~bit under market. PRE-LAUNCH only. */
 const TIERS = [
-  { th: 10,  label: 'Starter',  day: 8,  week: 48,  features: ['SHA-256 rental lane', 'Preset or custom stratum', 'Live delivery checks'] },
-  { th: 50,  label: 'Operator', day: 35, week: 199, features: ['Priority routing', 'ASICBoost fleet', 'Pool + custom destinations'] },
-  { th: 100, label: 'Fleet',    day: 65, week: 379, features: ['Highest TH slices', 'Multi-destination ready', 'Support channel (at launch)'] }
+  { th: 1,   label: 'Core',
+    sub:  { week: 7.99,  month: 24.99,  year: 214.99 },
+    once: { week: 10.99, month: 29.99,  year: 249.99 },
+    features: ['1 TH/s SHA-256', 'Preset or custom stratum', 'Live delivery checks'] },
+  { th: 2,   label: 'Plus',
+    sub:  { week: 14.99, month: 46.99,  year: 399.99 },
+    once: { week: 19.99, month: 52.99,  year: 449.99 },
+    features: ['2 TH/s SHA-256', 'Preset or custom stratum', 'Live delivery checks'] },
+  { th: 5,   label: 'Pro',
+    sub:  { week: 35.99, month: 89.99,  year: 749.99 },
+    once: { week: 42.99, month: 104.99, year: 899.99 },
+    features: ['5 TH/s SHA-256', 'ASICBoost fleet path', 'Solo or shared destination'] },
+  { th: 10,  label: 'Ultra',
+    sub:  { week: 62.99, month: 179.99, year: 1499.99 },
+    once: { week: 74.99, month: 209.99, year: 1749.99 },
+    features: ['10 TH/s SHA-256', 'Priority routing', 'Custom stratum OK'] },
+  { th: 25,  label: 'Max',
+    sub:  { week: 129.99, month: 349.99, year: 2899.99 },
+    once: { week: 149.99, month: 374.99, year: 3199.99 },
+    features: ['25 TH/s SHA-256', 'Stronger BCH solo odds', 'Volume $/TH'] },
+  { th: 50,  label: 'Epic',
+    sub:  { week: 149.99, month: 449.99, year: 3699.99 },
+    once: { week: 179.99, month: 524.99, year: 4299.99 },
+    features: ['50 TH/s SHA-256', 'Best mid-size value', 'Multi-destination ready'] },
+  { th: 100, label: 'Fleet',
+    sub:  { week: 259.99, month: 799.99, year: 6499.99 },
+    once: { week: 299.99, month: 879.99, year: 7499.99 },
+    features: ['100 TH/s SHA-256', 'Fleet slice', 'Operator-grade routing'] },
+  { th: 200, label: 'Rack',
+    sub:  { week: 449.99, month: 1399.99, year: 10999.99 },
+    once: { week: 499.99, month: 1499.99, year: 12499.99 },
+    features: ['200 TH/s SHA-256', 'Rack-scale rental', 'Lowest $/TH on sheet'] }
 ];
+
 
 const $ = id => document.getElementById(id);
 function toast(m) {
@@ -406,16 +464,41 @@ function clearRoute() {
 }
 
 function renderTiers() {
-  $('tierGrid').innerHTML = TIERS.map((t, i) => `
-    <div class="tier ${i === 1 ? 'hot' : ''}">
+  const mode = window._priceMode || 'sub';
+  $('tierGrid').innerHTML = TIERS.map((t) => {
+    const p = t[mode];
+    const tag = mode === 'sub' ? 'sub · auto-renew' : 'one-time term';
+    return `
+    <div class="tier ${t.th === 50 ? 'hot' : ''}">
       <div class="tn">${t.label}</div>
       <div class="th">${t.th} <small>TH/s</small></div>
-      <div class="tp">~$${t.day}<small>/day</small></div>
-      <div class="td">~$${t.week} / 7 days · indicative</div>
+      <div class="tp">$${p.month.toFixed(2)}<small>/mo</small></div>
+      <div class="td">Week $${p.week.toFixed(2)} · Year $${p.year.toFixed(2)}</div>
+      <div class="td" style="margin-top:4px">$${(p.month / t.th).toFixed(2)}/TH/mo · ${tag}</div>
       <ul>${t.features.map(f => '<li>' + f + '</li>').join('')}</ul>
       <button class="btn btn-sm" disabled title="Not for sale yet">Rent — closed</button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+}
+
+function setPriceMode(mode) {
+  window._priceMode = mode;
+  const sub = mode === 'sub';
+  $('btnSub').className = sub ? 'btn btn-sm' : 'btn ghost btn-sm';
+  $('btnOnce').className = !sub ? 'btn btn-sm' : 'btn ghost btn-sm';
+  $('priceModeNote').textContent = sub
+    ? 'Showing subscription rates (lower · auto-renew when live).'
+    : 'Showing one-time rates (pay the week/month/year upfront · no auto-renew).';
+  renderTiers();
+}
+
+function renderPriceSheet() {
+  if (!$('priceSheet')) return;
+  $('priceSheet').innerHTML = TIERS.map(t =>
+    '<tr><td>' + t.th + '</td>' +
+    '<td>$' + t.sub.week.toFixed(2) + '</td><td>$' + t.sub.month.toFixed(2) + '</td><td>$' + t.sub.year.toFixed(2) + '</td>' +
+    '<td>$' + t.once.week.toFixed(2) + '</td><td>$' + t.once.month.toFixed(2) + '</td><td>$' + t.once.year.toFixed(2) + '</td></tr>'
+  ).join('');
 }
 
 function loadSaved() {
@@ -439,7 +522,9 @@ function loadSaved() {
   } catch (e) {}
 }
 
-renderTiers();
+window._priceMode = 'sub';
+setPriceMode('sub');
+renderPriceSheet();
 onPreset();
 onDestMode();
 loadSaved();
