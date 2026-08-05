@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BeeHash Dashboard — Miner Stats + Boost</title>
-<meta name="description" content="Signed-in BeeHash dashboard. Miner stats and Boost hashrate rental — available after signup. Pre-launch.">
+<title>BeeHash Dashboard — Miners + Boost</title>
+<meta name="description" content="BeeHash dashboard. Miners (subscription or one-time plans) and separate Boost hashrate. After sign-up. Pre-launch.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -34,7 +34,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(12,14,16,.94);backdrop-f
 
 main{max-width:720px;margin:0 auto;padding:14px 14px 80px}
 
-/* Auth */
 .auth-wrap{max-width:400px;margin:40px auto;padding:0 8px}
 .auth-wrap h1{font-size:24px;margin-bottom:8px}
 .auth-wrap .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
@@ -42,7 +41,6 @@ main{max-width:720px;margin:0 auto;padding:14px 14px 80px}
 .tabs-auth button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-weight:700;cursor:pointer}
 .tabs-auth button.on{background:var(--honey);color:#141414;border-color:var(--honey)}
 
-/* App shell after login */
 .app-tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px}
 .app-tabs button{flex:1;padding:10px 8px;border:none;border-radius:8px;background:transparent;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--muted)}
 .app-tabs button.on{background:var(--panel2);color:var(--honey)}
@@ -50,7 +48,6 @@ main{max-width:720px;margin:0 auto;padding:14px 14px 80px}
 .panel.on{display:block}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
-.card.wide{}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(max-width:520px){.grid2,.grid3{grid-template-columns:1fr}}
@@ -84,7 +81,6 @@ select.input{cursor:pointer}
 .chip.live{color:var(--live);background:rgba(61,220,132,.1)}
 .chip.plan{color:var(--honey);background:rgba(247,179,43,.1)}
 
-/* Gauge */
 .gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:12px 0}
 .gauge{width:160px;height:90px}
 .gauge-val{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:-8px}
@@ -103,15 +99,13 @@ select.input{cursor:pointer}
 .tier .th small{font-size:10px;color:var(--muted)}
 .tier .tp{font-family:var(--mono);font-size:12px;margin-top:4px}
 
-.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
-th{text-align:left;color:var(--muted);font-weight:500;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
-td{padding:8px 10px;border-bottom:1px solid var(--line)}
-tr:last-child td{border-bottom:none}
+.boost-card{border-color:rgba(247,179,43,.25);background:linear-gradient(180deg,rgba(247,179,43,.06),var(--panel))}
+.mode-bar{display:flex;gap:6px;background:var(--panel2);border-radius:10px;padding:4px;margin-bottom:12px}
+.mode-bar button{flex:1;padding:10px;border:none;border-radius:8px;background:transparent;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.mode-bar button.on{background:var(--honey);color:#141414}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90%}
 .toast.show{opacity:1;transform:translateX(-50%)}
-
 .gate-banner{background:rgba(247,179,43,.08);border:1px solid rgba(247,179,43,.3);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
 .gate-banner b{color:var(--honey)}
 </style>
@@ -136,10 +130,9 @@ tr:last-child td{border-bottom:none}
 
 <main>
 
-<!-- ========== AUTH (before signup) ========== -->
 <section id="authView" class="auth-wrap">
   <h1>Dashboard access</h1>
-  <p class="sub">Miner stats and <b style="color:var(--text)">Boost</b> (rented hashrate) are only available after you create an account. Local demo accounts for pre-launch — nothing is billed.</p>
+  <p class="sub"><b style="color:var(--text)">Miners</b> (subscription or one-time plans) and a separate <b style="color:var(--text)">Boost</b> tab are only available after sign-up. Demo accounts — nothing is billed.</p>
   <div class="tabs-auth">
     <button type="button" class="on" id="tabLogin" onclick="setAuthTab('login')">Log in</button>
     <button type="button" id="tabReg" onclick="setAuthTab('reg')">Sign up</button>
@@ -150,21 +143,20 @@ tr:last-child td{border-bottom:none}
     <button type="button" class="btn btn-block" id="authSubmit" onclick="doAuth()">Log in</button>
     <div id="authMsg"></div>
   </div>
-  <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">Accounts are stored in this browser only (demo). Real backend comes after fleet proof.</p>
+  <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">Stored in this browser only until a real backend ships.</p>
 </section>
 
-<!-- ========== DASHBOARD (after signup) ========== -->
 <section id="dashView" style="display:none">
-  <div class="gate-banner"><b>Pre-launch dashboard.</b> Stats stay honest (zeros / demo until hardware proof). Boost orders stay closed until public hashrate proof + payments.</div>
+  <div class="gate-banner"><b>Pre-launch.</b> Miners = base plan (sub or one-time). Boost = separate add-on hashrate + destination routing. Orders closed until fleet proof + payments.</div>
 
   <div class="app-tabs">
-    <button type="button" class="on" data-tab="stats" onclick="gotoTab('stats')">Miners</button>
+    <button type="button" class="on" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
     <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
     <button type="button" data-tab="account" onclick="gotoTab('account')">Account</button>
   </div>
 
-  <!-- STATS -->
-  <div class="panel on" id="panel-stats">
+  <!-- ========== MINERS: stats + subscription / one-time plans ========== -->
+  <div class="panel on" id="panel-miners">
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div class="k">Active hashrate</div>
@@ -178,36 +170,65 @@ tr:last-child td{border-bottom:none}
         <div class="gauge-val" id="gaugeVal">0.00 <small>TH/s</small></div>
       </div>
       <div class="grid3">
-        <div><div class="k">Base</div><div class="v" id="vBase">0 <small>TH</small></div></div>
+        <div><div class="k">Base plan</div><div class="v" id="vBase">0 <small>TH</small></div></div>
         <div><div class="k">Boost</div><div class="v" id="vBoost">0 <small>TH</small></div></div>
         <div><div class="k">Total</div><div class="v" id="vTotal">0 <small>TH</small></div></div>
       </div>
     </div>
 
-    <div class="section-label">Miner UI</div>
+    <div class="section-label">Miner stats</div>
     <div class="card">
-      <div class="stat-row"><span>Status</span><span id="mStatus">No active rental</span></div>
+      <div class="stat-row"><span>Status</span><span id="mStatus">No active plan</span></div>
       <div class="stat-row"><span>Accepted shares</span><span id="mShares">—</span></div>
       <div class="stat-row"><span>Rejected</span><span id="mReject">—</span></div>
-      <div class="stat-row"><span>Destination</span><span id="mDest">—</span></div>
+      <div class="stat-row"><span>Plan type</span><span id="mPlanType">—</span></div>
       <div class="stat-row"><span>Last share</span><span id="mLast">—</span></div>
-      <div class="stat-row"><span>Delivery check</span><span id="mDelivery">Waiting for fleet</span></div>
     </div>
-    <div class="notice">When Boost is active, this panel shows live delivery toward your chosen pool. Until BeeHash publishes public proof of hashrate, totals stay at <b>0</b>.</div>
-    <button type="button" class="btn btn-block" onclick="gotoTab('boost')">Open Boost →</button>
-  </div>
 
-  <!-- BOOST (rental) — only after signup -->
-  <div class="panel" id="panel-boost">
-    <div class="section-label">Boost hashrate <span class="chip plan">RENTAL</span></div>
-    <div class="notice"><b>Boost is separate from normal solo-miner ports.</b> Rented SHA-256 power is routed on a dedicated lane to your preset pool or custom stratum. Only visible here after sign-up.</div>
+    <div class="section-label">Base plan — subscription or one-time</div>
+    <div class="notice">Choose how you pay for <b>base miner capacity</b>. Boost is a <b>separate tab</b> for extra rented TH and pool routing.</div>
 
-    <div class="row" style="margin-bottom:10px">
-      <button type="button" class="btn btn-sm" id="btnSub" onclick="setPriceMode('sub')">Subscription</button>
-      <button type="button" class="btn ghost btn-sm" id="btnOnce" onclick="setPriceMode('once')">One-time</button>
+    <div class="mode-bar">
+      <button type="button" class="on" id="btnSub" onclick="setPriceMode('sub')">Subscription</button>
+      <button type="button" id="btnOnce" onclick="setPriceMode('once')">One-time</button>
     </div>
     <p id="priceModeNote" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px"></p>
     <div class="tiers" id="tierGrid"></div>
+
+    <div class="card" style="margin-top:10px">
+      <div class="field">
+        <label for="termPick">Term</label>
+        <select class="input" id="termPick" onchange="updateMinerSummary()">
+          <option value="week">Weekly</option>
+          <option value="month" selected>Monthly</option>
+          <option value="year">Annual</option>
+        </select>
+      </div>
+      <div class="notice" id="minerSummary"><b>Select a miner size above.</b></div>
+      <button type="button" class="btn btn-block" disabled title="Not for sale yet">Activate miner — closed</button>
+      <button type="button" class="btn ghost btn-block btn-sm" style="margin-top:8px" onclick="saveMinerPref()">Save plan preference</button>
+      <div id="minerMsg"></div>
+    </div>
+  </div>
+
+  <!-- ========== BOOST: separate add-on only ========== -->
+  <div class="panel" id="panel-boost">
+    <div class="section-label">Boost <span class="chip plan">ADD-ON</span></div>
+    <div class="notice boost-card"><b>Boost is separate from base Miners.</b> Extra SHA-256 hashrate on a dedicated rental lane — automatic routing, live delivery checks, ASICBoost. Configure destination here; buy base capacity under <b>Miners</b>.</div>
+
+    <div class="section-label">Boost size</div>
+    <div class="tiers" id="boostGrid"></div>
+    <div class="card">
+      <div class="field">
+        <label for="boostTerm">Boost term</label>
+        <select class="input" id="boostTerm" onchange="updateBoostSummary()">
+          <option value="week">Weekly</option>
+          <option value="month" selected>Monthly</option>
+          <option value="year">Annual</option>
+        </select>
+      </div>
+      <div class="notice" id="boostSummary"><b>Select a Boost size.</b> Priced as add-on (same competitive sheet; applied on top of base when live).</div>
+    </div>
 
     <div class="section-label">Mining destination</div>
     <div class="card">
@@ -239,34 +260,21 @@ tr:last-child td{border-bottom:none}
         <div class="field"><label for="customWorker">Worker</label><input class="input" id="customWorker" placeholder="wallet.worker1"></div>
         <div class="field"><label for="customPass">Password</label><input class="input" id="customPass" placeholder="x" value="x"></div>
       </div>
-    </div>
-
-    <div class="section-label">Term</div>
-    <div class="card">
-      <div class="field">
-        <label for="termPick">Runtime</label>
-        <select class="input" id="termPick">
-          <option value="week">Weekly</option>
-          <option value="month" selected>Monthly</option>
-          <option value="year">Annual</option>
-        </select>
-      </div>
-      <div class="notice" id="orderSummary"><b>Select a Boost size above.</b></div>
-      <button type="button" class="btn btn-block" disabled id="btnOrder" title="Not for sale yet">Create Boost order — closed</button>
-      <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;text-align:center">Checkout opens only after live fleet proof + payments. Saving destination does not charge you.</p>
+      <div class="notice" id="boostOrderBox" style="margin-top:10px"></div>
+      <button type="button" class="btn btn-block" disabled title="Not for sale yet">Create Boost order — closed</button>
       <button type="button" class="btn ghost btn-block btn-sm" style="margin-top:8px" onclick="saveBoostPref()">Save Boost preference</button>
       <div id="boostMsg"></div>
+      <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;text-align:center">Boost does not replace Miners plans. Checkout closed until fleet proof + payments.</p>
     </div>
   </div>
 
-  <!-- ACCOUNT -->
   <div class="panel" id="panel-account">
     <div class="card">
       <div class="k">Signed in as</div>
       <div class="v" style="font-size:14px;word-break:break-all" id="acctEmail">—</div>
     </div>
     <div class="card">
-      <div class="stat-row"><span>Base plan</span><span>None (pre-launch)</span></div>
+      <div class="stat-row"><span>Base miner plan</span><span id="acctMiner">None</span></div>
       <div class="stat-row"><span>Active Boost</span><span id="acctBoost">0 TH</span></div>
       <div class="stat-row"><span>Orders</span><span>0</span></div>
     </div>
@@ -280,6 +288,7 @@ tr:last-child td{border-bottom:none}
 <script>
 const USERS_KEY = 'bh_dash_users';
 const SESSION_KEY = 'bh_dash_session';
+const MINER_KEY = 'bh_miner_pref';
 const BOOST_KEY = 'bh_boost_pref';
 
 const PRESETS = {
@@ -300,11 +309,18 @@ const TIERS = [
   { th: 200, label: 'Rack', sub: { week: 449.99, month: 1399.99, year: 10999.99 }, once: { week: 499.99, month: 1499.99, year: 12499.99 } }
 ];
 
+/* Boost add-on sizes — separate product; same rate card for now */
+const BOOST_TIERS = [
+  { th: 1, label: '+1 TH' }, { th: 5, label: '+5 TH' }, { th: 10, label: '+10 TH' },
+  { th: 25, label: '+25 TH' }, { th: 50, label: '+50 TH' }, { th: 100, label: '+100 TH' }
+];
+
 const $ = id => document.getElementById(id);
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2800);}
 
 let authMode = 'login';
-let selectedTh = null;
+let selectedMinerTh = null;
+let selectedBoostTh = null;
 window._priceMode = 'sub';
 
 function setAuthTab(m) {
@@ -314,40 +330,27 @@ function setAuthTab(m) {
   $('authSubmit').textContent = m === 'login' ? 'Log in' : 'Create account';
   $('authMsg').innerHTML = '';
 }
-
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch { return {}; }
-}
-function setUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function getUsers(){try{return JSON.parse(localStorage.getItem(USERS_KEY)||'{}');}catch{return{};}}
+function setUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
 
 function doAuth() {
-  const email = ($('authEmail').value || '').trim().toLowerCase();
-  const pass = $('authPass').value || '';
-  if (!email || !email.includes('@') || pass.length < 4) {
-    $('authMsg').innerHTML = '<div class="notice err"><b>Need a valid email and password (4+ chars).</b></div>';
+  const email = ($('authEmail').value||'').trim().toLowerCase();
+  const pass = $('authPass').value||'';
+  if (!email.includes('@') || pass.length < 4) {
+    $('authMsg').innerHTML = '<div class="notice err"><b>Need valid email and password (4+).</b></div>';
     return;
   }
   const users = getUsers();
   if (authMode === 'reg') {
-    if (users[email]) {
-      $('authMsg').innerHTML = '<div class="notice err"><b>Account exists — log in instead.</b></div>';
-      return;
-    }
-    // demo only — not real security
+    if (users[email]) { $('authMsg').innerHTML = '<div class="notice err"><b>Account exists — log in.</b></div>'; return; }
     users[email] = { pass: btoa(pass), created: Date.now() };
     setUsers(users);
-    localStorage.setItem(SESSION_KEY, email);
-    toast('Account created');
-    showDash(email);
-  } else {
-    if (!users[email] || users[email].pass !== btoa(pass)) {
-      $('authMsg').innerHTML = '<div class="notice err"><b>Wrong email or password.</b></div>';
-      return;
-    }
-    localStorage.setItem(SESSION_KEY, email);
-    toast('Logged in');
-    showDash(email);
+  } else if (!users[email] || users[email].pass !== btoa(pass)) {
+    $('authMsg').innerHTML = '<div class="notice err"><b>Wrong email or password.</b></div>';
+    return;
   }
+  localStorage.setItem(SESSION_KEY, email);
+  showDash(email);
 }
 
 function logout() {
@@ -365,14 +368,14 @@ function showDash(email) {
   $('btnLogout').style.display = 'inline-flex';
   $('userPill').textContent = email;
   $('acctEmail').textContent = email;
-  renderStats();
   setPriceMode('sub');
-  onPreset();
-  onDestMode();
-  loadBoostPref();
-  // deep link ?tab=boost
+  renderBoostGrid();
+  onPreset(); onDestMode();
+  loadMinerPref(); loadBoostPref();
+  renderStats();
   const tab = new URLSearchParams(location.search).get('tab');
   if (tab === 'boost' || tab === 'account') gotoTab(tab);
+  else gotoTab('miners');
 }
 
 function gotoTab(name) {
@@ -381,12 +384,6 @@ function gotoTab(name) {
 }
 
 function renderStats() {
-  // Honest zeros until real boost/fleet
-  let boostTh = 0;
-  try {
-    const p = JSON.parse(localStorage.getItem(BOOST_KEY) || 'null');
-    // preference only — not an active paid boost
-  } catch {}
   const base = 0, boost = 0, total = base + boost;
   $('vBase').innerHTML = base + ' <small>TH</small>';
   $('vBoost').innerHTML = boost + ' <small>TH</small>';
@@ -400,21 +397,23 @@ function renderStats() {
 function setPriceMode(mode) {
   window._priceMode = mode;
   const sub = mode === 'sub';
-  $('btnSub').className = sub ? 'btn btn-sm' : 'btn ghost btn-sm';
-  $('btnOnce').className = !sub ? 'btn btn-sm' : 'btn ghost btn-sm';
+  $('btnSub').className = sub ? 'on' : '';
+  $('btnOnce').className = !sub ? 'on' : '';
+  // mode-bar uses class on on button
+  $('btnSub').className = sub ? 'on' : '';
+  $('btnOnce').className = !sub ? 'on' : '';
   $('priceModeNote').textContent = sub
-    ? 'Subscription rates (auto-renew when live).'
-    : 'One-time term rates (no auto-renew).';
-  renderTiers();
-  updateOrderSummary();
+    ? 'Subscription — lower rate, auto-renew when live.'
+    : 'One-time — pay the term upfront, no auto-renew.';
+  renderMinerTiers();
+  updateMinerSummary();
 }
 
-function renderTiers() {
+function renderMinerTiers() {
   const mode = window._priceMode || 'sub';
   $('tierGrid').innerHTML = TIERS.map(t => {
     const p = t[mode];
-    const on = selectedTh === t.th ? ' on' : '';
-    return `<div class="tier${on}" onclick="selectTier(${t.th})">
+    return `<div class="tier${selectedMinerTh===t.th?' on':''}" onclick="selectMiner(${t.th})">
       <div class="tn">${t.label}</div>
       <div class="th">${t.th} <small>TH</small></div>
       <div class="tp">$${p.month.toFixed(2)}/mo</div>
@@ -422,29 +421,85 @@ function renderTiers() {
   }).join('');
 }
 
-function selectTier(th) {
-  selectedTh = th;
-  renderTiers();
-  updateOrderSummary();
+function selectMiner(th) {
+  selectedMinerTh = th;
+  renderMinerTiers();
+  updateMinerSummary();
 }
 
-function updateOrderSummary() {
-  const el = $('orderSummary');
-  if (!selectedTh) {
-    el.innerHTML = '<b>Select a Boost size above.</b>';
-    return;
-  }
-  const t = TIERS.find(x => x.th === selectedTh);
+function updateMinerSummary() {
+  const el = $('minerSummary');
+  if (!selectedMinerTh) { el.innerHTML = '<b>Select a miner size above.</b>'; return; }
+  const t = TIERS.find(x => x.th === selectedMinerTh);
   const mode = window._priceMode || 'sub';
   const term = $('termPick').value;
   const price = t[mode][term];
-  const termLabel = { week: 'week', month: 'month', year: 'year' }[term];
-  const kind = mode === 'sub' ? 'subscription' : 'one-time';
-  el.innerHTML = `<b>Boost ${selectedTh} TH/s</b> · ${kind} · ${termLabel}<br>Price: <b style="color:var(--honey)">$${price.toFixed(2)}</b> · not chargeable yet (pre-launch)`;
+  const kind = mode === 'sub' ? 'Subscription' : 'One-time';
+  el.innerHTML = `<b>${t.label} · ${selectedMinerTh} TH/s</b> · ${kind} · ${term}<br>Price: <b style="color:var(--honey)">$${price.toFixed(2)}</b> · not chargeable yet`;
+  $('mPlanType').textContent = kind + ' · ' + selectedMinerTh + ' TH (pref only)';
+  $('acctMiner').textContent = t.label + ' · ' + kind + ' (pref)';
 }
 
-$('termPick')?.addEventListener?.('change', updateOrderSummary);
-document.addEventListener('change', e => { if (e.target && e.target.id === 'termPick') updateOrderSummary(); });
+function saveMinerPref() {
+  if (!selectedMinerTh) {
+    $('minerMsg').innerHTML = '<div class="notice err"><b>Select a size first.</b></div>';
+    return;
+  }
+  const data = {
+    th: selectedMinerTh,
+    mode: window._priceMode,
+    term: $('termPick').value
+  };
+  localStorage.setItem(MINER_KEY, JSON.stringify(data));
+  $('minerMsg').innerHTML = '<div class="notice ok"><b>Miner plan preference saved.</b> Not an order.</div>';
+  toast('Miner preference saved');
+  updateMinerSummary();
+}
+
+function loadMinerPref() {
+  try {
+    const d = JSON.parse(localStorage.getItem(MINER_KEY) || 'null');
+    if (!d) return;
+    if (d.mode) setPriceMode(d.mode);
+    if (d.th) { selectedMinerTh = d.th; renderMinerTiers(); }
+    if (d.term) $('termPick').value = d.term;
+    updateMinerSummary();
+  } catch {}
+}
+
+function renderBoostGrid() {
+  $('boostGrid').innerHTML = BOOST_TIERS.map(b => {
+    const tier = TIERS.find(t => t.th === b.th) || TIERS[0];
+    const p = tier.sub.month;
+    return `<div class="tier${selectedBoostTh===b.th?' on':''}" onclick="selectBoost(${b.th})">
+      <div class="tn">${b.label}</div>
+      <div class="th">${b.th} <small>TH</small></div>
+      <div class="tp">from $${p.toFixed(2)}/mo</div>
+    </div>`;
+  }).join('');
+  updateBoostSummary();
+}
+
+function selectBoost(th) {
+  selectedBoostTh = th;
+  renderBoostGrid();
+  updateBoostSummary();
+}
+
+function updateBoostSummary() {
+  const el = $('boostSummary');
+  const box = $('boostOrderBox');
+  if (!selectedBoostTh) {
+    el.innerHTML = '<b>Select a Boost size.</b> Separate from base Miners plan.';
+    box.innerHTML = '';
+    return;
+  }
+  const tier = TIERS.find(t => t.th === selectedBoostTh) || TIERS.find(t => t.th === 1);
+  const term = $('boostTerm').value;
+  const price = tier.sub[term];
+  el.innerHTML = `<b>Boost +${selectedBoostTh} TH/s</b> · ${term}<br>Add-on from <b style="color:var(--honey)">$${price.toFixed(2)}</b> (sub rate card) · closed until launch`;
+  box.innerHTML = '<b>Boost only</b> — does not include base miner plan. Set destination below.';
+}
 
 function onDestMode() {
   const custom = $('destMode').value === 'custom';
@@ -458,12 +513,7 @@ function onPreset() {
 
 function saveBoostPref() {
   const mode = $('destMode').value;
-  const data = {
-    priceMode: window._priceMode,
-    th: selectedTh,
-    term: $('termPick').value,
-    destMode: mode
-  };
+  const data = { th: selectedBoostTh, term: $('boostTerm').value, destMode: mode };
   if (mode === 'custom') {
     data.url = $('customUrl').value.trim();
     data.worker = $('customWorker').value.trim();
@@ -480,29 +530,30 @@ function saveBoostPref() {
       return;
     }
   }
+  if (!selectedBoostTh) {
+    $('boostMsg').innerHTML = '<div class="notice err"><b>Select a Boost size.</b></div>';
+    return;
+  }
   localStorage.setItem(BOOST_KEY, JSON.stringify(data));
-  $('boostMsg').innerHTML = '<div class="notice ok"><b>Boost preference saved</b> on this device. Not an order — checkout is closed.</div>';
+  $('boostMsg').innerHTML = '<div class="notice ok"><b>Boost preference saved.</b> Not an order.</div>';
   toast('Boost preference saved');
-  if (data.worker) $('mDest').textContent = (data.pool || 'custom') + ' · ' + data.worker.slice(0, 12) + '…';
 }
 
 function loadBoostPref() {
   try {
     const d = JSON.parse(localStorage.getItem(BOOST_KEY) || 'null');
     if (!d) return;
-    if (d.priceMode) setPriceMode(d.priceMode);
-    if (d.th) { selectedTh = d.th; renderTiers(); }
-    if (d.term) $('termPick').value = d.term;
+    if (d.th) { selectedBoostTh = d.th; renderBoostGrid(); }
+    if (d.term) $('boostTerm').value = d.term;
     if (d.destMode) { $('destMode').value = d.destMode; onDestMode(); }
     if (d.pool) { $('presetPool').value = d.pool; onPreset(); }
     if (d.worker && d.destMode !== 'custom') $('presetWorker').value = d.worker;
     if (d.url) $('customUrl').value = d.url;
     if (d.worker && d.destMode === 'custom') $('customWorker').value = d.worker;
-    updateOrderSummary();
+    updateBoostSummary();
   } catch {}
 }
 
-// boot
 (function () {
   const session = localStorage.getItem(SESSION_KEY);
   if (session) showDash(session);
