@@ -399,9 +399,6 @@ function setPriceMode(mode) {
   const sub = mode === 'sub';
   $('btnSub').className = sub ? 'on' : '';
   $('btnOnce').className = !sub ? 'on' : '';
-  // mode-bar uses class on on button
-  $('btnSub').className = sub ? 'on' : '';
-  $('btnOnce').className = !sub ? 'on' : '';
   $('priceModeNote').textContent = sub
     ? 'Subscription — lower rate, auto-renew when live.'
     : 'One-time — pay the term upfront, no auto-renew.';
