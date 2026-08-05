@@ -76,6 +76,18 @@ h1 em{font-style:normal;color:var(--honey)}
 .hero-art .cap{font-family:var(--mono);font-size:10px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line);line-height:1.5}
 .hero-art .cap b{color:var(--honey)}
 
+
+.beta-banner{margin:20px 0 8px;border:1px solid rgba(247,179,43,.4);border-radius:14px;background:linear-gradient(145deg,rgba(247,179,43,.12),rgba(20,23,27,.95));padding:16px 16px 14px;position:relative;overflow:hidden}
+.beta-banner .beta-tag{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;color:#141414;background:var(--honey);border-radius:4px;padding:3px 8px;margin-bottom:10px}
+.beta-banner h2{font-size:clamp(18px,4.5vw,22px);line-height:1.25;margin-bottom:8px;letter-spacing:-.01em}
+.beta-banner p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:8px}
+.beta-banner p b{color:var(--text)}
+.beta-banner .beta-meta{font-family:var(--mono);font-size:11px;color:var(--honey);margin:10px 0 12px;line-height:1.5}
+.beta-banner .beta-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.beta-banner a.cta{text-decoration:none}
+.beta-banner .proof{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--line);line-height:1.5;word-break:break-all}
+.beta-banner .proof a{color:var(--honey)}
+
 /* waitlist */
 .wlrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .input{flex:1;min-width:220px;background:#1a1e23;border:1px solid var(--line);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:13px;color:var(--text)}
@@ -103,6 +115,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="hnav">
     <a href="bch.html">BCH</a>
     <a href="rent.html">Rent</a>
+    <a href="dashboard.html">Dashboard</a>
     <a href="app.html">App</a>
   </div>
 </header>
@@ -110,7 +123,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <section class="hero">
   <h1>Hashrate hosting with <em>zero fake numbers.</em></h1>
   <p class="sub">Most cloud-mining sites show you invented dashboards. Everything below is live public blockchain data or an honest "not yet." Nothing is purchasable today — and the site says so instead of pretending.</p>
-  <a class="cta" href="rent.html">Rent hashrate</a>
+  <a class="cta" href="dashboard.html?tab=boost">Boost (sign up)</a>
+  <a class="cta ghost" href="rent.html">Rent info</a>
   <a class="cta ghost" href="app.html">Live app</a>
   <a class="cta ghost" href="#waitlist">Join the waitlist</a>
 
@@ -119,6 +133,30 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <div class="cap"><b>Brand vision.</b> Hardware, uptime, and hashrate claims go live only with public pool proof. Today hosted TH = <b>0</b> — PRE-LAUNCH.</div>
   </div>
 </section>
+
+
+<div class="beta-banner" id="beta">
+  <span class="beta-tag">BETA · FREE</span>
+  <h2>BeeHash Cloud Beta — 5 spots only</h2>
+  <p>Testers run <b>45–50 TH/s solo</b> for <b>7 days straight</b>. No pool splitting — any block reward pays <b>100% to your wallet</b> (pool fee on find only).</p>
+  <p>Solo at this size is a <b>lottery</b>. Beta is about proving delivery: allocated TH, continuous, checkable on <b>live pool stats</b>.</p>
+  <p>Want more power? <b>Boost</b> unlocks up to <b>150 TH/s</b> when capacity allows.</p>
+  <p>No burst mining. No faked numbers. Just what you’re allocated, running.</p>
+  <div class="beta-meta">No payments in beta · First come, first served · 5 spots</div>
+  <div class="beta-actions">
+    <a class="cta" href="#waitlist">Request a beta spot</a>
+    <a class="cta ghost" href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="proof">
+    <b style="color:var(--text)">Public proof (when live):</b>
+    <!-- OPERATOR: replace PROOF_URL with your solo pool stats page after shares appear -->
+    <span id="betaProof">Pending — operator publishes solo pool stats URL when 45–50 TH is online.</span>
+    <!-- Example when ready:
+    <a href="PROOF_URL" target="_blank" rel="noopener">PROOF_URL</a>
+    Hosted TH on this beta = only what that page shows.
+    -->
+  </div>
+</div>
 
 <div class="ticker">
   <div class="tk"><div class="k">BTC price <span class="chip off" id="c-price">—</span></div><div class="v" id="v-price">—</div></div>
