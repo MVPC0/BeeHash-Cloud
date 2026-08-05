@@ -663,29 +663,31 @@ function renderEconomics() {
    WAITLIST — never fakes success
    ============================================================ */
 async function joinWaitlist() {
-  const email = $('wlEmail').value.trim();
+  const email = ($('wlEmail').value || '').trim();
+  const msg = $('wlMsg');
+  if (!msg) return;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    $('wlMsg').innerHTML = '<div class="notice errbox"><b>Enter a valid email.</b></div>';
+    msg.innerHTML = '<div class="notice errbox"><b>Enter a valid email.</b></div>';
     return;
   }
-
+  msg.innerHTML = '<div class="notice"><b>Sending…</b></div>';
   if (FORM_ENDPOINT) {
     try {
       const r = await fetch(FORM_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email, source: 'app-launch-tab' })
+        body: JSON.stringify({ email: email, source: 'beehash-landing' })
       });
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      $('wlMsg').innerHTML = '<div class="notice okbox"><b>You're on the list.</b> Sent to the operator's inbox.</div>';
+      msg.innerHTML = '<div class="notice ok"><b>You are on the list.</b> We got your invite request.</div>';
       $('wlEmail').value = '';
     } catch (e) {
-      $('wlMsg').innerHTML = '<div class="notice errbox"><b>Send failed.</b> The form backend didn't accept the request — try again in a minute.</div>';
+      msg.innerHTML = '<div class="notice errbox"><b>Send failed.</b> Check the form is active in Formspree, then try again.</div>';
     }
   } else {
     const list = JSON.parse(localStorage.getItem('bh_waitlist') || '[]');
     if (!list.includes(email)) { list.push(email); localStorage.setItem('bh_waitlist', JSON.stringify(list)); }
-    $('wlMsg').innerHTML = '<div class="notice"><b>Saved on this device only.</b> The operator hasn't connected a form backend yet, so this stays in your browser — it was not sent anywhere. (Operator: set <code>FORM_ENDPOINT</code> to make this real.)</div>';
+    msg.innerHTML = '<div class="notice"><b>Saved on this device only.</b> Form backend not connected yet.</div>';
   }
 }
 
