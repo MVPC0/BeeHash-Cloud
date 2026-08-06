@@ -252,23 +252,58 @@ function cacheSet(d){try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.n
 
 async function loadBTC() {
   const cached = cacheGet();
-  if (cached) { render(cached, 'cached'); }
+  if (cached) render(cached, "cached");
 
-  const out = { height: null, hashrate: null, blocks: null, cgPrice: null };
-  const [height, hashrate, blocks, cg] = await Promise.allSettled([
-    ft('https://mempool.space/api/blocks/tip/height'),
-    fj('https://mempool.space/api/v1/mining/hashrate/3d'),
-    fj('https://mempool.space/api/blocks'),
-    fj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true')
-  ]);
+  try {
+    const out = {
+      height: null,
+      hashrate: null,
+      blocks: null,
+      cgPrice: null
+    };
 
-  if (height.status === 'fulfilled') out.height = parseInt(height.value, 10);
-  if (hashrate.status === 'fulfilled') out.hashrate = hashrate.value?.currentHashrate;
-  if (blocks.status === 'fulfilled') out.blocks = Array.isArray(blocks.value) ? blocks.value : null;
-  if (cg.status === 'fulfilled') out.cgPrice = cg.value?.bitcoin;
+    const [height, hashrate, blocks, cg] = await Promise.allSettled([
+      ft("https://mempool.space/api/blocks/tip/height"),
+      fj("https://mempool.space/api/v1/mining/hashrate/3d"),
+      fj("https://mempool.space/api/blocks"),
+      fj("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true")
+    ]);
 
-  if (out.height || out.hashrate || out.blocks || out.cgPrice) cacheSet(out);
-  render(out, 'live');
+    if (height.status === "fulfilled")
+      out.height = parseInt(height.value, 10);
+
+    if (hashrate.status === "fulfilled")
+      out.hashrate = hashrate.value?.currentHashrate;
+
+    if (blocks.status === "fulfilled")
+      out.blocks = Array.isArray(blocks.value) ? blocks.value : null;
+
+    if (cg.status === "fulfilled")
+      out.cgPrice = cg.value?.bitcoin;
+
+    if (out.height || out.hashrate || out.blocks || out.cgPrice) {
+      cacheSet(out);
+      render(out, "live");
+    } else if (cached) {
+      render(cached, "cached");
+    } else {
+      chip("c-net", "err");
+      chip("c-blocks", "err");
+      chip("c-calc", "err");
+      toast("Unable to load live BTC data.");
+    }
+  } catch (err) {
+    console.error("BTC load error:", err);
+
+    if (cached) {
+      render(cached, "cached");
+    } else {
+      chip("c-net", "err");
+      chip("c-blocks", "err");
+      chip("c-calc", "err");
+      toast("Unable to load live BTC data.");
+    }
+  }
 }
 
 function render(d, mode) {
