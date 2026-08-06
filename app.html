@@ -131,6 +131,55 @@ nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(12,14,16,.
 /* miner stats */
 .miner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 @media(min-width:520px){.miner-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:640px){
+  main{padding:12px}
+  header{padding:10px 12px;flex-wrap:wrap;gap:6px}
+  .logo{font-size:14px}
+  .nav-links{gap:8px;font-size:11px;margin-left:0;width:100%;justify-content:center;padding-top:4px}
+  .refresh{margin-left:0;width:100%;justify-content:center;font-size:9px}
+  .grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .card{padding:12px}
+  .card .v{font-size:17px}
+  .fees{grid-template-columns:repeat(2,1fr)}
+  .blocks{gap:6px}
+  .blk{width:100px;padding:6px}
+  .blk .bh{font-size:11px}
+  .blk .bd{font-size:8.5px}
+  .miner-grid{grid-template-columns:1fr 1fr}
+  .field{margin-bottom:8px}
+  .input{padding:12px;font-size:15px}
+  .btn{width:100%;padding:12px}
+  .btn-sm{padding:10px 14px}
+  .row{flex-direction:column}
+  .section-label{font-size:9px;margin:16px 0 6px}
+  table{font-size:10px}
+  th,td{padding:5px 6px}
+  .road{gap:6px}
+  .rd{padding:10px;flex-direction:column;gap:6px}
+  .rd .st{align-self:flex-start}
+  nav{padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .nv{padding:4px 8px;font-size:9px}
+  .nv svg{width:17px;height:17px}
+  .toast{bottom:72px}
+  .demo-banner{font-size:9px;padding:5px}
+}
+@media(max-width:420px){
+  .grid3{grid-template-columns:1fr}
+  .fees{grid-template-columns:1fr 1fr}
+  .miner-grid{grid-template-columns:1fr}
+}
+/* Touch-friendly */
+button,a,select,input,.nv{min-height:44px;min-width:44px}
+.nv{min-width:60px}
+/* iOS zoom fix */
+input,select,textarea{font-size:16px}
+@media(max-width:640px){
+  input,select,textarea{font-size:16px}
+}
+
 </style>
 </head>
 <body>

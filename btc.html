@@ -98,6 +98,47 @@ footer{border-top:1px solid var(--line);margin-top:36px;padding:18px 16px 30px;f
 footer a{color:var(--muted)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
 .toast.show{opacity:1;transform:translateX(-50%)}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:640px){
+  main{padding:12px}
+  header{padding:10px 12px;flex-wrap:wrap;gap:6px}
+  .logo{font-size:14px}
+  .hnav{gap:8px;font-size:11px;margin-left:0;width:100%;justify-content:center;padding-top:4px;border-top:1px solid var(--line)}
+  .tag{font-size:8px}
+  .hero{padding:20px 0 6px}
+  h1{font-size:clamp(20px,6vw,28px)}
+  .sub{font-size:12.5px}
+  .hero-art{margin:14px 0 4px}
+  .grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .card{padding:12px}
+  .card .v{font-size:16px}
+  .plans{grid-template-columns:repeat(2,1fr)}
+  .durs{flex-direction:column;gap:4px}
+  .dur{padding:10px}
+  .field{margin:8px 0}
+  .input{padding:12px;font-size:15px}
+  .btn{width:100%;padding:12px}
+  .blkrow{flex-direction:column;gap:2px;padding:10px 4px}
+  .section-label{font-size:9px;margin:18px 0 6px}
+  .notice{padding:12px;font-size:12px}
+  footer{padding:16px 12px 24px;font-size:11px}
+  .chip{font-size:8px}
+}
+@media(max-width:420px){
+  .grid3{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr 1fr}
+}
+/* Touch-friendly tap targets */
+button,a,select,input{min-height:44px;min-width:44px}
+a{display:inline-flex;align-items:center}
+/* Prevent zoom on iOS inputs */
+input,select,textarea{font-size:16px}
+@media(max-width:640px){
+  input,select,textarea{font-size:16px}
+}
+
 </style>
 </head>
 <body>
