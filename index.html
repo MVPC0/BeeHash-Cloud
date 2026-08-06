@@ -131,7 +131,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
   <div class="hero-art">
     <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud — plug and play hashrate when miners are online" loading="eager">
-    <div class="cap"><b>Brand vision.</b> Hardware, uptime, and hashrate claims go live only with public pool proof. Today hosted TH = <b>0</b> — PRE-LAUNCH.</div>
+    <div class="cap"><b>Brand vision.</b> Hardware, uptime, and hashrate claims go live only with public pool proof. Operator BTC proof online (public pool). Customer / beta hosted TH = <b>0</b> until seats are assigned — PRE-LAUNCH.</div>
   </div>
 </section>
 
@@ -139,7 +139,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <div class="beta-banner" id="beta">
   <span class="beta-tag">BETA · FREE</span>
   <h2>BeeHash Cloud Beta — invite only</h2>
-  <p>Testers run <b>45–50 TH/s solo</b> for <b>7 days straight</b>. No pool splitting — any block reward pays <b>100% to your wallet</b> (pool fee on find only).</p>
+  <p>Testers run <b>45–50 TH/s solo</b> for <b>7 days straight</b> when allocated. <b>No wallet required from testers</b> — BeeHash manages beta routing. Any block on the delivery path follows the operator-set destination (pool fee on find).</p>
   <p>Solo at this size is a <b>lottery</b>. Beta is about proving delivery: allocated TH, continuous, checkable on <b>live pool stats</b>.</p>
   <p>Want more power? <b>Boost</b> unlocks up to <b>150 TH/s</b> when capacity allows.</p>
   <p>No burst mining. No faked numbers. Just what you’re allocated, running.</p>
@@ -151,11 +151,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="proof">
     <b style="color:var(--text)">Public proof (when live):</b>
     <!-- OPERATOR: replace PROOF_URL with your solo pool stats page after shares appear -->
-    <span id="betaProof">Pending — operator publishes solo pool stats URL when 45–50 TH is online.</span>
-    <!-- Example when ready:
-    <a href="PROOF_URL" target="_blank" rel="noopener">PROOF_URL</a>
-    Hosted TH on this beta = only what that page shows.
-    -->
+    <span id="betaProof">
+      <b style="color:var(--text)">Operator BTC proof (not beta allocation):</b><br>
+      <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener">https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2</a><br>
+      Live solo hashrate for the farm — verifiable anytime. Beta spots are separate; testers are not paid out on this operator wallet.
+    </span>
   </div>
 </div>
 
@@ -172,7 +172,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <div class="section-label">Where this actually stands</div>
 <div class="road">
   <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and CKPool miner monitoring — all public APIs, all verifiable.</p></div></div>
-  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Real hashrate online</h4><p>Operator hashrate proven via public pool pages (solo and/or shared). Customers pick destination pool at rental time — BeeHash is the hashrate layer, not a locked house pool. Until proof links show real shares, hosted TH stays <b>0</b>.</p></div></div>
+  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Real hashrate online</h4><p>Operator hashrate proven via public pool pages (solo and/or shared). <b>BTC operator proof is live</b> (MineShop). That is farm proof — not customer beta allocation. Product hosted TH stays <b>0</b> until beta seats are assigned.</p></div></div>
   <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
   <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Open only after the two items above are done. Any site that sells you hashrate it can't prove exists is the thing this one was built against.</p></div></div>
 </div>

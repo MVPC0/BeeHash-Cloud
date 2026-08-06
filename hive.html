@@ -103,17 +103,17 @@ select.wallet-input{cursor:pointer;width:100%}
 <div class="container" id="gateView">
   <div class="gate-card">
     <h1>Enter the Hive</h1>
-    <p>Invite-only beta. Paste the wallet for solo payouts. Stored in <strong style="color:var(--text-primary)">this browser only</strong> — not a real account server yet.</p>
-    <div class="field"><label for="walletInput">BTC or BCH address</label>
-    <input class="wallet-input" id="walletInput" placeholder="bc1q… or bitcoincash:q…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left"></div>
+    <p>Invite-only beta dashboard. <strong style="color:var(--text-primary)">No wallet required</strong> from testers — BeeHash handles routing for beta. Session is stored in <strong style="color:var(--text-primary)">this browser only</strong> (demo access, not a real account server).</p>
+    <div class="field"><label for="walletInput">Display name or invite code (optional)</label>
+    <input class="wallet-input" id="walletInput" placeholder="e.g. beta-3 or your name" autocomplete="off" spellcheck="false" style="width:100%;text-align:left"></div>
     <button class="btn btn-gold" style="width:100%;margin-top:8px" onclick="enterHive()">Enter Hive</button>
-    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No payments. No fake hashrate. Hosted TH stays 0 until public pool proof.</p>
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No payments. No fake hashrate. Hosted TH stays 0 until your seat is allocated.</p>
   </div>
 </div>
 <div class="container" id="dashView" style="display:none">
   <div class="honest-banner">
     <div class="badge">Real talk</div>
-    <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s solo when allocated · 7 days · no payments. Rewards go to <strong>your</strong> wallet on a real pool. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
+    <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments · <strong>no wallet from testers</strong>. Operator BTC proof is separate (Home). Rewards go to <strong>your</strong> wallet on a real pool. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
   </div>
   <div class="net-stats">
     <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
@@ -154,8 +154,8 @@ select.wallet-input{cursor:pointer;width:100%}
       <div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
     </div>
     <div class="connection-panel">
-      <div style="flex:1;min-width:180px"><div class="conn-label">Destination (beta default)</div><div class="conn-value" id="stratumUrl">stratum+tcp://solo-bch.2miners.com:9393</div></div>
-      <div style="flex:1;min-width:180px"><div class="conn-label">Your wallet / worker</div><div class="conn-value" id="connUser">—</div></div>
+      <div style="flex:1;min-width:180px"><div class="conn-label">Destination (beta default)</div><div class="conn-value" id="stratumUrl">stratum+tcp://solo.mineshop.eu:3333</div></div>
+      <div style="flex:1;min-width:180px"><div class="conn-label">Worker (operator-managed in beta)</div><div class="conn-value" id="connUser">—</div></div>
       <div><div class="conn-label">Pass</div><div class="conn-value">x</div></div>
       <button class="btn btn-outline" style="font-size:.7rem" onclick="copyConn()">Copy</button>
     </div>
@@ -193,14 +193,15 @@ select.wallet-input{cursor:pointer;width:100%}
       <div id="presetBox">
         <div class="field"><label for="presetPool">Pool</label>
           <select class="wallet-input" id="presetPool" onchange="onPreset()">
+            <option value="mineshop-btc">Solo · MineShop BTC</option>
+            <option value="ckpool-btc">Solo · CKPool BTC</option>
             <option value="2miners-bch">Solo · 2Miners BCH</option>
             <option value="mole-bch">Solo · MolePool BCH</option>
-            <option value="ckpool-btc">Solo · CKPool BTC</option>
             <option value="hmpool-bch">Shared · HashedMax BCH</option>
           </select>
         </div>
-        <div class="field"><label for="presetWorker">Payout address</label>
-          <input class="wallet-input" id="presetWorker" placeholder="bitcoincash:q… or bc1q…" style="width:100%">
+        <div class="field"><label for="presetWorker">Payout address (optional — not required in beta)</label>
+          <input class="wallet-input" id="presetWorker" placeholder="Leave blank in beta — operator-managed" style="width:100%">
         </div>
         <div class="notice" id="presetDetail"></div>
       </div>
@@ -222,7 +223,7 @@ select.wallet-input{cursor:pointer;width:100%}
 </div>
 <script>
 const SESSION_KEY='bh_hive_wallet',MINER_KEY='bh_miner_pref',BOOST_KEY='bh_boost_pref';
-const PRESETS={'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo-bch.2miners.com:9393',note:'Full block to your BCH address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
+const PRESETS={'mineshop-btc':{name:'MineShop BTC Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'BTC solo · public stats on solo.mineshop.eu · full block to your bc1 address on find.'},'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'Full block to your BCH address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
 const TIERS=[
   {th:1,label:'Core',sub:{week:7.99,month:24.99,year:214.99},once:{week:10.99,month:29.99,year:249.99}},
   {th:5,label:'Pro',sub:{week:35.99,month:89.99,year:749.99},once:{week:42.99,month:104.99,year:899.99}},
@@ -236,9 +237,9 @@ const workers=[{name:'Slot-01'},{name:'Slot-02'},{name:'Slot-03'},{name:'Slot-04
 let priceMode='sub',selectedMinerTh=null,selectedBoostTh=null,currentWallet='';
 const $=id=>document.getElementById(id);
 function showError(m){const t=$('errorToast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
-function enterHive(){const w=($('walletInput').value||'').trim();if(w.length<15){showError('Enter a valid wallet address');return}currentWallet=w;localStorage.setItem(SESSION_KEY,w);showDash(w)}
+function enterHive(){let w=($('walletInput').value||'').trim();if(!w)w='beta-guest';if(w.length<2){showError('Enter a short name or invite code');return}currentWallet=w;localStorage.setItem(SESSION_KEY,w);showDash(w)}
 function disconnectHive(){localStorage.removeItem(SESSION_KEY);currentWallet='';$('dashView').style.display='none';$('gateView').style.display='block';$('topWallet').style.display='none'}
-function showDash(wallet){currentWallet=wallet;$('gateView').style.display='none';$('dashView').style.display='block';$('topWallet').style.display='flex';$('walletPill').textContent=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;$('connUser').textContent=wallet+'.beehash';$('presetWorker').value=wallet;renderSwarm();renderBeeCards();setPriceMode('sub');renderBoostTiers();onPreset();onDestMode();loadPrefs();tryFetchLiveData();const tab=new URLSearchParams(location.search).get('tab');if(tab==='boost'||tab==='miners')gotoTab(tab)}
+function showDash(wallet){currentWallet=wallet;$('gateView').style.display='none';$('dashView').style.display='block';$('topWallet').style.display='flex';$('walletPill').textContent=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;$('connUser').textContent='beehash.'+wallet.replace(/\s+/g,'-').toLowerCase();if($('presetWorker'))$('presetWorker').placeholder='Operator sets payout for beta';renderSwarm();renderBeeCards();setPriceMode('sub');renderBoostTiers();onPreset();onDestMode();loadPrefs();tryFetchLiveData();const tab=new URLSearchParams(location.search).get('tab');if(tab==='boost'||tab==='miners')gotoTab(tab)}
 function gotoTab(name){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));document.querySelectorAll('.panel-section').forEach(p=>p.classList.toggle('on',p.id==='sec-'+name))}
 function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
 function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
@@ -255,7 +256,7 @@ function renderBoostTiers(){$('boostTiers').innerHTML=BOOST_SIZES.map(th=>{const
 function selectBoost(th){selectedBoostTh=th;renderBoostTiers()}
 function onDestMode(){const c=$('destMode').value==='custom';$('presetBox').style.display=c?'none':'block';$('customBox').style.display=c?'block':'none'}
 function onPreset(){const p=PRESETS[$('presetPool').value];$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br><code style="color:var(--gold);font-size:.75rem">'+p.stratum+'</code><br>'+p.note;$('stratumUrl').textContent=p.stratum}
-function saveBoostPref(){const mode=$('destMode').value;const data={th:selectedBoostTh,destMode:mode};if(mode==='custom'){data.url=($('customUrl').value||'').trim();data.worker=($('customWorker').value||'').trim();data.pass=($('customPass').value||'x').trim();if(!data.url||!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Need stratum URL and worker.</strong></div>';return}}else{data.pool=$('presetPool').value;data.worker=($('presetWorker').value||'').trim();if(!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Enter payout address.</strong></div>';return}}localStorage.setItem(BOOST_KEY,JSON.stringify(data));if(data.worker)$('connUser').textContent=data.worker+(data.worker.includes('.')?'':'.beehash');$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
+function saveBoostPref(){const mode=$('destMode').value;const data={th:selectedBoostTh,destMode:mode};if(mode==='custom'){data.url=($('customUrl').value||'').trim();data.worker=($('customWorker').value||'').trim();data.pass=($('customPass').value||'x').trim();if(!data.url||!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Need stratum URL and worker.</strong></div>';return}}else{data.pool=$('presetPool').value;data.worker=($('presetWorker').value||'').trim();/* beta: payout optional */}localStorage.setItem(BOOST_KEY,JSON.stringify(data));if(data.worker)$('connUser').textContent=data.worker+(data.worker.includes('.')?'':'.beehash');$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
 function loadPrefs(){try{const m=JSON.parse(localStorage.getItem(MINER_KEY)||'null');if(m){if(m.mode)priceMode=m.mode;if(m.th)selectedMinerTh=m.th;if(m.term)$('termPick').value=m.term;setPriceMode(priceMode)}const b=JSON.parse(localStorage.getItem(BOOST_KEY)||'null');if(b){if(b.th){selectedBoostTh=b.th;renderBoostTiers()}if(b.destMode){$('destMode').value=b.destMode;onDestMode()}if(b.pool){$('presetPool').value=b.pool;onPreset()}if(b.worker&&b.destMode!=='custom')$('presetWorker').value=b.worker;if(b.url)$('customUrl').value=b.url;if(b.worker&&b.destMode==='custom')$('customWorker').value=b.worker}}catch(e){}}
 function copyConn(){const text='URL: '+$('stratumUrl').textContent+'\nUser: '+$('connUser').textContent+'\nPass: x';navigator.clipboard.writeText(text).then(()=>showError('Copied')).catch(()=>{})}
 (function(){const w=localStorage.getItem(SESSION_KEY);if(w)showDash(w)})();

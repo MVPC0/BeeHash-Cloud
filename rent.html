@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rent Bitcoin Hashrate — SHA-256 Solo Mining Rental | BeeHash Cloud</title>
 <meta name="description" content="Rent SHA-256 mining power for solo mining. Automatic routing, live delivery checks, ASICBoost compatible. Point rented hashrate at BeeHash solo ports or your own custom stratum.">
@@ -153,7 +152,7 @@ footer a{color:var(--muted)}
 </div>
 
 <div class="notice" style="margin:12px 0">
-  <b>Beta is invite only (5 free spots).</b> Base allocation 45–50 TH/s solo · 7 days · no payments.
+  <b>Beta is invite only (5 free spots).</b> Base allocation 45–50 TH/s solo when assigned · 7 days · no payments · no wallet from testers. Operator BTC proof on Home — separate from beta seats.
   <a href="index.html#beta" style="color:var(--honey)">Details on Home</a> ·
   <a href="index.html#waitlist" style="color:var(--honey)">Request an invite</a>
 </div>
@@ -318,23 +317,7 @@ footer a{color:var(--muted)}
 <div class="toast" id="toast"></div>
 
 <script>
-const $ = id => document.getElementById(id);
 
-const TIERS = [
-  { th: 1, label: 'Core', sub: { week: 7.99, month: 24.99, year: 214.99 }, once: { week: 10.99, month: 29.99, year: 249.99 } },
-  { th: 2, label: 'Plus', sub: { week: 14.99, month: 46.99, year: 399.99 }, once: { week: 19.99, month: 52.99, year: 449.99 } },
-  { th: 5, label: 'Pro', sub: { week: 35.99, month: 89.99, year: 749.99 }, once: { week: 42.99, month: 104.99, year: 899.99 } },
-  { th: 10, label: 'Ultra', sub: { week: 62.99, month: 179.99, year: 1499.99 }, once: { week: 74.99, month: 209.99, year: 1749.99 } },
-  { th: 25, label: 'Max', sub: { week: 129.99, month: 349.99, year: 2899.99 }, once: { week: 149.99, month: 374.99, year: 3199.99 } },
-  { th: 50, label: 'Epic', sub: { week: 149.99, month: 449.99, year: 3699.99 }, once: { week: 179.99, month: 524.99, year: 4299.99 } },
-  { th: 100, label: 'Fleet', sub: { week: 259.99, month: 799.99, year: 6499.99 }, once: { week: 299.99, month: 879.99, year: 7499.99 } },
-  { th: 200, label: 'Rack', sub: { week: 449.99, month: 1399.99, year: 10999.99 }, once: { week: 499.99, month: 1499.99, year: 12499.99 } }
-];
-
-const BOOST_TIERS = [
-  { th: 1, label: '+1 TH' }, { th: 5, label: '+5 TH' }, { th: 10, label: '+10 TH' },
-  { th: 25, label: '+25 TH' }, { th: 50, label: '+50 TH' }, { th: 100, label: '+100 TH' }
-];
 
 function renderTiers() {
   const mode = window._priceMode || 'sub';
@@ -348,7 +331,7 @@ function renderTiers() {
       <div class="tp">$${p.month.toFixed(2)}<small>/mo</small></div>
       <div class="td">Week $${p.week.toFixed(2)} · Year $${p.year.toFixed(2)}</div>
       <div class="td" style="margin-top:4px">$${(p.month / t.th).toFixed(2)}/TH/mo · ${tag}</div>
-      <ul>${t.features ? t.features.map(f => '<li>' + f + '</li>').join('') : '<li>ASICBoost compatible</li><li>Live delivery checks</li><li>Custom stratum support</li>'}</ul>
+      <ul>${t.features.map(f => '<li>' + f + '</li>').join('')}</ul>
       <button class="btn btn-sm" disabled title="Not for sale yet">Rent — closed</button>
     </div>`;
   }).join('');
@@ -374,9 +357,12 @@ function renderPriceSheet() {
   ).join('');
 }
 
+
+
 window._priceMode = 'sub';
 setPriceMode('sub');
 renderPriceSheet();
+
 </script>
 </body>
 </html>
