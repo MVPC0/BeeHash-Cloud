@@ -87,6 +87,16 @@ h1 em{font-style:normal;color:var(--honey)}
 .beta-banner a.cta{text-decoration:none}
 .beta-banner .proof{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px solid var(--line);line-height:1.5;word-break:break-all}
 .beta-banner .proof a{color:var(--honey)}
+.proof-card{margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(61,220,132,.35);background:rgba(61,220,132,.06)}
+.proof-card .pk{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--live);font-weight:700;margin-bottom:6px}
+.proof-card a.proof-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:rgba(61,220,132,.15);border:1px solid rgba(61,220,132,.4);color:var(--live);padding:8px 12px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:600;text-decoration:none}
+.proof-card a.proof-btn:hover{background:rgba(61,220,132,.25)}
+.proof-card .ps{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45}
+.chain-pills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chain-pills span{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid var(--line)}
+.chain-pills .on{color:var(--live);border-color:rgba(61,220,132,.4);background:rgba(61,220,132,.08)}
+.chain-pills .off{color:var(--muted)}
+
 
 /* waitlist */
 .wlrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -115,6 +125,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="hnav">
     <a href="bch.html">BCH</a>
     <a href="rent.html">Rent</a>
+    <a href="hive.html">Hive</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="hive.html">Hive</a>
     <a href="app.html">App</a>
@@ -123,39 +134,40 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 <section class="hero">
   <h1>Hashrate hosting with <em>zero fake numbers.</em></h1>
-  <p class="sub">Most cloud-mining sites show you invented dashboards. Everything below is live public blockchain data or an honest "not yet." Nothing is purchasable today — and the site says so instead of pretending.</p>
-  <a class="cta" href="dashboard.html?tab=boost">Boost (sign up)</a>
-  <a class="cta ghost" href="rent.html">Rent info</a>
-  <a class="cta ghost" href="app.html">Live app</a>
-  <a class="cta ghost" href="#waitlist">Join the waitlist</a>
+  <p class="sub">Live chain data. Honest zeros. Operator <b>BTC</b> farm proof is public. Nothing is for sale until customer hashrate is proven and allocated.</p>
+  <a class="cta" href="hive.html">Open Hive</a>
+  <a class="cta ghost" href="#beta">BTC proof + beta</a>
+  <a class="cta ghost" href="rent.html">Rent</a>
+  <a class="cta ghost" href="#waitlist">Waitlist</a>
 
   <div class="hero-art">
     <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud — plug and play hashrate when miners are online" loading="eager">
-    <div class="cap"><b>Brand vision.</b> Hardware, uptime, and hashrate claims go live only with public pool proof. Operator BTC proof online (public pool). Customer / beta hosted TH = <b>0</b> until seats are assigned — PRE-LAUNCH.</div>
+    <div class="cap"><b>BTC operator proof live.</b> Customer / beta hosted TH = <b>0</b> until seats are assigned.</div>
   </div>
 </section>
 
 
+
 <div class="beta-banner" id="beta">
-  <span class="beta-tag">BETA · FREE</span>
-  <h2>BeeHash Cloud Beta — invite only</h2>
-  <p>Testers run <b>45–50 TH/s solo</b> for <b>7 days straight</b> when allocated. <b>No wallet required from testers</b> — BeeHash manages beta routing. Any block on the delivery path follows the operator-set destination (pool fee on find).</p>
-  <p>Solo at this size is a <b>lottery</b>. Beta is about proving delivery: allocated TH, continuous, checkable on <b>live pool stats</b>.</p>
-  <p>Want more power? <b>Boost</b> unlocks up to <b>150 TH/s</b> when capacity allows.</p>
-  <p>No burst mining. No faked numbers. Just what you’re allocated, running.</p>
-  <div class="beta-meta">No payments in beta · Invite only · 5 spots</div>
+  <span class="beta-tag">BETA · FREE · INVITE ONLY</span>
+  <h2>BeeHash Cloud Beta — 5 spots</h2>
+  <div class="chain-pills">
+    <span class="on">BTC · operator proof live</span>
+    <span class="off">BCH · supported later</span>
+    <span class="off">Customer TH · 0 until assigned</span>
+  </div>
+  <p>When allocated, testers run <b>45–50 TH/s solo</b> for <b>7 days</b>. <b>No wallet from testers</b> — BeeHash manages beta routing. Solo is a <b>lottery</b>; this beta is about delivery proof, not guaranteed blocks.</p>
+  <p>Boost (optional, capacity-limited) up to <b>150 TH/s</b> when available. No burst mining. No faked numbers.</p>
+  <div class="beta-meta">No payments · No tester wallet · First 5 invites only</div>
   <div class="beta-actions">
     <a class="cta" href="#waitlist">Request an invite</a>
-    <a class="cta ghost" href="dashboard.html">Dashboard</a>
+    <a class="cta ghost" href="hive.html">Open Hive</a>
   </div>
-  <div class="proof">
-    <b style="color:var(--text)">Public proof (when live):</b>
-    <!-- OPERATOR: replace PROOF_URL with your solo pool stats page after shares appear -->
-    <span id="betaProof">
-      <b style="color:var(--text)">Operator BTC proof (not beta allocation):</b><br>
-      <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener">https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2</a><br>
-      Live solo hashrate for the farm — verifiable anytime. Beta spots are separate; testers are not paid out on this operator wallet.
-    </span>
+  <div class="proof-card">
+    <div class="pk">OPERATOR BTC PROOF · NOT BETA</div>
+    <div style="font-size:13px;color:var(--text);font-weight:600">Bitcoin solo · MineShop</div>
+    <a class="proof-btn" href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener">View live farm stats ↗</a>
+    <div class="ps">Public hashrate for the operator wallet only. Beta seats are separate and are not paid out on this address.</div>
   </div>
 </div>
 
@@ -172,7 +184,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <div class="section-label">Where this actually stands</div>
 <div class="road">
   <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and CKPool miner monitoring — all public APIs, all verifiable.</p></div></div>
-  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Real hashrate online</h4><p>Operator hashrate proven via public pool pages (solo and/or shared). <b>BTC operator proof is live</b> (MineShop). That is farm proof — not customer beta allocation. Product hosted TH stays <b>0</b> until beta seats are assigned.</p></div></div>
+  <div class="rd"><span class="st done">DONE</span><div><h4>Operator BTC proof</h4><p>Farm hashrate is public on MineShop (solo). <b>Not</b> the same as customer beta seats — those stay at 0 TH until assigned.</p></div></div>
+  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Customer / beta hashrate</h4><p>Allocated TH for invitees. Opens only when a seat is assigned and delivery is verifiable.</p></div></div>
   <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
   <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Open only after the two items above are done. Any site that sells you hashrate it can't prove exists is the thing this one was built against.</p></div></div>
 </div>
