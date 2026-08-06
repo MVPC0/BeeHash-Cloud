@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeHash Hive (Beta)</title>
+<meta name="description" content="BeeHash Hive. Live public chain data. Zero fake hashrate until pool proof. Invite-only beta.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-deep:#0a0a0e;--bg-panel:#111118;--bg-card:#161620;--gold:#f5b800;--gold-dim:#c49000;--gold-glow:rgba(245,184,0,.3);--green:#00e676;--red:#ff1744;--text-primary:#f0f0f5;--text-secondary:#8a8a9a;--text-muted:#555566;--border:#222233}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sans-serif;min-height:100vh}
+.bg-honeycomb{position:fixed;inset:0;z-index:0;opacity:.03;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 0L56 16.5v33L28 66 0 49.5v-33z' fill='none' stroke='%23f5b800' stroke-width='1'/%3E%3C/svg%3E");background-size:56px 100px}
+.topbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(17,17,24,.95);border-bottom:1px solid rgba(245,184,0,.2);backdrop-filter:blur(10px);flex-wrap:wrap;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Orbitron,sans-serif;font-weight:700;font-size:1.15rem;color:var(--gold);text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px var(--gold-glow)}
+.tag{font-family:Orbitron,sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.12em;color:#000;background:var(--gold);border-radius:4px;padding:3px 8px}
+.nav-links{display:flex;gap:12px;flex-wrap:wrap}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:.85rem;font-weight:600;text-transform:uppercase}.nav-links a:hover{color:var(--gold)}
+.wallet-input{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-primary);font-family:Rajdhani,sans-serif;font-size:.9rem;width:min(320px,100%);outline:none}
+.wallet-input:focus{border-color:var(--gold)}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-family:Rajdhani,sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}.btn-outline:hover{border-color:var(--gold);color:var(--gold)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.container{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:16px 20px 48px}
+.honest-banner{background:linear-gradient(90deg,rgba(245,184,0,.1),rgba(245,184,0,.02));border:1px solid rgba(245,184,0,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:.85rem;color:var(--text-secondary);line-height:1.55}
+.honest-banner .badge{display:inline-block;background:var(--gold);color:#000;padding:3px 10px;border-radius:4px;font-weight:700;font-size:.7rem;text-transform:uppercase;margin-bottom:8px}
+.honest-banner strong{color:var(--gold)}
+.gate-card{max-width:480px;margin:48px auto;background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:28px 24px;text-align:center}
+.gate-card h1{font-family:Orbitron,sans-serif;font-size:1.35rem;color:var(--gold);margin-bottom:10px}
+.gate-card p{color:var(--text-secondary);font-size:.95rem;margin-bottom:18px;line-height:1.5}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.dashboard-grid{grid-template-columns:1fr}}
+.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.panel-title{font-family:Orbitron,sans-serif;font-size:.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:blink 1.5s infinite}.live-dot.off{background:var(--text-muted);animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.net-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:700px){.net-stats{grid-template-columns:1fr 1fr}}
+.net-stat{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer}
+.net-stat:hover{border-color:var(--gold)}
+.net-val{font-family:Orbitron,sans-serif;font-size:.95rem;font-weight:700}
+.net-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;margin-top:3px}
+.net-source{font-size:.6rem;color:var(--text-muted);margin-top:2px}
+.honeycomb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+.hex-cell{aspect-ratio:1;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
+.hex-cell.offline{opacity:.75;border-color:rgba(255,23,68,.25)}
+.hex-name{font-size:.6rem;color:var(--text-muted);text-transform:uppercase}
+.hex-hash{font-family:Orbitron,sans-serif;font-size:.75rem;font-weight:700;margin-top:2px}
+.hex-status{font-size:.55rem;margin-top:2px;font-weight:600;color:var(--red)}
+.nectar-container{display:flex;flex-direction:column;align-items:center;padding:12px}
+.nectar-jar{width:110px;height:150px;position:relative;margin-bottom:12px}
+.jar-body{position:absolute;bottom:0;width:100%;height:100%;border:3px solid var(--gold);border-radius:0 0 18px 18px;border-top:none;overflow:hidden}
+.jar-neck{position:absolute;top:0;left:50%;transform:translateX(-50%);width:55%;height:16px;border:3px solid var(--gold);border-bottom:none;border-radius:6px 6px 0 0}
+.jar-honey{position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,#f5b800,#c49000);border-radius:0 0 14px 14px;transition:height .8s}
+.nectar-pct{font-family:Orbitron,sans-serif;font-size:1.6rem;font-weight:900;color:var(--gold)}
+.nectar-label{font-size:.75rem;color:var(--text-secondary);margin-top:3px;text-align:center}
+.nectar-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:14px}
+.stat-box{background:var(--bg-card);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:Orbitron,sans-serif;font-size:.95rem;font-weight:700}
+.stat-label{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;margin-top:2px}
+.bee-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.bee-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;min-height:110px}
+.card-header{display:flex;justify-content:space-between;margin-bottom:8px}
+.card-name{font-family:Orbitron,sans-serif;font-size:.65rem;font-weight:700;color:var(--gold);text-transform:uppercase}
+.card-status{width:7px;height:7px;border-radius:50%;background:var(--red)}
+.card-hash{font-family:Orbitron,sans-serif;font-size:1.1rem;font-weight:900}
+.card-unit{font-size:.7rem;color:var(--text-secondary)}
+.card-meta{font-size:.7rem;color:var(--text-muted);margin-top:6px}
+.drop-empty{padding:24px 12px;text-align:center;color:var(--text-muted);font-size:.85rem;line-height:1.5}
+.connection-panel{background:linear-gradient(90deg,var(--bg-card),var(--bg-panel));border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:16px}
+.conn-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase}
+.conn-value{font-family:Orbitron,sans-serif;font-size:.7rem;color:var(--gold);background:var(--bg-deep);padding:5px 10px;border-radius:5px;border:1px solid var(--border);word-break:break-all}
+.tabs{display:flex;gap:4px;background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
+.tabs button{flex:1;padding:10px 8px;border:none;border-radius:8px;background:transparent;color:var(--text-secondary);font-family:Rajdhani,sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;text-transform:uppercase}
+.tabs button.on{background:var(--bg-card);color:var(--gold)}
+.panel-section{display:none}.panel-section.on{display:block}
+.tier-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:12px}
+.tier{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer}
+.tier:hover,.tier.on{border-color:rgba(245,184,0,.5)}
+.tier .tn{font-size:.7rem;color:var(--text-muted);text-transform:uppercase}
+.tier .th{font-family:Orbitron,sans-serif;font-size:1.1rem;color:var(--gold);font-weight:700}
+.tier .tp{font-size:.7rem;color:var(--text-secondary);margin-top:4px}
+.field{margin-bottom:10px;text-align:left}.field label{display:block;font-size:.7rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px}
+select.wallet-input{cursor:pointer;width:100%}
+.notice{border:1px solid var(--border);border-left:3px solid var(--gold);background:var(--bg-card);border-radius:8px;padding:10px 12px;font-size:.8rem;color:var(--text-secondary);margin:10px 0;line-height:1.5;text-align:left}
+.notice.ok{border-left-color:var(--green)}.notice.err{border-left-color:var(--red)}.notice strong{color:var(--text-primary)}
+.footer{text-align:center;padding:28px 12px 40px;color:var(--text-muted);font-size:.75rem;line-height:1.6}.footer a{color:var(--gold);text-decoration:none}
+.error-toast{position:fixed;bottom:20px;right:20px;background:var(--bg-card);border:1px solid var(--red);border-radius:10px;padding:12px 16px;color:var(--red);font-size:.8rem;z-index:200;max-width:300px;display:none}.error-toast.show{display:block}
+</style>
+</head>
+<body>
+<div class="bg-honeycomb"></div>
+<div class="error-toast" id="errorToast"></div>
+<div class="topbar">
+  <a class="logo" href="index.html"><div class="logo-icon">🐝</div><span>BEEHASH <span style="color:var(--text-secondary);font-size:.7rem">HIVE</span></span></a>
+  <span class="tag">BETA</span>
+  <div class="nav-links"><a href="index.html">Home</a><a href="rent.html">Rent</a><a href="bch.html">BCH</a><a href="app.html">App</a></div>
+  <div id="topWallet" style="display:none;align-items:center;gap:8px">
+    <span style="font-size:.75rem;color:var(--text-muted);font-family:monospace" id="walletPill"></span>
+    <button class="btn btn-outline" onclick="disconnectHive()">Leave</button>
+  </div>
+</div>
+<div class="container" id="gateView">
+  <div class="gate-card">
+    <h1>Enter the Hive</h1>
+    <p>Invite-only beta. Paste the wallet for solo payouts. Stored in <strong style="color:var(--text-primary)">this browser only</strong> — not a real account server yet.</p>
+    <div class="field"><label for="walletInput">BTC or BCH address</label>
+    <input class="wallet-input" id="walletInput" placeholder="bc1q… or bitcoincash:q…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left"></div>
+    <button class="btn btn-gold" style="width:100%;margin-top:8px" onclick="enterHive()">Enter Hive</button>
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No payments. No fake hashrate. Hosted TH stays 0 until public pool proof.</p>
+  </div>
+</div>
+<div class="container" id="dashView" style="display:none">
+  <div class="honest-banner">
+    <div class="badge">Real talk</div>
+    <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s solo when allocated · 7 days · no payments. Rewards go to <strong>your</strong> wallet on a real pool. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
+  </div>
+  <div class="net-stats">
+    <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
+    <div class="net-stat" onclick="refreshData()"><div class="net-val" id="blockHeight">—</div><div class="net-label">Block Height</div><div class="net-source" id="heightSource">—</div></div>
+    <div class="net-stat" onclick="refreshData()"><div class="net-val" id="networkHash">—</div><div class="net-label">Network Hashrate</div><div class="net-source" id="hashSource">—</div></div>
+    <div class="net-stat"><div class="net-val" id="hostedHash">0 TH/s</div><div class="net-label">Your Hosted Hash</div><div class="net-source">Honest zero</div></div>
+  </div>
+  <div class="tabs">
+    <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
+    <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
+    <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
+  </div>
+  <div class="panel-section on" id="sec-swarm">
+    <div class="dashboard-grid">
+      <div class="panel">
+        <div class="panel-title"><span class="live-dot off"></span> Swarm Pulse</div>
+        <div class="honeycomb-grid" id="swarmGrid"></div>
+        <p style="font-size:.7rem;color:var(--text-muted);margin-top:10px">Slots stay offline until public pool proof + your beta allocation.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">🍯 Nectar (delivery)</div>
+        <div class="nectar-container">
+          <div class="nectar-jar"><div class="jar-neck"></div><div class="jar-body"><div class="jar-honey" id="jarHoney" style="height:0%"></div></div></div>
+          <div class="nectar-pct">0%</div>
+          <div class="nectar-label">No active delivery yet<br>(honest empty jar)</div>
+          <div class="nectar-stats">
+            <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Base</div></div>
+            <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Boost</div></div>
+            <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Total</div></div>
+            <div class="stat-box"><div class="stat-val">3%</div><div class="stat-label">Target fee*</div></div>
+          </div>
+        </div>
+        <p style="font-size:.65rem;color:var(--text-muted);text-align:center">* Design target — not charged in free beta.</p>
+      </div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="panel"><div class="panel-title">🐝 Bee slots</div><div class="bee-cards-grid" id="beeCards"></div></div>
+      <div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
+    </div>
+    <div class="connection-panel">
+      <div style="flex:1;min-width:180px"><div class="conn-label">Destination (beta default)</div><div class="conn-value" id="stratumUrl">stratum+tcp://solo-bch.2miners.com:9393</div></div>
+      <div style="flex:1;min-width:180px"><div class="conn-label">Your wallet / worker</div><div class="conn-value" id="connUser">—</div></div>
+      <div><div class="conn-label">Pass</div><div class="conn-value">x</div></div>
+      <button class="btn btn-outline" style="font-size:.7rem" onclick="copyConn()">Copy</button>
+    </div>
+  </div>
+  <div class="panel-section" id="sec-miners">
+    <div class="panel">
+      <div class="panel-title">Base plan preference</div>
+      <div class="notice">Subscription vs one-time. <strong>Orders closed</strong> in free beta — save preference only.</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button type="button" class="btn btn-gold" id="btnSub" onclick="setPriceMode('sub')">Subscription</button>
+        <button type="button" class="btn btn-outline" id="btnOnce" onclick="setPriceMode('once')">One-time</button>
+      </div>
+      <div class="tier-row" id="minerTiers"></div>
+      <div class="field"><label for="termPick">Term</label>
+        <select class="wallet-input" id="termPick" onchange="updateMinerSummary()">
+          <option value="week">Weekly</option><option value="month" selected>Monthly</option><option value="year">Annual</option>
+        </select>
+      </div>
+      <div class="notice" id="minerSummary"><strong>Select a size.</strong></div>
+      <button class="btn btn-gold" style="width:100%" disabled>Activate miner — closed</button>
+      <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="saveMinerPref()">Save preference</button>
+      <div id="minerMsg"></div>
+    </div>
+  </div>
+  <div class="panel-section" id="sec-boost">
+    <div class="panel">
+      <div class="panel-title">Boost — add-on (separate)</div>
+      <div class="notice"><strong>Boost is not the base plan.</strong> Extra TH + routing when capacity exists.</div>
+      <div class="tier-row" id="boostTiers"></div>
+      <div class="field"><label for="destMode">Routing</label>
+        <select class="wallet-input" id="destMode" onchange="onDestMode()">
+          <option value="preset">Preset pool</option><option value="custom">Custom stratum</option>
+        </select>
+      </div>
+      <div id="presetBox">
+        <div class="field"><label for="presetPool">Pool</label>
+          <select class="wallet-input" id="presetPool" onchange="onPreset()">
+            <option value="2miners-bch">Solo · 2Miners BCH</option>
+            <option value="mole-bch">Solo · MolePool BCH</option>
+            <option value="ckpool-btc">Solo · CKPool BTC</option>
+            <option value="hmpool-bch">Shared · HashedMax BCH</option>
+          </select>
+        </div>
+        <div class="field"><label for="presetWorker">Payout address</label>
+          <input class="wallet-input" id="presetWorker" placeholder="bitcoincash:q… or bc1q…" style="width:100%">
+        </div>
+        <div class="notice" id="presetDetail"></div>
+      </div>
+      <div id="customBox" style="display:none">
+        <div class="field"><label>Stratum URL</label><input class="wallet-input" id="customUrl" placeholder="stratum+tcp://…" style="width:100%"></div>
+        <div class="field"><label>Worker</label><input class="wallet-input" id="customWorker" style="width:100%"></div>
+        <div class="field"><label>Password</label><input class="wallet-input" id="customPass" value="x" style="width:100%"></div>
+      </div>
+      <button class="btn btn-gold" style="width:100%" disabled>Create Boost order — closed</button>
+      <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="saveBoostPref()">Save Boost preference</button>
+      <div id="boostMsg"></div>
+    </div>
+  </div>
+  <div class="footer">
+    <strong style="color:var(--gold)">BeeHash Hive</strong> — zero fake numbers.<br>
+    <a href="index.html#beta">Beta details</a> · <a href="index.html#waitlist">Request invite</a> · <a href="rent.html">Rent info</a><br>
+    Solo mining is a lottery. Nothing here is investment advice.
+  </div>
+</div>
+<script>
+const SESSION_KEY='bh_hive_wallet',MINER_KEY='bh_miner_pref',BOOST_KEY='bh_boost_pref';
+const PRESETS={'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo-bch.2miners.com:9393',note:'Full block to your BCH address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
+const TIERS=[
+  {th:1,label:'Core',sub:{week:7.99,month:24.99,year:214.99},once:{week:10.99,month:29.99,year:249.99}},
+  {th:5,label:'Pro',sub:{week:35.99,month:89.99,year:749.99},once:{week:42.99,month:104.99,year:899.99}},
+  {th:10,label:'Ultra',sub:{week:62.99,month:179.99,year:1499.99},once:{week:74.99,month:209.99,year:1749.99}},
+  {th:25,label:'Max',sub:{week:129.99,month:349.99,year:2899.99},once:{week:149.99,month:374.99,year:3199.99}},
+  {th:50,label:'Epic',sub:{week:149.99,month:449.99,year:3699.99},once:{week:179.99,month:524.99,year:4299.99}},
+  {th:100,label:'Fleet',sub:{week:259.99,month:799.99,year:6499.99},once:{week:299.99,month:879.99,year:7499.99}}
+];
+const BOOST_SIZES=[1,5,10,25,50,100];
+const workers=[{name:'Slot-01'},{name:'Slot-02'},{name:'Slot-03'},{name:'Slot-04'},{name:'Slot-05'},{name:'Slot-06'}];
+let priceMode='sub',selectedMinerTh=null,selectedBoostTh=null,currentWallet='';
+const $=id=>document.getElementById(id);
+function showError(m){const t=$('errorToast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
+function enterHive(){const w=($('walletInput').value||'').trim();if(w.length<15){showError('Enter a valid wallet address');return}currentWallet=w;localStorage.setItem(SESSION_KEY,w);showDash(w)}
+function disconnectHive(){localStorage.removeItem(SESSION_KEY);currentWallet='';$('dashView').style.display='none';$('gateView').style.display='block';$('topWallet').style.display='none'}
+function showDash(wallet){currentWallet=wallet;$('gateView').style.display='none';$('dashView').style.display='block';$('topWallet').style.display='flex';$('walletPill').textContent=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;$('connUser').textContent=wallet+'.beehash';$('presetWorker').value=wallet;renderSwarm();renderBeeCards();setPriceMode('sub');renderBoostTiers();onPreset();onDestMode();loadPrefs();tryFetchLiveData();const tab=new URLSearchParams(location.search).get('tab');if(tab==='boost'||tab==='miners')gotoTab(tab)}
+function gotoTab(name){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));document.querySelectorAll('.panel-section').forEach(p=>p.classList.toggle('on',p.id==='sec-'+name))}
+function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
+function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
+function tryFetchLiveData(){const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
+fetch('https://mempool.space/api/v1/prices').then(r=>r.json()).then(d=>{$('btcPrice').textContent='$'+Number(d.USD).toLocaleString();s('priceSource','mempool.space')}).catch(()=>s('priceSource','unavailable'));
+fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text()).then(h=>{$('blockHeight').textContent=Number(h).toLocaleString();s('heightSource','mempool.space')}).catch(()=>s('heightSource','unavailable'));
+fetch('https://mempool.space/api/v1/mining/hashrate/3d').then(r=>r.json()).then(d=>{if(d.hashrates&&d.hashrates.length){const hps=d.hashrates[d.hashrates.length-1].avgHashrate;const txt=hps>=1e18?(hps/1e18).toFixed(2)+' EH/s':(hps/1e15).toFixed(2)+' PH/s';$('networkHash').textContent=txt;s('hashSource','mempool.space')}}).catch(()=>s('hashSource','unavailable'))}
+function refreshData(){tryFetchLiveData()}
+function setPriceMode(mode){priceMode=mode;$('btnSub').className=mode==='sub'?'btn btn-gold':'btn btn-outline';$('btnOnce').className=mode==='once'?'btn btn-gold':'btn btn-outline';$('minerTiers').innerHTML=TIERS.map(t=>{const p=t[mode];return '<div class="tier'+(selectedMinerTh===t.th?' on':'')+'" onclick="selectMiner('+t.th+')"><div class="tn">'+t.label+'</div><div class="th">'+t.th+'</div><div class="tp">$'+p.month.toFixed(0)+'/mo</div></div>'}).join('');updateMinerSummary()}
+function selectMiner(th){selectedMinerTh=th;setPriceMode(priceMode)}
+function updateMinerSummary(){if(!selectedMinerTh){$('minerSummary').innerHTML='<strong>Select a size.</strong>';return}const t=TIERS.find(x=>x.th===selectedMinerTh);const term=$('termPick').value;const price=t[priceMode][term];const kind=priceMode==='sub'?'Subscription':'One-time';$('minerSummary').innerHTML='<strong>'+t.label+' · '+t.th+' TH</strong> · '+kind+' · '+term+'<br>List: <strong style="color:var(--gold)">$'+price.toFixed(2)+'</strong> · not for sale in beta'}
+function saveMinerPref(){if(!selectedMinerTh){$('minerMsg').innerHTML='<div class="notice err"><strong>Pick a size first.</strong></div>';return}localStorage.setItem(MINER_KEY,JSON.stringify({th:selectedMinerTh,mode:priceMode,term:$('termPick').value}));$('minerMsg').innerHTML='<div class="notice ok"><strong>Preference saved</strong> on this device. Not an order.</div>'}
+function renderBoostTiers(){$('boostTiers').innerHTML=BOOST_SIZES.map(th=>{const t=TIERS.find(x=>x.th===th)||TIERS[0];return '<div class="tier'+(selectedBoostTh===th?' on':'')+'" onclick="selectBoost('+th+')"><div class="tn">+'+th+' TH</div><div class="th">'+th+'</div><div class="tp">from $'+t.sub.month.toFixed(0)+'</div></div>'}).join('')}
+function selectBoost(th){selectedBoostTh=th;renderBoostTiers()}
+function onDestMode(){const c=$('destMode').value==='custom';$('presetBox').style.display=c?'none':'block';$('customBox').style.display=c?'block':'none'}
+function onPreset(){const p=PRESETS[$('presetPool').value];$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br><code style="color:var(--gold);font-size:.75rem">'+p.stratum+'</code><br>'+p.note;$('stratumUrl').textContent=p.stratum}
+function saveBoostPref(){const mode=$('destMode').value;const data={th:selectedBoostTh,destMode:mode};if(mode==='custom'){data.url=($('customUrl').value||'').trim();data.worker=($('customWorker').value||'').trim();data.pass=($('customPass').value||'x').trim();if(!data.url||!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Need stratum URL and worker.</strong></div>';return}}else{data.pool=$('presetPool').value;data.worker=($('presetWorker').value||'').trim();if(!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Enter payout address.</strong></div>';return}}localStorage.setItem(BOOST_KEY,JSON.stringify(data));if(data.worker)$('connUser').textContent=data.worker+(data.worker.includes('.')?'':'.beehash');$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
+function loadPrefs(){try{const m=JSON.parse(localStorage.getItem(MINER_KEY)||'null');if(m){if(m.mode)priceMode=m.mode;if(m.th)selectedMinerTh=m.th;if(m.term)$('termPick').value=m.term;setPriceMode(priceMode)}const b=JSON.parse(localStorage.getItem(BOOST_KEY)||'null');if(b){if(b.th){selectedBoostTh=b.th;renderBoostTiers()}if(b.destMode){$('destMode').value=b.destMode;onDestMode()}if(b.pool){$('presetPool').value=b.pool;onPreset()}if(b.worker&&b.destMode!=='custom')$('presetWorker').value=b.worker;if(b.url)$('customUrl').value=b.url;if(b.worker&&b.destMode==='custom')$('customWorker').value=b.worker}}catch(e){}}
+function copyConn(){const text='URL: '+$('stratumUrl').textContent+'\nUser: '+$('connUser').textContent+'\nPass: x';navigator.clipboard.writeText(text).then(()=>showError('Copied')).catch(()=>{})}
+(function(){const w=localStorage.getItem(SESSION_KEY);if(w)showDash(w)})();
+</script>
+</body>
+</html>
