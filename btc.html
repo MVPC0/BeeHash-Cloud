@@ -1,12 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/app.html">
-  <link rel="canonical" href="/app.html">
-  <title>Redirecting… — BeeHash Cloud</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeHash Cloud — BTC Hashrate (Pre-Launch)</title>
+<meta name="description" content="Bitcoin hashrate hosting — pre-launch. Live network data from mempool.space, honest odds, nothing purchasable yet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e10; --panel:#14171b; --panel2:#1a1e23; --line:#242a31;
+  --honey:#f7b32b; --honey-dim:#a97c1d;
+  --btc:#f7b32b;
+  --live:#3ddc84; --err:#e5484d;
+  --text:#e8eaed; --muted:#8b939e;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);font-size:14px;line-height:1.5}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--btc);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+header{position:sticky;top:0;z-index:50;background:rgba(12,14,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px}
+.logo a{color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px}
+.hex{width:20px;height:20px;flex:none}
+.tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--btc);border:1px solid rgba(247,179,43,.4);border-radius:4px;padding:2px 6px}
+.hnav{margin-left:auto;display:flex;gap:14px;font-size:12px;font-weight:700}
+.hnav a{color:var(--muted);text-decoration:none}
+.hnav a:hover{color:var(--honey)}
+
+main{max-width:680px;margin:0 auto;padding:16px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.1em;padding:1px 6px;border-radius:3px;vertical-align:middle}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.chip.live{color:var(--live);background:rgba(61,220,132,.08)}
+.chip.cached{color:var(--honey);background:rgba(247,179,43,.08)}
+.chip.err{color:var(--err);background:rgba(229,72,77,.1)}
+.chip.off{color:var(--muted);background:rgba(139,147,158,.08)}
+
+.hero{padding:28px 0 8px}
+h1{font-size:clamp(24px,6vw,34px);line-height:1.15;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--btc)}
+.sub{color:var(--muted);font-size:13.5px;max-width:56ch;margin-top:10px}
+.hero-art{margin:18px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.hero-art img{display:block;width:100%;height:auto}
+.hero-art .cap{font-family:var(--mono);font-size:10px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line);line-height:1.45}
+.hero-art .cap b{color:var(--honey)}
+
+.section-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:22px 0 8px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:420px){.grid3{grid-template-columns:1fr 1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.card .k{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:4px}
+.card .v{font-family:var(--mono);font-size:18px;font-weight:600}
+.card .v small{font-size:11px;color:var(--muted);font-weight:400}
+.card .sub2{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
+.card.wide{grid-column:1/-1}
+.v.errv{color:var(--err);font-size:12px;font-weight:400;font-family:var(--disp)}
+
+/* plans */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:480px){.plans{grid-template-columns:repeat(2,1fr)}}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s}
+.plan:hover{border-color:var(--btc)}
+.plan.sel{border-color:var(--btc);background:rgba(247,179,43,.05)}
+.plan .ph{font-family:var(--mono);font-size:20px;font-weight:600}
+.plan .pu{font-size:10px;color:var(--muted)}
+.plan .pp{font-family:var(--mono);font-size:13px;color:var(--honey);margin-top:6px}
+.durs{display:flex;gap:6px;margin:10px 0}
+.dur{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;font-family:var(--mono);font-size:11px;cursor:pointer}
+.dur.sel{border-color:var(--btc);color:var(--btc)}
+
+.field{margin:10px 0}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:13px}
+.input::placeholder{color:#5a636e}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;background:var(--honey);color:#141414}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.notice{border:1px solid var(--line);border-left:3px solid var(--honey);background:var(--panel);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin:10px 0}
+.notice.errbox{border-left-color:var(--err)}
+.notice b{color:var(--text)}
+.notice code{font-family:var(--mono);font-size:10.5px;background:var(--panel2);padding:1px 5px;border-radius:4px;color:var(--honey)}
+
+.blkrow{display:flex;justify-content:space-between;gap:8px;padding:9px 4px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px}
+.blkrow:last-child{border-bottom:none}
+.blkrow .bh{color:var(--btc);font-weight:600}
+.blkrow .bm{color:var(--muted)}
+
+footer{border-top:1px solid var(--line);margin-top:36px;padding:18px 16px 30px;font-size:11.5px;color:var(--muted);text-align:center}
+footer a{color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
 </head>
 <body>
-  <p>Redirecting to <a href="/app.html">/app.html</a>…</p>
+
+<header>
+  <div class="logo"><a href="index.html">
+    <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
+    BeeHash BTC</a>
+  </div>
+  <span class="tag">PRE-LAUNCH</span>
+  <nav class="hnav"><a href="index.html">Home</a><a href="rent.html">Rent</a><a href="dashboard.html">Dash</a><a href="bch.html">BCH</a></nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="hero-art">
+    <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud brand" loading="lazy">
+    <div class="cap"><b>Cloud hashrate vision.</b> Destination pool is yours to choose. Live only after public proof — PRE-LAUNCH.</div>
+  </div>
+  <h1>Bitcoin hashrate. <em>Solo lottery</em> against the biggest network in mining.</h1>
+  <p class="sub">Point rented SHA-256 hashrate at a solo pool and keep the full block reward if you find one. Every number below is live network data from mempool.space and CoinGecko. Nothing is purchasable yet.</p>
+</section>
+
+<div class="section-label">BTC network — live <span class="chip off" id="c-net">—</span></div>
+<div class="grid">
+  <div class="card"><div class="k">BTC price</div><div class="v" id="v-price">—</div><div class="sub2" id="s-price"></div></div>
+  <div class="card"><div class="k">Block height</div><div class="v" id="v-height">—</div></div>
+  <div class="card"><div class="k">Network hashrate</div><div class="v" id="v-hash">—</div><div class="sub2">3-day average</div></div>
+  <div class="card"><div class="k">Block reward</div><div class="v">3.125 <small>BTC</small></div><div class="sub2" id="s-reward">≈ $—</div></div>
+</div>
+
+<div class="section-label">Solo odds calculator <span class="chip off" id="c-calc">—</span></div>
+<div class="card wide">
+  <div class="durs" id="durRow">
+    <div class="dur" data-d="1" onclick="setDur(1,this)">24 hours</div>
+    <div class="dur sel" data-d="7" onclick="setDur(7,this)">7 days</div>
+    <div class="dur" data-d="30" onclick="setDur(30,this)">30 days</div>
+  </div>
+  <div class="plans" id="planGrid"></div>
+  <div class="grid3" style="margin-top:10px" id="oddsOut"></div>
+  <div class="notice" id="calcNote"><b>Solo mining is a lottery.</b> "Expected time" is an average over infinite tries — a rental can win on day one or never. The full block reward goes to the winner; expected value is not a promise. BTC's network is orders of magnitude larger than BCH's, so odds at the same TH/s are far longer here.</div>
+</div>
+
+<div class="section-label">Rental plans — indicative pricing</div>
+<div class="notice"><b>Not purchasable yet.</b> Prices below are the planned tiers so you can judge the economics before launch. Payments open only after real hashrate is online with a public proof link, and legal review is done — same gates as the <a href="index.html" style="color:var(--honey)">main roadmap</a>.</div>
+
+<div class="section-label">Destination pool <span class="chip off">PLANNED</span></div>
+<div class="card wide">
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">BeeHash Cloud is not a single pool. When rentals open, rented SHA-256 hashrate is pointed at <b style="color:var(--text)">whichever pool you select</b>. You keep the wallet; we point the hash.</p>
+  <div class="field">
+    <label for="poolPick">Preferred mining pool</label>
+    <select class="input" id="poolPick" onchange="onPoolPick()">
+      <option value="ckpool-solo">Solo · CKPool — full block to your address (0% fee)</option>
+      <option value="mineshop-solo">Solo · Mineshop — full block to your address (0% fee)</option>
+    </select>
+  </div>
+  <div id="poolPickDetail" class="notice" style="margin-top:8px"></div>
+  <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px">Selection is saved in this browser only until payments exist. Nothing is rented yet.</p>
+</div>
+
+<div class="section-label">Proof of work — both solo pools</div>
+<div class="card wide">
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Anyone can verify an address on either solo pool. Enter a BTC address (yours or a customer's) and open the public stats page. BeeHash only claims hashrate that these links can show.</p>
+  <div class="field">
+    <label for="proofAddr">BTC address</label>
+    <input class="input" id="proofAddr" placeholder="bc1… or legacy" autocomplete="off" spellcheck="false">
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+    <button type="button" class="btn" onclick="openProof('ckpool')">Open CKPool proof</button>
+    <button type="button" class="btn ghost" onclick="openProof('mineshop')">Open Mineshop proof</button>
+  </div>
+  <div id="proofLinks" style="margin-top:10px"></div>
+  <div class="notice" style="margin-top:10px">
+    <b>Operator proof (live):</b> <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener" style="color:var(--honey)">solo.mineshop.eu operator wallet</a> — farm proof, not customer beta allocation. Hosted hashrate on the landing page stays <b>0</b> until beta seats are assigned.
+  </div>
+</div>
+
+<div class="section-label">Recent BTC blocks — whole network <span class="chip off" id="c-blocks">—</span></div>
+<div class="card wide" id="blocksList" style="padding:4px 12px"></div>
+<p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px">These are real network blocks from public data — not this project's finds. This project has found 0 blocks, because it has 0 customer-hosted hashrate. That number changes in public when it changes.</p>
+
+<div class="section-label">Get notified</div>
+<div class="card wide">
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">The waitlist lives on the main page — one list for BTC and BCH launches.</p>
+  <a class="btn" href="index.html#waitlist">Join the waitlist</a>
+</div>
+
+</main>
+
+<footer>
+  © 2026 BeeHash Cloud — pre-launch · <a href="index.html">Home</a> · <a href="bch.html">BCH page</a><br>
+  Nothing here is investment advice. Solo mining is a lottery.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG + STATE
+   ============================================================ */
+const CACHE_KEY = 'btc_cache_v1';
+const CACHE_TTL = 60_000;
+
+const S = {
+  price: null, chg: null, height: null, hashEH: null,
+  selPlan: 10, selDays: 7,
+  plans: [
+    { th: 1,   p1: 1.00,  p7: 5.00,   p30: 15.00 },
+    { th: 10,  p1: 7.00,  p7: 35.00,  p30: 99.00 },
+    { th: 50,  p1: 30.00, p7: 140.00, p30: 375.00 },
+    { th: 100, p1: 55.00, p7: 250.00, p30: 650.00 },
+    { th: 250, p1: 120.00,p7: 525.00, p30: 1300.00 },
+    { th: 500, p1: 220.00,p7: 950.00, p30: 2250.00 }
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 0) => n == null || Number.isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
+
+function chip(id, state) {
+  const el = $(id);
+  el.className = 'chip ' + state;
+  el.textContent = { live: 'LIVE', cached: 'CACHED', err: 'ERROR', off: '—' }[state] || state;
+}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600);}
+
+async function fj(url, timeoutMs = 12000) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { signal: ctl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+async function ft(url, timeoutMs = 12000) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { signal: ctl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.text();
+  } finally { clearTimeout(t); }
+}
+
+/* ============================================================
+   LIVE DATA — mempool.space (height, hashrate, blocks) + CoinGecko (price)
+   ============================================================ */
+function cacheGet(){try{const c=JSON.parse(localStorage.getItem(CACHE_KEY));if(c&&Date.now()-c.t<CACHE_TTL)return c.data;}catch(e){}return null;}
+function cacheSet(d){try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),data:d}));}catch(e){}}
+
+async function loadBTC() {
+  const cached = cacheGet();
+  if (cached) { render(cached, 'cached'); }
+
+  const out = { height: null, hashrate: null, blocks: null, cgPrice: null };
+  const [height, hashrate, blocks, cg] = await Promise.allSettled([
+    ft('https://mempool.space/api/blocks/tip/height'),
+    fj('https://mempool.space/api/v1/mining/hashrate/3d'),
+    fj('https://mempool.space/api/blocks'),
+    fj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true')
+  ]);
+
+  if (height.status === 'fulfilled') out.height = parseInt(height.value, 10);
+  if (hashrate.status === 'fulfilled') out.hashrate = hashrate.value?.currentHashrate;
+  if (blocks.status === 'fulfilled') out.blocks = Array.isArray(blocks.value) ? blocks.value : null;
+  if (cg.status === 'fulfilled') out.cgPrice = cg.value?.bitcoin;
+
+  if (out.height || out.hashrate || out.blocks || out.cgPrice) cacheSet(out);
+  render(out, 'live');
+}
+
+function render(d, mode) {
+  if (d.cgPrice?.usd) { S.price = d.cgPrice.usd; S.chg = d.cgPrice.usd_24h_change; }
+
+  if (d.height != null) S.height = d.height;
+  if (d.hashrate != null) S.hashEH = Number(d.hashrate) / 1e18;
+
+  const netOK = S.price != null || S.height != null || S.hashEH != null;
+  chip('c-net', netOK ? mode : 'err');
+
+  $('v-price').textContent = S.price != null ? '$' + fmt(S.price, 2) : '—';
+  $('s-price').textContent = S.chg != null ? (S.chg >= 0 ? '+' : '') + S.chg.toFixed(2) + '% 24h' : '';
+  if (S.price == null) $('v-price').innerHTML = '<span class="errv">unavailable</span>';
+
+  $('v-height').textContent = S.height != null ? '#' + fmt(S.height) : '—';
+  if (S.height == null) $('v-height').innerHTML = '<span class="errv">unavailable</span>';
+
+  $('v-hash').innerHTML = S.hashEH != null ? fmt(S.hashEH, 1) + ' <small>EH/s</small>' : '<span class="errv">unavailable</span>';
+  $('s-reward').textContent = S.price != null ? '≈ $' + fmt(3.125 * S.price, 0) + ' per block' : '≈ $—';
+
+  // recent blocks — real network blocks, clearly labeled as not ours
+  if (d.blocks && Array.isArray(d.blocks) && d.blocks.length > 0) {
+    chip('c-blocks', mode);
+    $('blocksList').innerHTML = d.blocks.slice(0, 8).map(b => {
+      const mins = Math.max(0, Math.floor((Date.now() - (b.timestamp * 1000)) / 60000));
+      const agoTxt = mins < 60 ? mins + 'm ago' : Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm ago';
+      const poolName = b.extras?.pool?.name || 'unknown';
+      return `<div class="blkrow"><span class="bh">#${fmt(b.height)}</span><span>${fmt(b.tx_count)} txs</span><span class="bm">${poolName}</span><span class="bm">${agoTxt}</span></div>`;
+    }).join('');
+  } else {
+    chip('c-blocks', 'err');
+    $('blocksList').innerHTML = '<div class="notice errbox" style="margin:8px 0"><b>Block feed unavailable.</b> mempool.space may be unreachable or returned unexpected data.</div>';
+  }
+
+  renderPlans();
+  renderOdds();
+}
+
+/* ============================================================
+   PLANS + ODDS — pure computation from live data
+   ============================================================ */
+function setDur(d, el) {
+  S.selDays = d;
+  document.querySelectorAll('.dur').forEach(x => x.classList.remove('sel'));
+  el.classList.add('sel');
+  renderPlans(); renderOdds();
+}
+function setPlan(th) { S.selPlan = th; renderPlans(); renderOdds(); }
+
+function renderPlans() {
+  $('planGrid').innerHTML = S.plans.map(p => {
+    const price = p['p' + S.selDays];
+    return `<div class="plan ${p.th === S.selPlan ? 'sel' : ''}" onclick="setPlan(${p.th})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')setPlan(${p.th})">
+      <div class="ph">${p.th}</div><div class="pu">TH/s</div>
+      <div class="pp">$${price.toFixed(price < 10 ? 2 : 0)} <span style="color:var(--muted);font-size:10px">/ ${S.selDays === 1 ? '24h' : S.selDays + 'd'}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderOdds() {
+  const ready = S.hashEH && S.hashEH > 0 && S.price && S.price > 0;
+  chip('c-calc', ready ? 'live' : 'err');
+  if (!ready) {
+    $('oddsOut').innerHTML = '';
+    $('calcNote').innerHTML = '<b>Live data unavailable.</b> Odds need current network hashrate and BTC price — no stale guesses shown.';
+    return;
+  }
+
+  const plan = S.plans.find(p => p.th === S.selPlan);
+  const price = plan['p' + S.selDays];
+  const netTH = S.hashEH * 1e6;
+  const dailyChance = netTH > 0 ? (S.selPlan / netTH) * 144 : 0;
+  const periodChance = dailyChance > 0 ? 1 - Math.pow(1 - dailyChance / 144, 144 * S.selDays) : 0;
+  const expectedDays = dailyChance > 0 ? 1 / dailyChance : Infinity;
+  const winUsd = 3.125 * S.price;
+
+  const cell = (k, v, sub = '') => `<div class="card"><div class="k">${k}</div><div class="v" style="font-size:14px">${v}</div>${sub ? `<div class="sub2">${sub}</div>` : ''}</div>`;
+  $('oddsOut').innerHTML =
+    cell('Win chance', (periodChance * 100).toFixed(periodChance < 0.0001 ? 6 : 3) + '%', 'over ' + (S.selDays === 1 ? '24h' : S.selDays + ' days')) +
+    cell('Expected wait', expectedDays > 730 ? fmt(expectedDays / 365, 0) + ' yrs' : expectedDays > 365 ? fmt(expectedDays / 365, 1) + ' yrs' : fmt(expectedDays, 0) + ' days', 'average, at ' + S.selPlan + ' TH/s') +
+    cell('Block payout', '$' + fmt(winUsd, 0), '3.125 BTC, winner-take-all') +
+    cell('Rental cost', '$' + fmt(price, 2), '$' + (price / S.selPlan / S.selDays).toFixed(3) + ' /TH/day') +
+    cell('Cost per 0.01% odds', periodChance > 0 ? '$' + fmt(price / (periodChance * 10000), 2) : '—', 'lottery-ticket math') +
+    cell('EV per period', '$' + fmt(periodChance * winUsd, 4), 'expected value, pre-variance');
+
+  $('calcNote').innerHTML = '<b>Solo mining is a lottery.</b> "Expected wait" is an average over infinite tries — a rental can win on day one or never. Expected value is not a promise. BTC odds at small TH/s are astronomically long — this is a lottery ticket, not an income plan.';
+}
+
+/* ============================================================
+   POOL PICK + PROOF LINKS
+   ============================================================ */
+const POOLS = {
+  'ckpool-solo': {
+    name: 'CKPool Solo',
+    type: 'SOLO',
+    stratum: 'stratum+tcp://solo.ckpool.org:3333',
+    fee: '0% — donation optional',
+    blurb: 'Winner-take-all. Your BTC address is the worker username, password "x". The most established BTC solo pool, no registration required.'
+  },
+  'mineshop-solo': {
+    name: 'Mineshop Solo',
+    type: 'SOLO',
+    stratum: 'stratum+tcp://solo.mineshop.eu:3333',
+    fee: '0%',
+    blurb: 'Winner-take-all. EU-based with a Germany low-latency endpoint. This is where BeeHash\'s own operator proof link points.'
+  }
+};
+
+function onPoolPick() {
+  const id = $('poolPick').value;
+  const p = POOLS[id];
+  localStorage.setItem('bh_btc_pool_pref', id);
+  $('poolPickDetail').innerHTML =
+    '<b>' + p.name + '</b> · <span style="color:var(--btc)">' + p.type + '</span><br>' +
+    'Stratum: <code>' + p.stratum + '</code><br>' +
+    'Fee: ' + p.fee + '<br>' + p.blurb;
+}
+
+function openProof(which) {
+  const addr = ($('proofAddr').value || '').trim();
+  if (!addr || addr.length < 15) {
+    toast('Enter a BTC address first');
+    return;
+  }
+  localStorage.setItem('bh_btc_proof_addr', addr);
+  const enc = encodeURIComponent(addr);
+  const urls = {
+    'ckpool': 'https://solo.ckpool.org/users/' + enc,
+    'mineshop': 'https://solo.mineshop.eu/miner/?wallet=' + enc
+  };
+  const labels = { 'ckpool': 'CKPool Solo', 'mineshop': 'Mineshop Solo' };
+  const url = urls[which];
+  $('proofLinks').innerHTML =
+    '<div class="notice okbox" style="border-left-color:var(--btc)">' +
+    '<b>' + labels[which] + ' proof link</b><br>' +
+    '<a href="' + url + '" target="_blank" rel="noopener" style="color:var(--btc);word-break:break-all">' + url + '</a><br>' +
+    '<span style="font-size:11px">Opens the pool\'s public account page for this address. If the pool shows hashrate/shares, that is independent proof.</span></div>';
+  window.open(url, '_blank', 'noopener');
+}
+
+const pref = localStorage.getItem('bh_btc_pool_pref');
+if (pref && POOLS[pref] && $('poolPick')) { $('poolPick').value = pref; }
+if ($('poolPick')) onPoolPick();
+const pa = localStorage.getItem('bh_btc_proof_addr');
+if (pa && $('proofAddr')) $('proofAddr').value = pa;
+
+loadBTC();
+setInterval(() => { localStorage.removeItem(CACHE_KEY); loadBTC(); }, 60000);
+</script>
 </body>
 </html>
