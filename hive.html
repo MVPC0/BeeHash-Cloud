@@ -18,8 +18,13 @@ body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sa
 .nav-links{display:flex;gap:12px;flex-wrap:wrap}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:.85rem;font-weight:600;text-transform:uppercase}.nav-links a:hover{color:var(--gold)}
 .wallet-input{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-primary);font-family:Rajdhani,sans-serif;font-size:.9rem;width:min(320px,100%);outline:none}
 .wallet-input:focus{border-color:var(--gold)}
+.wallet-input.err{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
 .btn{padding:8px 16px;border-radius:8px;border:none;font-family:Rajdhani,sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}.btn-outline:hover{border-color:var(--gold);color:var(--gold)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.chain-select{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.chain-btn{flex:1;padding:10px 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-secondary);font-family:Orbitron,sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.chain-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(245,184,0,.08)}
+.chain-btn .sym{font-size:1.1rem;display:block;margin-bottom:2px}
 .container{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:16px 20px 48px}
 .honest-banner{background:linear-gradient(90deg,rgba(245,184,0,.1),rgba(245,184,0,.02));border:1px solid rgba(245,184,0,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:.85rem;color:var(--text-secondary);line-height:1.55}
 .honest-banner .badge{display:inline-block;background:var(--gold);color:#000;padding:3px 10px;border-radius:4px;font-weight:700;font-size:.7rem;text-transform:uppercase;margin-bottom:8px}
@@ -28,14 +33,12 @@ body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sa
 .gate-card h1{font-family:Orbitron,sans-serif;font-size:1.35rem;color:var(--gold);margin-bottom:10px}
 .gate-card p{color:var(--text-secondary);font-size:.95rem;margin-bottom:18px;line-height:1.5}
 .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-@media(max-width:900px){.dashboard-grid{grid-template-columns:1fr}}
 .panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden}
 .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
 .panel-title{font-family:Orbitron,sans-serif;font-size:.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:blink 1.5s infinite}.live-dot.off{background:var(--text-muted);animation:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .net-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-@media(max-width:700px){.net-stats{grid-template-columns:1fr 1fr}}
 .net-stat{background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer}
 .net-stat:hover{border-color:var(--gold)}
 .net-val{font-family:Orbitron,sans-serif;font-size:.95rem;font-weight:700}
@@ -86,46 +89,103 @@ select.wallet-input{cursor:pointer;width:100%}
 .notice.ok{border-left-color:var(--green)}.notice.err{border-left-color:var(--red)}.notice strong{color:var(--text-primary)}
 .footer{text-align:center;padding:28px 12px 40px;color:var(--text-muted);font-size:.75rem;line-height:1.6}.footer a{color:var(--gold);text-decoration:none}
 .error-toast{position:fixed;bottom:20px;right:20px;background:var(--bg-card);border:1px solid var(--red);border-radius:10px;padding:12px 16px;color:var(--red);font-size:.8rem;z-index:200;max-width:300px;display:none}.error-toast.show{display:block}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:640px){
+  .topbar{padding:10px 14px}
+  .nav-links{gap:8px;font-size:.75rem;margin-left:0;width:100%;justify-content:center;padding-top:4px;border-top:1px solid var(--border)}
+  .container{padding:12px 14px 40px}
+  .gate-card{margin:24px auto;padding:20px 16px}
+  .gate-card h1{font-size:1.1rem}
+  .dashboard-grid{grid-template-columns:1fr}
+  .net-stats{grid-template-columns:1fr 1fr}
+  .net-val{font-size:.85rem}
+  .tabs button{font-size:.75rem;padding:8px 6px}
+  .tier-row{grid-template-columns:repeat(3,1fr)}
+  .bee-cards-grid{grid-template-columns:repeat(2,1fr)}
+  .connection-panel{flex-direction:column;align-items:flex-start}
+  .wallet-input{font-size:16px;padding:10px 12px}
+  .btn{width:100%;padding:10px}
+  .chain-select{flex-direction:column}
+  .chain-btn{width:100%}
+}
+@media(max-width:420px){
+  .tier-row{grid-template-columns:repeat(2,1fr)}
+  .net-stats{grid-template-columns:1fr}
+  .honeycomb-grid{grid-template-columns:repeat(3,1fr)}
+}
+/* Touch-friendly */
+button,a,select,input{min-height:44px;min-width:44px}
 </style>
 </head>
 <body>
 <div class="bg-honeycomb"></div>
 <div class="error-toast" id="errorToast"></div>
+
 <div class="topbar">
   <a class="logo" href="index.html"><div class="logo-icon">🐝</div><span>BEEHASH <span style="color:var(--text-secondary);font-size:.7rem">HIVE</span></span></a>
   <span class="tag">BETA</span>
-  <div class="nav-links"><a href="index.html">Home</a><a href="rent.html">Rent</a><a href="bch.html">BCH</a><a href="app.html">App</a></div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="rent.html">Rent</a>
+    <a href="dashboard.html">Dash</a>
+    <a href="btc.html">BTC</a>
+    <a href="bch.html">BCH</a>
+  </div>
   <div id="topWallet" style="display:none;align-items:center;gap:8px">
     <span style="font-size:.75rem;color:var(--text-muted);font-family:monospace" id="walletPill"></span>
     <button class="btn btn-outline" onclick="disconnectHive()">Leave</button>
   </div>
 </div>
+
 <div class="container" id="gateView">
   <div class="gate-card">
     <h1>Enter the Hive</h1>
-    <p>Invite-only beta dashboard. <strong style="color:var(--text-primary)">No wallet required</strong> from testers — BeeHash handles routing for beta. Session is stored in <strong style="color:var(--text-primary)">this browser only</strong> (demo access, not a real account server).</p>
-    <div class="field"><label for="walletInput">Display name or invite code (optional)</label>
-    <input class="wallet-input" id="walletInput" placeholder="e.g. beta-3 or your name" autocomplete="off" spellcheck="false" style="width:100%;text-align:left"></div>
-    <button class="btn btn-gold" style="width:100%;margin-top:8px" onclick="enterHive()">Enter Hive</button>
-    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No payments. No fake hashrate. Hosted TH stays 0 until your seat is allocated.</p>
+    <p>Connect your wallet to view your dashboard. <strong style="color:var(--text-primary)">Valid BTC or BCH address required</strong>. Session stored in this browser only.</p>
+
+    <div class="chain-select">
+      <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
+        <span class="sym">₿</span>BTC
+      </button>
+      <button type="button" class="chain-btn" id="btnBch" onclick="setChain('bch')">
+        <span class="sym">₿</span>BCH
+      </button>
+    </div>
+
+    <div class="field">
+      <label for="walletInput" id="walletLabel">BTC payout address</label>
+      <input class="wallet-input" id="walletInput" placeholder="bc1q… or 1… or 3…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left" oninput="clearErr()">
+    </div>
+
+    <div class="notice" id="walletHint" style="font-size:.75rem">
+      Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
+    </div>
+
+    <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
+
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No payments in beta. Hosted TH stays 0 until your seat is allocated. Invalid addresses are blocked.</p>
   </div>
 </div>
+
 <div class="container" id="dashView" style="display:none">
   <div class="honest-banner">
-    <div class="badge">Real talk</div>
-    <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments · <strong>no wallet from testers</strong>. Operator BTC proof is separate (Home). Rewards go to <strong>your</strong> wallet on a real pool. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
+    <div class="badge" id="chainBadge">BTC</div>
+    <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. Rewards go to <strong id="payoutAddr" style="color:var(--gold)">your wallet</strong>. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
   </div>
+
   <div class="net-stats">
-    <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
+    <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label" id="priceLabel">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
     <div class="net-stat" onclick="refreshData()"><div class="net-val" id="blockHeight">—</div><div class="net-label">Block Height</div><div class="net-source" id="heightSource">—</div></div>
     <div class="net-stat" onclick="refreshData()"><div class="net-val" id="networkHash">—</div><div class="net-label">Network Hashrate</div><div class="net-source" id="hashSource">—</div></div>
     <div class="net-stat"><div class="net-val" id="hostedHash">0 TH/s</div><div class="net-label">Your Hosted Hash</div><div class="net-source">Honest zero</div></div>
   </div>
+
   <div class="tabs">
     <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
     <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
     <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
   </div>
+
   <div class="panel-section on" id="sec-swarm">
     <div class="dashboard-grid">
       <div class="panel">
@@ -160,6 +220,7 @@ select.wallet-input{cursor:pointer;width:100%}
       <button class="btn btn-outline" style="font-size:.7rem" onclick="copyConn()">Copy</button>
     </div>
   </div>
+
   <div class="panel-section" id="sec-miners">
     <div class="panel">
       <div class="panel-title">Base plan preference</div>
@@ -180,6 +241,7 @@ select.wallet-input{cursor:pointer;width:100%}
       <div id="minerMsg"></div>
     </div>
   </div>
+
   <div class="panel-section" id="sec-boost">
     <div class="panel">
       <div class="panel-title">Boost — add-on (separate)</div>
@@ -200,8 +262,8 @@ select.wallet-input{cursor:pointer;width:100%}
             <option value="hmpool-bch">Shared · HashedMax BCH</option>
           </select>
         </div>
-        <div class="field"><label for="presetWorker">Payout address (optional — not required in beta)</label>
-          <input class="wallet-input" id="presetWorker" placeholder="Leave blank in beta — operator-managed" style="width:100%">
+        <div class="field"><label for="presetWorker">Payout address</label>
+          <input class="wallet-input" id="presetWorker" placeholder="Your wallet address" style="width:100%">
         </div>
         <div class="notice" id="presetDetail"></div>
       </div>
@@ -215,14 +277,16 @@ select.wallet-input{cursor:pointer;width:100%}
       <div id="boostMsg"></div>
     </div>
   </div>
+
   <div class="footer">
     <strong style="color:var(--gold)">BeeHash Hive</strong> — zero fake numbers.<br>
     <a href="index.html#beta">Beta details</a> · <a href="index.html#waitlist">Request invite</a> · <a href="rent.html">Rent info</a><br>
     Solo mining is a lottery. Nothing here is investment advice.
   </div>
 </div>
+
 <script>
-const SESSION_KEY='bh_hive_wallet',MINER_KEY='bh_miner_pref',BOOST_KEY='bh_boost_pref';
+const SESSION_KEY='bh_hive_wallet',CHAIN_KEY='bh_hive_chain',MINER_KEY='bh_miner_pref',BOOST_KEY='bh_boost_pref';
 const PRESETS={'mineshop-btc':{name:'MineShop BTC Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'BTC solo · public stats on solo.mineshop.eu · full block to your bc1 address on find.'},'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'Full block to your BCH address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
 const TIERS=[
   {th:1,label:'Core',sub:{week:7.99,month:24.99,year:214.99},once:{week:10.99,month:29.99,year:249.99}},
@@ -234,32 +298,201 @@ const TIERS=[
 ];
 const BOOST_SIZES=[1,5,10,25,50,100];
 const workers=[{name:'Slot-01'},{name:'Slot-02'},{name:'Slot-03'},{name:'Slot-04'},{name:'Slot-05'},{name:'Slot-06'}];
-let priceMode='sub',selectedMinerTh=null,selectedBoostTh=null,currentWallet='';
+let priceMode='sub',selectedMinerTh=null,selectedBoostTh=null,currentWallet='',currentChain='btc';
 const $=id=>document.getElementById(id);
+
+/* ===== WALLET VALIDATION ===== */
+function isValidBTC(addr){
+  if(!addr||addr.length<26)return false;
+  const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  const bech32=/^bc1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  const taproot=/^bc1p[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  return legacy.test(addr)||bech32.test(addr)||taproot.test(addr);
+}
+function isValidBCH(addr){
+  if(!addr||addr.length<25)return false;
+  const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  const cashaddr=/^bitcoincash:[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  const simple=/^[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  return legacy.test(addr)||cashaddr.test(addr)||simple.test(addr);
+}
+function validateAddress(addr,chain){
+  addr=(addr||'').trim();
+  if(!addr)return{valid:false,msg:'Enter a wallet address'};
+  if(chain==='btc'){
+    if(isValidBTC(addr))return{valid:true,msg:'Valid BTC address'};
+    return{valid:false,msg:'Invalid BTC address. Use Legacy (1/3…), SegWit (bc1q…), or Taproot (bc1p…)'}
+  }
+  if(chain==='bch'){
+    if(isValidBCH(addr))return{valid:true,msg:'Valid BCH address'};
+    return{valid:false,msg:'Invalid BCH address. Use CashAddr (bitcoincash:q…), Simple (q…), or Legacy (1…)'}
+  }
+  return{valid:false,msg:'Select a chain'};
+}
+
+/* ===== CHAIN SELECTOR ===== */
+function setChain(chain){
+  currentChain=chain;
+  document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
+  $(chain==='btc'?'btnBtc':'btnBch').classList.add('on');
+
+  const input=$('walletInput');
+  const label=$('walletLabel');
+  const hint=$('walletHint');
+
+  if(chain==='btc'){
+    label.textContent='BTC payout address';
+    input.placeholder='bc1q… or 1… or 3…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).';
+  }else{
+    label.textContent='BCH payout address';
+    input.placeholder='bitcoincash:q… or q…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin Cash</strong> address (CashAddr, Simple, or Legacy).';
+  }
+  input.classList.remove('err');
+}
+function clearErr(){$('walletInput').classList.remove('err')}
+
+/* ===== GATE / DASHBOARD ===== */
 function showError(m){const t=$('errorToast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
-function enterHive(){let w=($('walletInput').value||'').trim();if(!w)w='beta-guest';if(w.length<2){showError('Enter a short name or invite code');return}currentWallet=w;localStorage.setItem(SESSION_KEY,w);showDash(w)}
-function disconnectHive(){localStorage.removeItem(SESSION_KEY);currentWallet='';$('dashView').style.display='none';$('gateView').style.display='block';$('topWallet').style.display='none'}
-function showDash(wallet){currentWallet=wallet;$('gateView').style.display='none';$('dashView').style.display='block';$('topWallet').style.display='flex';$('walletPill').textContent=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;$('connUser').textContent='beehash.'+wallet.replace(/\s+/g,'-').toLowerCase();if($('presetWorker'))$('presetWorker').placeholder='Operator sets payout for beta';renderSwarm();renderBeeCards();setPriceMode('sub');renderBoostTiers();onPreset();onDestMode();loadPrefs();tryFetchLiveData();const tab=new URLSearchParams(location.search).get('tab');if(tab==='boost'||tab==='miners')gotoTab(tab)}
+
+function enterHive(){
+  const addr=($('walletInput').value||'').trim();
+  const result=validateAddress(addr,currentChain);
+
+  if(!result.valid){
+    $('walletInput').classList.add('err');
+    showError(result.msg);
+    return;
+  }
+
+  currentWallet=addr;
+  localStorage.setItem(SESSION_KEY,addr);
+  localStorage.setItem(CHAIN_KEY,currentChain);
+  showDash(addr,currentChain);
+}
+
+function disconnectHive(){
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(CHAIN_KEY);
+  currentWallet='';
+  currentChain='btc';
+  $('dashView').style.display='none';
+  $('gateView').style.display='block';
+  $('topWallet').style.display='none';
+  setChain('btc');
+  $('walletInput').value='';
+  $('walletInput').classList.remove('err');
+}
+
+function showDash(wallet,chain){
+  currentWallet=wallet;
+  currentChain=chain||'btc';
+
+  $('gateView').style.display='none';
+  $('dashView').style.display='block';
+  $('topWallet').style.display='flex';
+
+  const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
+  $('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
+  $('payoutAddr').textContent=short;
+  $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
+  $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
+  $('connUser').textContent='beehash.'+wallet.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+
+  // Update price label
+  $('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
+
+  // Update preset pools based on chain
+  const poolSelect=$('presetPool');
+  if(poolSelect){
+    if(chain==='bch'){
+      poolSelect.innerHTML='<option value="2miners-bch">Solo · 2Miners BCH</option><option value="mole-bch">Solo · MolePool BCH</option><option value="hmpool-bch">Shared · HashedMax BCH</option>';
+    }else{
+      poolSelect.innerHTML='<option value="mineshop-btc">Solo · MineShop BTC</option><option value="ckpool-btc">Solo · CKPool BTC</option>';
+    }
+  }
+
+  if($('presetWorker'))$('presetWorker').placeholder='Your '+chain.toUpperCase()+' wallet address';
+
+  renderSwarm();
+  renderBeeCards();
+  setPriceMode('sub');
+  renderBoostTiers();
+  onPreset();
+  onDestMode();
+  loadPrefs();
+  tryFetchLiveData();
+
+  const tab=new URLSearchParams(location.search).get('tab');
+  if(tab==='boost'||tab==='miners')gotoTab(tab);
+}
+
 function gotoTab(name){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));document.querySelectorAll('.panel-section').forEach(p=>p.classList.toggle('on',p.id==='sec-'+name))}
 function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
 function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
-function tryFetchLiveData(){const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
-fetch('https://mempool.space/api/v1/prices').then(r=>r.json()).then(d=>{$('btcPrice').textContent='$'+Number(d.USD).toLocaleString();s('priceSource','mempool.space')}).catch(()=>s('priceSource','unavailable'));
-fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text()).then(h=>{$('blockHeight').textContent=Number(h).toLocaleString();s('heightSource','mempool.space')}).catch(()=>s('heightSource','unavailable'));
-fetch('https://mempool.space/api/v1/mining/hashrate/3d').then(r=>r.json()).then(d=>{if(d.hashrates&&d.hashrates.length){const hps=d.hashrates[d.hashrates.length-1].avgHashrate;const txt=hps>=1e18?(hps/1e18).toFixed(2)+' EH/s':(hps/1e15).toFixed(2)+' PH/s';$('networkHash').textContent=txt;s('hashSource','mempool.space')}}).catch(()=>s('hashSource','unavailable'))}
+
+function tryFetchLiveData(){
+  const chain=currentChain||localStorage.getItem(CHAIN_KEY)||'btc';
+  const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
+
+  if(chain==='bch'){
+    // BCH data from Blockchair
+    fetch('https://api.blockchair.com/bitcoin-cash/stats').then(r=>r.json()).then(d=>{
+      if(d.data&&d.data.market_price_usd)$('btcPrice').textContent='$'+Number(d.data.market_price_usd).toLocaleString();
+      s('priceSource','blockchair.com');
+    }).catch(()=>s('priceSource','unavailable'));
+    fetch('https://api.blockchair.com/bitcoin-cash/stats').then(r=>r.json()).then(d=>{
+      if(d.data&&d.data.blocks)$('blockHeight').textContent=Number(d.data.blocks).toLocaleString();
+      s('heightSource','blockchair.com');
+    }).catch(()=>s('heightSource','unavailable'));
+    fetch('https://api.blockchair.com/bitcoin-cash/stats').then(r=>r.json()).then(d=>{
+      if(d.data&&d.data.hashrate_24h){
+        const h=d.data.hashrate_24h;
+        const txt=h>=1e18?(h/1e18).toFixed(2)+' EH/s':(h/1e15).toFixed(2)+' PH/s';
+        $('networkHash').textContent=txt;
+      }
+      s('hashSource','blockchair.com');
+    }).catch(()=>s('hashSource','unavailable'));
+  }else{
+    // BTC data from mempool.space
+    fetch('https://mempool.space/api/v1/prices').then(r=>r.json()).then(d=>{$('btcPrice').textContent='$'+Number(d.USD).toLocaleString();s('priceSource','mempool.space')}).catch(()=>s('priceSource','unavailable'));
+    fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text()).then(h=>{$('blockHeight').textContent=Number(h).toLocaleString();s('heightSource','mempool.space')}).catch(()=>s('heightSource','unavailable'));
+    fetch('https://mempool.space/api/v1/mining/hashrate/3d').then(r=>r.json()).then(d=>{if(d.hashrates&&d.hashrates.length){const hps=d.hashrates[d.hashrates.length-1].avgHashrate;const txt=hps>=1e18?(hps/1e18).toFixed(2)+' EH/s':(hps/1e15).toFixed(2)+' PH/s';$('networkHash').textContent=txt;s('hashSource','mempool.space')}}).catch(()=>s('hashSource','unavailable'));
+  }
+}
 function refreshData(){tryFetchLiveData()}
+
 function setPriceMode(mode){priceMode=mode;$('btnSub').className=mode==='sub'?'btn btn-gold':'btn btn-outline';$('btnOnce').className=mode==='once'?'btn btn-gold':'btn btn-outline';$('minerTiers').innerHTML=TIERS.map(t=>{const p=t[mode];return '<div class="tier'+(selectedMinerTh===t.th?' on':'')+'" onclick="selectMiner('+t.th+')"><div class="tn">'+t.label+'</div><div class="th">'+t.th+'</div><div class="tp">$'+p.month.toFixed(0)+'/mo</div></div>'}).join('');updateMinerSummary()}
 function selectMiner(th){selectedMinerTh=th;setPriceMode(priceMode)}
 function updateMinerSummary(){if(!selectedMinerTh){$('minerSummary').innerHTML='<strong>Select a size.</strong>';return}const t=TIERS.find(x=>x.th===selectedMinerTh);const term=$('termPick').value;const price=t[priceMode][term];const kind=priceMode==='sub'?'Subscription':'One-time';$('minerSummary').innerHTML='<strong>'+t.label+' · '+t.th+' TH</strong> · '+kind+' · '+term+'<br>List: <strong style="color:var(--gold)">$'+price.toFixed(2)+'</strong> · not for sale in beta'}
 function saveMinerPref(){if(!selectedMinerTh){$('minerMsg').innerHTML='<div class="notice err"><strong>Pick a size first.</strong></div>';return}localStorage.setItem(MINER_KEY,JSON.stringify({th:selectedMinerTh,mode:priceMode,term:$('termPick').value}));$('minerMsg').innerHTML='<div class="notice ok"><strong>Preference saved</strong> on this device. Not an order.</div>'}
-function renderBoostTiers(){$('boostTiers').innerHTML=BOOST_SIZES.map(th=>{const t=TIERS.find(x=>x.th===th)||TIERS[0];return '<div class="tier'+(selectedBoostTh===th?' on':'')+'" onclick="selectBoost('+th+')"><div class="tn">+'+th+' TH</div><div class="th">'+th+'</div><div class="tp">from $'+t.sub.month.toFixed(0)+'</div></div>'}).join('')}
+function renderBoostTiers(){$('boostTiers').innerHTML=BOOST_SIZES.map(th=>{const t=TIERS.find(x=>x.th===th)||TIERS[0];return '<div class="tier'+(selectedBoostTh===th?' on':'')+'" onclick="selectBoost('+th+')"><div class="tn">+'+th+' TH</div><div class="th">'+th+'</div><div class="tp">$'+t.sub.month.toFixed(0)+'/mo</div></div>'}).join('')}
 function selectBoost(th){selectedBoostTh=th;renderBoostTiers()}
-function onDestMode(){const c=$('destMode').value==='custom';$('presetBox').style.display=c?'none':'block';$('customBox').style.display=c?'block':'none'}
-function onPreset(){const p=PRESETS[$('presetPool').value];$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br><code style="color:var(--gold);font-size:.75rem">'+p.stratum+'</code><br>'+p.note;$('stratumUrl').textContent=p.stratum}
-function saveBoostPref(){const mode=$('destMode').value;const data={th:selectedBoostTh,destMode:mode};if(mode==='custom'){data.url=($('customUrl').value||'').trim();data.worker=($('customWorker').value||'').trim();data.pass=($('customPass').value||'x').trim();if(!data.url||!data.worker){$('boostMsg').innerHTML='<div class="notice err"><strong>Need stratum URL and worker.</strong></div>';return}}else{data.pool=$('presetPool').value;data.worker=($('presetWorker').value||'').trim();/* beta: payout optional */}localStorage.setItem(BOOST_KEY,JSON.stringify(data));if(data.worker)$('connUser').textContent=data.worker+(data.worker.includes('.')?'':'.beehash');$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
-function loadPrefs(){try{const m=JSON.parse(localStorage.getItem(MINER_KEY)||'null');if(m){if(m.mode)priceMode=m.mode;if(m.th)selectedMinerTh=m.th;if(m.term)$('termPick').value=m.term;setPriceMode(priceMode)}const b=JSON.parse(localStorage.getItem(BOOST_KEY)||'null');if(b){if(b.th){selectedBoostTh=b.th;renderBoostTiers()}if(b.destMode){$('destMode').value=b.destMode;onDestMode()}if(b.pool){$('presetPool').value=b.pool;onPreset()}if(b.worker&&b.destMode!=='custom')$('presetWorker').value=b.worker;if(b.url)$('customUrl').value=b.url;if(b.worker&&b.destMode==='custom')$('customWorker').value=b.worker}}catch(e){}}
-function copyConn(){const text='URL: '+$('stratumUrl').textContent+'\nUser: '+$('connUser').textContent+'\nPass: x';navigator.clipboard.writeText(text).then(()=>showError('Copied')).catch(()=>{})}
-(function(){const w=localStorage.getItem(SESSION_KEY);if(w)showDash(w)})();
+function onDestMode(){$('presetBox').style.display=$('destMode').value==='preset'?'block':'none';$('customBox').style.display=$('destMode').value==='custom'?'block':'none'}
+function onPreset(){const id=$('presetPool').value;const p=PRESETS[id];if(!p)return;$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br>'+p.note+'<br><code>'+p.stratum+'</code>';localStorage.setItem('bh_preset_pool',id)}
+function saveBoostPref(){if(!selectedBoostTh){$('boostMsg').innerHTML='<div class="notice err"><strong>Pick a boost size first.</strong></div>';return}localStorage.setItem(BOOST_KEY,JSON.stringify({th:selectedBoostTh,pool:$('presetPool').value,mode:$('destMode').value}));$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
+function loadPrefs(){const m=localStorage.getItem(MINER_KEY);if(m){try{const o=JSON.parse(m);selectedMinerTh=o.th;priceMode=o.mode||'sub';$('termPick').value=o.term||'month';setPriceMode(priceMode)}catch(e){}}const b=localStorage.getItem(BOOST_KEY);if(b){try{const o=JSON.parse(b);selectedBoostTh=o.th;renderBoostTiers()}catch(e){}}const pp=localStorage.getItem('bh_preset_pool');if(pp&&$('presetPool'))$('presetPool').value=pp;onPreset()}
+function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser').textContent;navigator.clipboard.writeText(url+' · '+user+' · x').then(()=>showError('Copied to clipboard')).catch(()=>showError('Copy failed'))}
+
+/* ===== INIT ===== */
+(function init(){
+  const savedWallet=localStorage.getItem(SESSION_KEY);
+  const savedChain=localStorage.getItem(CHAIN_KEY);
+  if(savedWallet){
+    // Re-validate on load
+    const result=validateAddress(savedWallet,savedChain||'btc');
+    if(result.valid){
+      showDash(savedWallet,savedChain||'btc');
+    }else{
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(CHAIN_KEY);
+      setChain(savedChain||'btc');
+    }
+  }else{
+    setChain(savedChain||'btc');
+  }
+})();
 </script>
 </body>
 </html>
