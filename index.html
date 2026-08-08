@@ -10,12 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0c0e10; --panel:#14171b; --line:#242a31;
-  --honey:#f7b32b; --honey-dim:#a97c1d;
-  --live:#3ddc84; --err:#e5484d;
-  --text:#e8eaed; --muted:#8b939e;
-  --mono:'IBM Plex Mono',ui-monospace,monospace;
-  --disp:'Space Grotesk',system-ui,sans-serif;
+ --bg:#0c0e10; --panel:#14171b; --line:#242a31;
+ --honey:#f7b32b; --honey-dim:#a97c1d;
+ --live:#3ddc84; --err:#e5484d;
+ --text:#e8eaed; --muted:#8b939e;
+ --mono:'IBM Plex Mono',ui-monospace,monospace;
+ --disp:'Space Grotesk',system-ui,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{color-scheme:dark;scroll-behavior:smooth}
@@ -36,8 +36,8 @@ header a{margin-left:auto;color:var(--honey);font-size:13px;font-weight:700;text
 /* hero: honeycomb backdrop, thesis-first */
 .hero{position:relative;padding:56px 0 40px;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:-40px -40px auto auto;width:340px;height:340px;opacity:.06;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 2l24 14v28L28 58 4 44V16L28 2zm0 39l24 14v28L28 97 4 83V55l24-14z' fill='none' stroke='%23f7b32b' stroke-width='2'/%3E%3C/svg%3E");
-  background-size:56px 97px}
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 2l24 14v28L28 58 4 44V16L28 2zm0 39l24 14v28L28 97 4 83V55l24-14z' fill='none' stroke='%23f7b32b' stroke-width='2'/%3E%3C/svg%3E");
+ background-size:56px 97px}
 h1{font-size:clamp(30px,7vw,44px);line-height:1.12;letter-spacing:-.02em;font-weight:700;max-width:15ch}
 h1 em{font-style:normal;color:var(--honey)}
 .sub{color:var(--muted);font-size:15px;max-width:52ch;margin:16px 0 24px}
@@ -126,35 +126,35 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 /* ===== MOBILE RESPONSIVE ===== */
 @media(max-width:640px){
-  .wrap{padding:0 14px}
-  header{padding:14px 0;flex-wrap:wrap;gap:8px}
-  .hnav{gap:10px;font-size:12px;margin-left:0;width:100%;justify-content:center;padding-top:6px;border-top:1px solid var(--line)}
-  .hero{padding:36px 0 28px}
-  .hero h1{font-size:clamp(22px,7vw,30px)}
-  .hero p{font-size:13px}
-  .grid{grid-template-columns:1fr}
-  .grid3{grid-template-columns:1fr 1fr}
-  .hero-art img{height:auto;min-height:180px;object-fit:cover}
-  .card{padding:14px}
-  .card .v{font-size:17px}
-  .plans{grid-template-columns:repeat(2,1fr)}
-  .durs{flex-direction:column;gap:4px}
-  .dur{padding:10px}
-  .field{margin:8px 0}
-  .input{padding:12px;font-size:15px}
-  .btn{width:100%;padding:12px}
-  .blkrow{flex-direction:column;gap:2px;padding:10px 4px}
-  .blkrow .bh{font-size:13px}
-  footer{padding:16px 14px 24px;font-size:11px}
-  .section-label{font-size:9px}
-  .notice{padding:12px;font-size:12.5px}
-  .chip{font-size:8px}
+ .wrap{padding:0 14px}
+ header{padding:14px 0;flex-wrap:wrap;gap:8px}
+ .hnav{gap:10px;font-size:12px;margin-left:0;width:100%;justify-content:center;padding-top:6px;border-top:1px solid var(--line)}
+ .hero{padding:36px 0 28px}
+ .hero h1{font-size:clamp(22px,7vw,30px)}
+ .hero p{font-size:13px}
+ .grid{grid-template-columns:1fr}
+ .grid3{grid-template-columns:1fr 1fr}
+ .hero-art img{height:auto;min-height:180px;object-fit:cover}
+ .card{padding:14px}
+ .card .v{font-size:17px}
+ .plans{grid-template-columns:repeat(2,1fr)}
+ .durs{flex-direction:column;gap:4px}
+ .dur{padding:10px}
+ .field{margin:8px 0}
+ .input{padding:12px;font-size:15px}
+ .btn{width:100%;padding:12px}
+ .blkrow{flex-direction:column;gap:2px;padding:10px 4px}
+ .blkrow .bh{font-size:13px}
+ footer{padding:16px 14px 24px;font-size:11px}
+ .section-label{font-size:9px}
+ .notice{padding:12px;font-size:12.5px}
+ .chip{font-size:8px}
 }
 @media(max-width:420px){
-  .grid3{grid-template-columns:1fr}
-  .plans{grid-template-columns:1fr 1fr}
-  .logo{font-size:14px}
-  .prelaunch{font-size:8px}
+ .grid3{grid-template-columns:1fr}
+ .plans{grid-template-columns:1fr 1fr}
+ .logo{font-size:14px}
+ .prelaunch{font-size:8px}
 }
 /* Touch-friendly tap targets */
 button,a,select,input{min-height:44px;min-width:44px}
@@ -162,7 +162,7 @@ a{display:inline-flex;align-items:center}
 /* Prevent zoom on iOS inputs */
 input,select,textarea{font-size:16px}
 @media(max-width:640px){
-  input,select,textarea{font-size:16px}
+ input,select,textarea{font-size:16px}
 }
 
 </style>
@@ -171,98 +171,98 @@ input,select,textarea{font-size:16px}
 
 <div class="wrap">
 <header>
-  <div class="logo">
-    <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
-    BeeHash Cloud
-  </div>
-  <span class="prelaunch">PRE-LAUNCH</span>
-  <div class="hnav">
-    <a href="index.html">Home</a>
-    <a href="hive.html">Hive</a>
-    <a href="rent.html">Rent</a>
-    <a href="app.html">Tools</a>
-    <a href="#how">How it works</a>
-    <a href="terms.html">Terms</a>
-  </div>
+ <div class="logo">
+ <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
+ BeeHash Cloud
+ </div>
+ <span class="prelaunch">PRE-LAUNCH</span>
+ <div class="hnav">
+ <a href="index.html">Home</a>
+ <a href="hive.html">Hive</a>
+ <a href="rent.html">Rent</a>
+ <a href="app.html">Tools</a>
+ <a href="#how">How it works</a>
+ <a href="terms.html">Terms</a>
+ </div>
 </header>
 
 <section class="hero">
-  <h1>Hashrate hosting with <em>zero fake numbers.</em></h1>
-  <p class="sub">We rent you real SHA-256 hashrate. You enter <b>your</b> wallet. Solo blocks pay <b>you</b> — no middleman. Farm proof is public. Customer TH stays 0 until a seat is assigned.</p>
-  <a class="cta" href="hive.html">Open Hive</a>
-  <a class="cta ghost" href="#how">How it works</a>
-  <a class="cta ghost" href="#waitlist">Join waitlist</a>
+ <h1>Hashrate hosting with <em>zero fake numbers.</em></h1>
+ <p class="sub">We rent you real SHA-256 hashrate. You enter <b>your</b> wallet. Solo blocks pay <b>you</b> — no middleman. Farm proof is public. Customer TH stays 0 until a seat is assigned.</p>
+ <a class="cta" href="hive.html">Open Hive</a>
+ <a class="cta ghost" href="#how">How it works</a>
+ <a class="cta ghost" href="#waitlist">Join waitlist</a>
 
-  <div class="hero-art">
-    <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud — plug and play hashrate when miners are online" loading="eager">
-    <div class="cap"><b>Simple:</b> public farm proof · your payout address · no fake numbers.</div>
-  </div>
+ <div class="hero-art">
+ <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud — plug and play hashrate when miners are online" loading="eager">
+ <div class="cap"><b>Simple:</b> public farm proof · your payout address · no fake numbers.</div>
+ </div>
 </section>
 
 
 
 
 <div class="beta-banner" id="beta">
-  <span class="beta-tag">BETA · FULL</span>
-  <h2>Beta is full</h2>
-  <p>When your seat is live you get about <b>45–50 TH/s</b> for <b>7 days</b> of solo hashrate.</p>
-  <p><b>You enter your BTC or BCH address</b> in the Hive. If a block is found, the reward goes <b>straight to your wallet</b> (pool fee on find only). No middleman.</p>
-  <p>Solo at this size is a <b>lottery</b>. Beta is to prove delivery — not guaranteed profit.</p>
-  <div class="beta-meta">All 5 seats taken · Waitlist stays open for the next round</div>
-  <div class="beta-actions">
-    <a class="cta" href="#waitlist">Join waitlist (next round)</a>
-    <a class="cta ghost" href="hive.html">Open Hive</a>
-  </div>
-  <div class="proof-card" style="margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(61,220,132,.35);background:rgba(61,220,132,.06)">
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--live);font-weight:700;margin-bottom:6px">OPERATOR FARM PROOF · NOT YOUR SEAT</div>
-    <div style="font-size:13px;color:var(--text);font-weight:600">BTC solo on MineShop (BeeHash farm)</div>
-    <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:var(--live);font-family:var(--mono);font-size:12px;font-weight:600">View live farm stats ↗</a>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45">This is the operator farm page. Your beta payout uses the address <b style="color:var(--text)">you</b> enter in Hive.</div>
-  </div>
+ <span class="beta-tag">BETA · FULL</span>
+ <h2>Beta is full</h2>
+ <p>When your seat is live you get about <b>45–50 TH/s</b> for <b>7 days</b> of solo hashrate.</p>
+ <p><b>You enter your BTC or BCH address</b> in the Hive. If a block is found, the reward goes <b>straight to your wallet</b> (pool fee on find only). No middleman.</p>
+ <p>Solo at this size is a <b>lottery</b>. Beta is to prove delivery — not guaranteed profit.</p>
+ <div class="beta-meta">All 5 seats taken · Waitlist stays open for the next round</div>
+ <div class="beta-actions">
+ <a class="cta" href="#waitlist">Join waitlist (next round)</a>
+ <a class="cta ghost" href="hive.html">Open Hive</a>
+ </div>
+ <div class="proof-card" style="margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(61,220,132,.35);background:rgba(61,220,132,.06)">
+ <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--live);font-weight:700;margin-bottom:6px">OPERATOR FARM PROOF · NOT YOUR SEAT</div>
+ <div style="font-size:13px;color:var(--text);font-weight:600">BTC solo on MineShop (BeeHash farm)</div>
+ <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:var(--live);font-family:var(--mono);font-size:12px;font-weight:600">View live farm stats ↗</a>
+ <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45">This is the operator farm page. Your beta payout uses the address <b style="color:var(--text)">you</b> enter in Hive.</div>
+ </div>
 </div>
 
 
 <div class="section-label" id="how">How BeeHash works</div>
 <div class="steps">
-  <div class="step"><div class="num">1</div><div><h4>We host the miners</h4><p>BeeHash runs real SHA-256 hardware. Operator farm proof is public so you can verify hashrate exists.</p></div></div>
-  <div class="step"><div class="num">2</div><div><h4>You open the Hive</h4><p>Pick BTC or BCH and enter <b>your</b> payout address. That address is where solo block rewards go.</p></div></div>
-  <div class="step"><div class="num">3</div><div><h4>Hash is pointed at a pool</h4><p>Rented power is delivered toward a solo (or shared) pool using your address as the worker. No BeeHash middleman wallet.</p></div></div>
-  <div class="step"><div class="num">4</div><div><h4>Blocks pay you</h4><p>If a block is found, the pool pays your address. Solo is a lottery — small TH means rare finds.</p></div></div>
+ <div class="step"><div class="num">1</div><div><h4>We host the miners</h4><p>BeeHash runs real SHA-256 hardware. Operator farm proof is public so you can verify hashrate exists.</p></div></div>
+ <div class="step"><div class="num">2</div><div><h4>You open the Hive</h4><p>Pick BTC or BCH and enter <b>your</b> payout address. That address is where solo block rewards go.</p></div></div>
+ <div class="step"><div class="num">3</div><div><h4>Hash is pointed at a pool</h4><p>Rented power is delivered toward a solo (or shared) pool using your address as the worker. No BeeHash middleman wallet.</p></div></div>
+ <div class="step"><div class="num">4</div><div><h4>Blocks pay you</h4><p>If a block is found, the pool pays your address. Solo is a lottery — small TH means rare finds.</p></div></div>
 </div>
 
 <div class="section-label">Where to go</div>
 <div class="map">
-  <a href="hive.html"><strong>Hive</strong><span>Enter your wallet · view dashboard · beta seats</span></a>
-  <a href="rent.html"><strong>Rent</strong><span>What hashrate rental is · pricing later</span></a>
-  <a href="app.html"><strong>Tools</strong><span>Live BTC stats · calculators</span></a>
-  <a href="bch.html"><strong>BCH</strong><span>Bitcoin Cash tools & odds</span></a>
-  <a href="#beta"><strong>Beta</strong><span>Full · join waitlist for next round</span></a>
-  <a href="#waitlist"><strong>Waitlist</strong><span>Request an invite by email</span></a>
+ <a href="hive.html"><strong>Hive</strong><span>Enter your wallet · view dashboard · beta seats</span></a>
+ <a href="rent.html"><strong>Rent</strong><span>What hashrate rental is · pricing later</span></a>
+ <a href="app.html"><strong>Tools</strong><span>Live BTC stats · calculators</span></a>
+ <a href="bch.html"><strong>BCH</strong><span>Bitcoin Cash tools & odds</span></a>
+ <a href="#beta"><strong>Beta</strong><span>Full · join waitlist for next round</span></a>
+ <a href="#waitlist"><strong>Waitlist</strong><span>Request an invite by email</span></a>
 </div>
 
 <div class="ticker">
-  <div class="tk"><div class="k">BTC price <span class="chip off" id="c-price">—</span></div><div class="v" id="v-price">—</div></div>
-  <div class="tk"><div class="k">Block height <span class="chip off" id="c-height">—</span></div><div class="v" id="v-height">—</div></div>
-  <div class="tk"><div class="k">Network hashrate <span class="chip off" id="c-hash">—</span></div><div class="v" id="v-hash">—</div></div>
-  <div class="tk"><div class="k">Hosted hashrate <span class="chip off">HONEST</span></div><div class="v">0 <small>TH/s</small></div></div>
-  <div class="tk"><div class="k">Customers <span class="chip off">HONEST</span></div><div class="v">0</div></div>
-  <div class="tk"><div class="k">Blocks found <span class="chip off">HONEST</span></div><div class="v">0</div></div>
+ <div class="tk"><div class="k">BTC price <span class="chip off" id="c-price">—</span></div><div class="v" id="v-price">—</div></div>
+ <div class="tk"><div class="k">Block height <span class="chip off" id="c-height">—</span></div><div class="v" id="v-height">—</div></div>
+ <div class="tk"><div class="k">Network hashrate <span class="chip off" id="c-hash">—</span></div><div class="v" id="v-hash">—</div></div>
+ <div class="tk"><div class="k">Hosted hashrate <span class="chip off">HONEST</span></div><div class="v">0 <small>TH/s</small></div></div>
+ <div class="tk"><div class="k">Customers <span class="chip off">HONEST</span></div><div class="v">0</div></div>
+ <div class="tk"><div class="k">Blocks found <span class="chip off">HONEST</span></div><div class="v">0</div></div>
 </div>
 <p class="src">Live values: <a href="https://mempool.space" rel="noopener">mempool.space</a> + CoinGecko, refreshed every 60s. Zeros are real zeros.</p>
 
 <div class="section-label">Where this actually stands</div>
 <div class="road">
-  <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and CKPool miner monitoring — all public APIs, all verifiable.</p></div></div>
-  <div class="rd"><span class="st done">DONE</span><div><h4>Operator BTC proof</h4><p>Farm hashrate is public on MineShop (solo). <b>Not</b> the same as customer beta seats — those stay at 0 TH until assigned.</p></div></div>
-  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Customer / beta hashrate</h4><p>Allocated TH for invitees. Opens only when a seat is assigned and delivery is verifiable.</p></div></div>
-  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
-  <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Open only after the two items above are done. Any site that sells you hashrate it can't prove exists is the thing this one was built against.</p></div></div>
+ <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and CKPool miner monitoring — all public APIs, all verifiable.</p></div></div>
+ <div class="rd"><span class="st done">DONE</span><div><h4>Operator BTC proof</h4><p>Farm hashrate is public on MineShop (solo). <b>Not</b> the same as customer beta seats — those stay at 0 TH until assigned.</p></div></div>
+ <div class="rd"><span class="st todo">NOT YET</span><div><h4>Customer / beta hashrate</h4><p>Allocated TH for invitees. Opens only when a seat is assigned and delivery is verifiable.</p></div></div>
+ <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
+ <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Open only after the two items above are done. Any site that sells you hashrate it can't prove exists is the thing this one was built against.</p></div></div>
 </div>
 
 <div class="section-label" id="waitlist">Waitlist — next round</div>
 <div class="wlrow">
-  <input class="input" id="wlEmail" type="email" placeholder="you@email.com" autocomplete="email">
-  <button class="btn" onclick="joinWaitlist()">Join waitlist</button>
+ <input class="input" id="wlEmail" type="email" placeholder="you@email.com" autocomplete="email">
+ <button class="btn" onclick="joinWaitlist()">Join waitlist</button>
 </div>
 <div id="wlMsg"></div>
 
@@ -270,7 +270,7 @@ input,select,textarea{font-size:16px}
   <span>© 2026 BeeHash Cloud ·
     <a href="terms.html" style="color:var(--honey)">Terms</a> ·
     <a href="privacy.html" style="color:var(--honey)">Privacy</a> ·
-    <a href="mailto:beehash.cloud@gmail.com" style="color:var(--honey)">Support</a>
+    <a href="mailto:support@beehash.cloud" style="color:var(--honey)">support@beehash.cloud</a>
   </span>
   <span>Solo mining is a lottery. Not investment advice.</span>
 </div></footer>
@@ -278,92 +278,92 @@ input,select,textarea{font-size:16px}
 
 <script>
 /* ============================================================
-   OPERATOR CONFIG — set before promoting the waitlist
-   1. Formspree (free): https://formspree.io → new form → copy endpoint
-   2. Paste below. Until set, waitlist saves only in the visitor's browser.
-   ============================================================ */
-const FORM_ENDPOINT = 'https://formspree.io/f/xnpaakld';  // e.g. 'https://formspree.io/f/abcdwxyz'
+ OPERATOR CONFIG — set before promoting the waitlist
+ 1. Formspree (free): https://formspree.io → new form → copy endpoint
+ 2. Paste below. Until set, waitlist saves only in the visitor's browser.
+ ============================================================ */
+const FORM_ENDPOINT = 'https://formspree.io/f/xnpaakld'; // e.g. 'https://formspree.io/f/abcdwxyz'
 
 const $ = id => document.getElementById(id);
 const fmt = (n, d = 0) => n == null || Number.isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { maximumFractionDigits: d });
 
 function chip(id, state) {
-  const el = $(id);
-  el.className = 'chip ' + state;
-  el.textContent = { live: 'LIVE', err: 'ERROR', off: '—' }[state] || state;
+ const el = $(id);
+ el.className = 'chip ' + state;
+ el.textContent = { live: 'LIVE', err: 'ERROR', off: '—' }[state] || state;
 }
 
 async function fj(url, timeout = 12000) {
-  const ctl = new AbortController();
-  const t = setTimeout(() => ctl.abort(), timeout);
-  try {
-    const r = await fetch(url, { signal: ctl.signal });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.json();
-  } finally { clearTimeout(t); }
+ const ctl = new AbortController();
+ const t = setTimeout(() => ctl.abort(), timeout);
+ try {
+ const r = await fetch(url, { signal: ctl.signal });
+ if (!r.ok) throw new Error('HTTP ' + r.status);
+ return await r.json();
+ } finally { clearTimeout(t); }
 }
 
 async function loadTicker() {
-  const jobs = [
-    ['price', async () => {
-      try {
-        const d = await fj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-        return '$' + fmt(d?.bitcoin?.usd);
-      } catch (e) {
-        const d = await fj('https://mempool.space/api/v1/prices');
-        return '$' + fmt(d?.USD);
-      }
-    }],
-    ['height', async () => {
-      const h = await fj('https://mempool.space/api/blocks/tip/height');
-      return '#' + fmt(typeof h === 'number' ? h : h?.height);
-    }],
-    ['hash', async () => {
-      const d = await fj('https://mempool.space/api/v1/mining/hashrate/3d');
-      const eh = (d?.currentHashrate || 0) / 1e18;
-      return fmt(eh, 1) + ' <small>EH/s</small>';
-    }]
-  ];
+ const jobs = [
+ ['price', async () => {
+ try {
+ const d = await fj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+ return '$' + fmt(d?.bitcoin?.usd);
+ } catch (e) {
+ const d = await fj('https://mempool.space/api/v1/prices');
+ return '$' + fmt(d?.USD);
+ }
+ }],
+ ['height', async () => {
+ const h = await fj('https://mempool.space/api/blocks/tip/height');
+ return '#' + fmt(typeof h === 'number' ? h : h?.height);
+ }],
+ ['hash', async () => {
+ const d = await fj('https://mempool.space/api/v1/mining/hashrate/3d');
+ const eh = (d?.currentHashrate || 0) / 1e18;
+ return fmt(eh, 1) + ' <small>EH/s</small>';
+ }]
+ ];
 
-  for (const [key, job] of jobs) {
-    try {
-      const v = await job();
-      chip('c-' + key, 'live');
-      $('v-' + key).innerHTML = v;
-    } catch (e) {
-      chip('c-' + key, 'err');
-      $('v-' + key).innerHTML = '<span class="v err">unavailable</span>';
-    }
-  }
+ for (const [key, job] of jobs) {
+ try {
+ const v = await job();
+ chip('c-' + key, 'live');
+ $('v-' + key).innerHTML = v;
+ } catch (e) {
+ chip('c-' + key, 'err');
+ $('v-' + key).innerHTML = '<span class="v err">unavailable</span>';
+ }
+ }
 }
 
 async function joinWaitlist() {
-  const email = ($('wlEmail').value || '').trim();
-  const msg = $('wlMsg');
-  if (!msg) return;
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    msg.innerHTML = '<div class="notice errbox"><b>Enter a valid email.</b></div>';
-    return;
-  }
-  msg.innerHTML = '<div class="notice"><b>Sending…</b></div>';
-  if (FORM_ENDPOINT) {
-    try {
-      const r = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email: email, source: 'beehash-landing' })
-      });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      msg.innerHTML = '<div class="notice ok"><b>You are on the list.</b> We got your invite request.</div>';
-      $('wlEmail').value = '';
-    } catch (e) {
-      msg.innerHTML = '<div class="notice errbox"><b>Send failed.</b> Check the form is active in Formspree, then try again.</div>';
-    }
-  } else {
-    const list = JSON.parse(localStorage.getItem('bh_waitlist') || '[]');
-    if (!list.includes(email)) { list.push(email); localStorage.setItem('bh_waitlist', JSON.stringify(list)); }
-    msg.innerHTML = '<div class="notice"><b>Saved on this device only.</b> Form backend not connected yet.</div>';
-  }
+ const email = ($('wlEmail').value || '').trim();
+ const msg = $('wlMsg');
+ if (!msg) return;
+ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+ msg.innerHTML = '<div class="notice errbox"><b>Enter a valid email.</b></div>';
+ return;
+ }
+ msg.innerHTML = '<div class="notice"><b>Sending…</b></div>';
+ if (FORM_ENDPOINT) {
+ try {
+ const r = await fetch(FORM_ENDPOINT, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+ body: JSON.stringify({ email: email, source: 'beehash-landing' })
+ });
+ if (!r.ok) throw new Error('HTTP ' + r.status);
+ msg.innerHTML = '<div class="notice ok"><b>You are on the list.</b> We got your invite request.</div>';
+ $('wlEmail').value = '';
+ } catch (e) {
+ msg.innerHTML = '<div class="notice errbox"><b>Send failed.</b> Check the form is active in Formspree, then try again.</div>';
+ }
+ } else {
+ const list = JSON.parse(localStorage.getItem('bh_waitlist') || '[]');
+ if (!list.includes(email)) { list.push(email); localStorage.setItem('bh_waitlist', JSON.stringify(list)); }
+ msg.innerHTML = '<div class="notice"><b>Saved on this device only.</b> Form backend not connected yet.</div>';
+ }
 }
 
 // Load immediately and refresh every 60s
