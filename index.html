@@ -98,6 +98,18 @@ h1 em{font-style:normal;color:var(--honey)}
 .chain-pills .off{color:var(--muted)}
 
 
+/* how steps */
+.steps{display:grid;gap:10px;margin:8px 0 24px}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.step .num{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(247,179,43,.15);color:var(--honey);font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h4{font-size:14px;margin-bottom:2px}
+.step p{font-size:12.5px;color:var(--muted);line-height:1.5}
+.map{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 20px}
+@media(max-width:520px){.map{grid-template-columns:1fr}}
+.map a{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--text)}
+.map a:hover{border-color:var(--honey)}
+.map a strong{display:block;color:var(--honey);font-size:14px;margin-bottom:4px}
+.map a span{font-size:12px;color:var(--muted);line-height:1.45}
 /* waitlist */
 .wlrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .input{flex:1;min-width:220px;background:#1a1e23;border:1px solid var(--line);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:13px;color:var(--text)}
@@ -166,50 +178,65 @@ input,select,textarea{font-size:16px}
   <span class="prelaunch">PRE-LAUNCH</span>
   <div class="hnav">
     <a href="index.html">Home</a>
+    <a href="hive.html">Hive</a>
     <a href="rent.html">Rent</a>
-    <a href="dashboard.html">Dash</a>
-    <a href="btc.html">BTC</a>
-    <a href="bch.html">BCH</a>
+    <a href="app.html">Tools</a>
+    <a href="#how">How it works</a>
   </div>
 </header>
 
 <section class="hero">
   <h1>Hashrate hosting with <em>zero fake numbers.</em></h1>
-  <p class="sub">Live chain data. Honest zeros. Operator <b>BTC</b> farm proof is public. Nothing is for sale until customer hashrate is proven and allocated.</p>
+  <p class="sub">We rent you real SHA-256 hashrate. You enter <b>your</b> wallet. Solo blocks pay <b>you</b> — no middleman. Farm proof is public. Customer TH stays 0 until a seat is assigned.</p>
   <a class="cta" href="hive.html">Open Hive</a>
-  <a class="cta ghost" href="#beta">BTC proof + beta</a>
-  <a class="cta ghost" href="rent.html">Rent</a>
-  <a class="cta ghost" href="#waitlist">Waitlist</a>
+  <a class="cta ghost" href="#how">How it works</a>
+  <a class="cta ghost" href="#waitlist">Join waitlist</a>
 
   <div class="hero-art">
     <img src="brand-hero.jpg" width="1200" height="675" alt="BeeHash Cloud — plug and play hashrate when miners are online" loading="eager">
-    <div class="cap"><b>BTC operator proof live.</b> Customer / beta hosted TH = <b>0</b> until seats are assigned.</div>
+    <div class="cap"><b>Simple:</b> public farm proof · your payout address · no fake numbers.</div>
   </div>
 </section>
 
 
 
+
 <div class="beta-banner" id="beta">
   <span class="beta-tag">BETA · FREE · INVITE ONLY</span>
-  <h2>BeeHash Cloud Beta — 5 spots</h2>
-  <div class="chain-pills">
-    <span class="on">BTC · operator proof live</span>
-    <span class="off">BCH · supported later</span>
-    <span class="off">Customer TH · 0 until assigned</span>
-  </div>
-  <p>When allocated, testers run <b>45–50 TH/s solo</b> for <b>7 days</b>. <b>No wallet from testers</b> — Solo finds pay to the address you enter. Solo is a <b>lottery</b>; this beta is about delivery proof, not guaranteed blocks.</p>
-  <p>Boost (optional, capacity-limited) up to <b>150 TH/s</b> when available. No burst mining. No faked numbers.</p>
-  <div class="beta-meta">No payments · Solo payout to your address · 5 invites only</div>
+  <h2>Free beta — 5 spots</h2>
+  <p>When your seat is live you get about <b>45–50 TH/s</b> for <b>7 days</b> of solo hashrate.</p>
+  <p><b>You enter your BTC or BCH address</b> in the Hive. If a block is found, the reward goes <b>straight to your wallet</b> (pool fee on find only). No middleman.</p>
+  <p>Solo at this size is a <b>lottery</b>. Beta is to prove delivery — not guaranteed profit.</p>
+  <div class="beta-meta">No rental payments · 5 invites · Boost later if capacity allows</div>
   <div class="beta-actions">
     <a class="cta" href="#waitlist">Request an invite</a>
     <a class="cta ghost" href="hive.html">Open Hive</a>
   </div>
-  <div class="proof-card">
-    <div class="pk">OPERATOR BTC PROOF · NOT BETA</div>
-    <div style="font-size:13px;color:var(--text);font-weight:600">Bitcoin solo · MineShop</div>
-    <a class="proof-btn" href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener">View live farm stats ↗</a>
-    <div class="ps">Operator farm proof only. When you have a beta seat, you enter <b>your</b> address in Hive — solo blocks pay you directly.</div>
+  <div class="proof-card" style="margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(61,220,132,.35);background:rgba(61,220,132,.06)">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--live);font-weight:700;margin-bottom:6px">OPERATOR FARM PROOF · NOT YOUR SEAT</div>
+    <div style="font-size:13px;color:var(--text);font-weight:600">BTC solo on MineShop (BeeHash farm)</div>
+    <a href="https://solo.mineshop.eu/miner/?wallet=bc1q4udxqkn5l47jzp9xjxel4l0t958vrtm0rdhvq2" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:var(--live);font-family:var(--mono);font-size:12px;font-weight:600">View live farm stats ↗</a>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.45">This is the operator farm page. Your beta payout uses the address <b style="color:var(--text)">you</b> enter in Hive.</div>
   </div>
+</div>
+
+
+<div class="section-label" id="how">How BeeHash works</div>
+<div class="steps">
+  <div class="step"><div class="num">1</div><div><h4>We host the miners</h4><p>BeeHash runs real SHA-256 hardware. Operator farm proof is public so you can verify hashrate exists.</p></div></div>
+  <div class="step"><div class="num">2</div><div><h4>You open the Hive</h4><p>Pick BTC or BCH and enter <b>your</b> payout address. That address is where solo block rewards go.</p></div></div>
+  <div class="step"><div class="num">3</div><div><h4>Hash is pointed at a pool</h4><p>Rented power is delivered toward a solo (or shared) pool using your address as the worker. No BeeHash middleman wallet.</p></div></div>
+  <div class="step"><div class="num">4</div><div><h4>Blocks pay you</h4><p>If a block is found, the pool pays your address. Solo is a lottery — small TH means rare finds.</p></div></div>
+</div>
+
+<div class="section-label">Where to go</div>
+<div class="map">
+  <a href="hive.html"><strong>Hive</strong><span>Enter your wallet · view dashboard · beta seats</span></a>
+  <a href="rent.html"><strong>Rent</strong><span>What hashrate rental is · pricing later</span></a>
+  <a href="app.html"><strong>Tools</strong><span>Live BTC stats · calculators</span></a>
+  <a href="bch.html"><strong>BCH</strong><span>Bitcoin Cash tools & odds</span></a>
+  <a href="#beta"><strong>Beta</strong><span>Free 5 spots · invite only</span></a>
+  <a href="#waitlist"><strong>Waitlist</strong><span>Request an invite by email</span></a>
 </div>
 
 <div class="ticker">
@@ -231,16 +258,16 @@ input,select,textarea{font-size:16px}
   <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Open only after the two items above are done. Any site that sells you hashrate it can't prove exists is the thing this one was built against.</p></div></div>
 </div>
 
-<div class="section-label" id="waitlist">Waitlist</div>
+<div class="section-label" id="waitlist">Request a beta invite</div>
 <div class="wlrow">
-  <input class="input" id="wlEmail" type="email" placeholder="you@example.com" autocomplete="email">
-  <button class="btn" onclick="joinWaitlist()">Join waitlist</button>
+  <input class="input" id="wlEmail" type="email" placeholder="you@email.com" autocomplete="email">
+  <button class="btn" onclick="joinWaitlist()">Request invite</button>
 </div>
 <div id="wlMsg"></div>
 
 <footer><div class="wrap" style="padding:0">
-  <span>© 2026 BeeHash Cloud — pre-launch</span>
-  <span>Nothing here is investment advice. Solo mining is a lottery.</span>
+  <span>© 2026 BeeHash Cloud · <a href="hive.html" style="color:var(--honey)">Hive</a> · <a href="rent.html" style="color:var(--honey)">Rent</a> · <a href="#how" style="color:var(--honey)">How it works</a></span>
+  <span>Solo mining is a lottery. Not investment advice.</span>
 </div></footer>
 </div>
 
