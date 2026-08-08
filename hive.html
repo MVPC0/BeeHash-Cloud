@@ -7,7 +7,7 @@
 <meta name="description" content="BeeHash Hive. Live public chain data. Zero fake hashrate until pool proof. Invite-only beta.">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg-deep:#0a0a0e;--bg-panel:#111118;--bg-card:#161620;--gold:#f5b800;--gold-dim:#c49000;--gold-glow:rgba(245,184,0,.3);--green:#00e676;--red:#ff1744;--text-primary:#f0f0f5;--text-secondary:#8a8a9a;--text-muted:#555566;--border:#222233}
+:root{--bg-deep:#0a0a0e;--bg-panel:#111118;--bg-card:#161620;--gold:#f5b800;--gold-dim:#c49000;--gold-glow:rgba(245,184,0,.3);--green:#00e676;--green-dim:#00a853;--red:#ff1744;--text-primary:#f0f0f5;--text-secondary:#8a8a9a;--text-muted:#555566;--border:#222233}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sans-serif;min-height:100vh}
 .bg-honeycomb{position:fixed;inset:0;z-index:0;opacity:.03;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 0L56 16.5v33L28 66 0 49.5v-33z' fill='none' stroke='%23f5b800' stroke-width='1'/%3E%3C/svg%3E");background-size:56px 100px}
@@ -129,7 +129,7 @@ button,a,select,input{min-height:44px;min-width:44px}
     <a href="index.html">Home</a>
     <a href="rent.html">Rent</a>
     <a href="dashboard.html">Dash</a>
-    <a href="btc.html">BTC</a>
+    <a href="app.html">BTC</a>
     <a href="bch.html">BCH</a>
   </div>
   <div id="topWallet" style="display:none;align-items:center;gap:8px">
@@ -141,7 +141,7 @@ button,a,select,input{min-height:44px;min-width:44px}
 <div class="container" id="gateView">
   <div class="gate-card">
     <h1>Enter the Hive</h1>
-    <p>Connect your wallet to view your dashboard. <strong style="color:var(--text-primary)">Valid BTC or BCH address required</strong>. Session stored in this browser only.</p>
+    <p>Solo mining: pick <strong style="color:var(--text-primary)">BTC or BCH</strong> and enter <strong style="color:var(--text-primary)">your</strong> payout address. Any block found pays <strong style="color:var(--text-primary)">straight to you</strong> — no middleman. Session in this browser only. Beta: no rental payments.</p>
 
     <div class="chain-select">
       <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
@@ -287,7 +287,7 @@ button,a,select,input{min-height:44px;min-width:44px}
 
 <script>
 const SESSION_KEY='bh_hive_wallet',CHAIN_KEY='bh_hive_chain',MINER_KEY='bh_miner_pref',BOOST_KEY='bh_boost_pref';
-const PRESETS={'mineshop-btc':{name:'MineShop BTC Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'BTC solo · public stats on solo.mineshop.eu · full block to your bc1 address on find.'},'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'Full block to your BCH address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
+const PRESETS={'mineshop-btc':{name:'MineShop BTC Solo',stratum:'stratum+tcp://solo.mineshop.eu:3333',note:'BTC solo · public stats on solo.mineshop.eu · full block to your bc1 address on find.'},'2miners-bch':{name:'2Miners BCH Solo',stratum:'stratum+tcp://solo-bch.2miners.com:9393',note:'BCH solo · full block to your address on find.'},'mole-bch':{name:'MolePool BCH Solo',stratum:'stratum+tcp://bch.molepool.com:3333',note:'Confirm live port on molepool.com.'},'ckpool-btc':{name:'CKPool BTC Solo',stratum:'stratum+tcp://solo.ckpool.org:3333',note:'BTC solo — harder odds per TH.'},'hmpool-bch':{name:'HashedMax BCH Shared',stratum:'stratum+tcp://bch.hmpool.io:3337',note:'Shared — not full-block solo.'}};
 const TIERS=[
   {th:1,label:'Core',sub:{week:7.99,month:24.99,year:214.99},once:{week:10.99,month:29.99,year:249.99}},
   {th:5,label:'Pro',sub:{week:35.99,month:89.99,year:749.99},once:{week:42.99,month:104.99,year:899.99}},
@@ -470,7 +470,7 @@ function saveMinerPref(){if(!selectedMinerTh){$('minerMsg').innerHTML='<div clas
 function renderBoostTiers(){$('boostTiers').innerHTML=BOOST_SIZES.map(th=>{const t=TIERS.find(x=>x.th===th)||TIERS[0];return '<div class="tier'+(selectedBoostTh===th?' on':'')+'" onclick="selectBoost('+th+')"><div class="tn">+'+th+' TH</div><div class="th">'+th+'</div><div class="tp">$'+t.sub.month.toFixed(0)+'/mo</div></div>'}).join('')}
 function selectBoost(th){selectedBoostTh=th;renderBoostTiers()}
 function onDestMode(){$('presetBox').style.display=$('destMode').value==='preset'?'block':'none';$('customBox').style.display=$('destMode').value==='custom'?'block':'none'}
-function onPreset(){const id=$('presetPool').value;const p=PRESETS[id];if(!p)return;$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br>'+p.note+'<br><code>'+p.stratum+'</code>';localStorage.setItem('bh_preset_pool',id)}
+function onPreset(){const id=$('presetPool').value;const p=PRESETS[id];if(!p)return;$('presetDetail').innerHTML='<strong>'+p.name+'</strong><br>'+p.note+'<br><code>'+p.stratum+'</code>';if($('stratumUrl'))$('stratumUrl').textContent=p.stratum;localStorage.setItem('bh_preset_pool',id)}
 function saveBoostPref(){if(!selectedBoostTh){$('boostMsg').innerHTML='<div class="notice err"><strong>Pick a boost size first.</strong></div>';return}localStorage.setItem(BOOST_KEY,JSON.stringify({th:selectedBoostTh,pool:$('presetPool').value,mode:$('destMode').value}));$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
 function loadPrefs(){const m=localStorage.getItem(MINER_KEY);if(m){try{const o=JSON.parse(m);selectedMinerTh=o.th;priceMode=o.mode||'sub';$('termPick').value=o.term||'month';setPriceMode(priceMode)}catch(e){}}const b=localStorage.getItem(BOOST_KEY);if(b){try{const o=JSON.parse(b);selectedBoostTh=o.th;renderBoostTiers()}catch(e){}}const pp=localStorage.getItem('bh_preset_pool');if(pp&&$('presetPool'))$('presetPool').value=pp;onPreset()}
 function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser').textContent;navigator.clipboard.writeText(url+' · '+user+' · x').then(()=>showError('Copied to clipboard')).catch(()=>showError('Copy failed'))}
