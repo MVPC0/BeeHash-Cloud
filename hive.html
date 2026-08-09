@@ -168,6 +168,15 @@ button,a,select,input{min-height:44px;min-width:44px}
 
 .tabs{position:sticky;top:52px;z-index:20;background:var(--bg-deep);padding:8px 0;margin-bottom:12px}
 
+
+#topWallet{display:none;align-items:center;gap:8px;margin-left:8px}
+#topWallet.show,#topWallet[style*="flex"]{display:flex!important}
+#walletPill{font-size:11px;font-family:monospace;color:var(--text-secondary,#8a8a9a);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#topWallet .btn{padding:6px 10px;font-size:11px;min-height:auto;min-width:auto}
+@media(max-width:720px){
+  #walletPill{max-width:90px;font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -185,6 +194,11 @@ button,a,select,input{min-height:44px;min-width:44px}
       <a class="hide-sm" href="bch.html">BCH</a>
       <a class="hide-sm" href="index.html#how">How it works</a>
     </nav>
+    <span id="topWallet" style="display:none;align-items:center;gap:8px">
+      <span id="walletPill"></span>
+      <button type="button" class="btn btn-outline" onclick="disconnectHive()" style="min-height:auto;min-width:auto;padding:6px 10px;font-size:11px">Leave</button>
+    </span>
+
   </div>
   <div class="nav-sub">
     <a href="index.html#beta">Beta status</a>
