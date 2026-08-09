@@ -180,26 +180,56 @@ input,select,textarea{font-size:16px}
   input,select,textarea{font-size:16px}
 }
 
+
+/* === BeeHash site nav === */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
+.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
+.site-brand .badge{font-family:var(--mono,monospace);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim,#a97c1d);color:var(--honey,#f7b32b);border-radius:3px;padding:2px 5px}
+.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.site-nav a{text-decoration:none;color:var(--muted,#8b939e);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+.site-nav a:hover{color:var(--text,#e8eaed);background:rgba(255,255,255,.04)}
+.site-nav a.here{color:var(--honey,#f7b32b);background:rgba(247,179,43,.1)}
+.site-nav a.cta-nav{background:var(--honey,#f7b32b);color:#141414!important}
+.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line,#242a31)}
+.nav-sub a{font-size:11px;color:var(--muted,#8b939e);text-decoration:none;font-family:var(--mono,monospace)}
+.nav-sub a:hover{color:var(--honey,#f7b32b)}
+.you-are{font-size:11px;color:var(--muted,#8b939e);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono,monospace)}
+.you-are b{color:var(--text,#e8eaed)}
+.mobile-dock{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,14,16,.96);border-top:1px solid var(--line,#242a31);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.mobile-dock a{flex:1;text-align:center;text-decoration:none;color:var(--muted,#8b939e);font-size:10px;font-weight:700;padding:8px 4px;border-radius:8px;text-transform:uppercase}
+.mobile-dock a.here{color:var(--honey,#f7b32b)}
+@media(max-width:720px){.site-nav .hide-sm{display:none}.mobile-dock{display:flex;gap:2px}body{padding-bottom:64px}}
+.roadmap-link{display:block;margin:12px 16px 20px;max-width:960px;margin-left:auto;margin-right:auto;padding:12px 14px;border:1px solid var(--line,#242a31);border-radius:12px;background:var(--panel,#14171b);font-size:13px;color:var(--muted,#8b939e);text-decoration:none;line-height:1.45}
+.roadmap-link:hover{border-color:var(--honey,#f7b32b)}
+.roadmap-link b{color:var(--honey,#f7b32b)}
+
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px">
-    <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
-    BeeHash</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="site-brand" href="index.html">BeeHash <span class="badge">CLOUD</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="hive.html" class="cta-nav">Hive</a>
+      <a href="rent.html">Rent</a>
+      <a href="app.html" class="here">Tools</a>
+      <a class="hide-sm" href="bch.html">BCH</a>
+      <a class="hide-sm" href="index.html#how">How it works</a>
+    </nav>
   </div>
-  <span class="prelaunch">PRE-LAUNCH</span>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="rent.html">Rent</a>
-    <a href="dashboard.html">Dash</a>
-    <a href="btc.html">BTC</a>
-    <a href="bch.html" style="color:#0ac18e">BCH</a>
+  <div class="nav-sub">
+    <a href="index.html#beta">Beta status</a>
+    <a href="index.html#waitlist">Waitlist</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:support@beehash.cloud">Support</a>
   </div>
-  <div class="refresh"><span class="dot" id="netDot"></span><span id="refreshLbl">connecting…</span></div>
 </header>
+<div class="you-are">You are here: <b>Tools · Live data</b></div>
+
 
 <div class="demo-banner">DEMO DATA — NOT A REAL MINER. NOTHING ON THIS SCREEN IS EARNED.</div>
 
@@ -282,9 +312,8 @@ input,select,textarea{font-size:16px}
 <div class="page" id="page-launch">
   <div class="section-label">Where this actually stands</div>
   <div class="road">
-    <div class="rd"><span class="st done">DONE</span><div><h4>Live data platform</h4><p>Chain economics, fee market, and miner monitoring run on public APIs. No fabricated numbers anywhere on this site.</p></div></div>
-    <div class="rd"><span class="st todo">NOT YET</span><div><h4>Real hashrate online</h4><p>When hardware is live, its CKPool address will be published here as an independently verifiable proof link.</p></div></div>
-    <div class="rd"><span class="st todo">NOT YET</span><div><h4>Legal review + entity</h4><p>Terms of service and business entity before anything is sold.</p></div></div>
+    <a class="roadmap-link" href="index.html#roadmap">Launch status (one place): <b>see Home → Where this actually stands</b> — live data, operator proof, beta, legal, payments. This page does not repeat that list.</a>
+</div>
     <div class="rd"><span class="st todo">NOT YET</span><div><h4>Payments</h4><p>Nothing is purchasable today. Payments open only after the two items above are done.</p></div></div>
   </div>
 
