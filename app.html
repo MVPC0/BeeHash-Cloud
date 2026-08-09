@@ -568,7 +568,7 @@ function renderChain(d, mode) {
 
   // header status
   const anyLive = ['price', 'height', 'fees', 'mem'].some(k => d[k] != null);
-  $('netDot').className = 'dot ' + (anyLive ? 'live' : 'err');
+  if($('netDot'))$('netDot').className = 'dot ' + (anyLive ? 'live' : 'err');
 }
 
 /* ============================================================
@@ -791,7 +791,7 @@ function tick() {
     S.countdown = REFRESH_EVERY;
     loadChain(true); // allow cache for instant paint, but loadChain will still fetch fresh
   }
-  $('refreshLbl').textContent = S.failures > 1 ? 'offline · retry ' + S.countdown + 's' : 'refresh ' + S.countdown + 's';
+  if($('refreshLbl'))$('refreshLbl').textContent=S.failures > 1 ? 'offline · retry ' + S.countdown + 's' : 'refresh ' + S.countdown + 's';
 }
 
 

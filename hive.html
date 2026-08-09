@@ -526,7 +526,7 @@ function disconnectHive(){
  currentChain='btc';
  $('dashView').style.display='none';
  $('gateView').style.display='block';
- $('topWallet').style.display='none';
+ if($('topWallet'))$('topWallet').style.display='none';
  setChain('btc');
  $('walletInput').value='';
  $('walletInput').classList.remove('err');
@@ -538,10 +538,10 @@ function showDash(wallet,chain){
 
  $('gateView').style.display='none';
  $('dashView').style.display='block';
- $('topWallet').style.display='flex';
+ if($('topWallet'))$('topWallet').style.display='flex';
 
  const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
- $('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
+ if($('walletPill'))$('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
  $('payoutAddr').textContent=short;
  $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
  $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
@@ -793,7 +793,7 @@ function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser
   // Always show gate first — dashboard only after valid address + Enter Hive
   $('gateView').style.display='block';
   $('dashView').style.display='none';
-  if($('topWallet'))$('topWallet').style.display='none';
+  if($('topWallet'))if($('topWallet'))$('topWallet').style.display='none';
 
   const savedChain=localStorage.getItem(CHAIN_KEY)||'btc';
   const savedWallet=localStorage.getItem(SESSION_KEY)||'';
