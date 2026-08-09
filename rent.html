@@ -360,6 +360,24 @@ footer a{color:var(--muted)}
 <script>
 
 
+
+const $ = id => document.getElementById(id);
+
+const TIERS = [
+  { label: 'Starter', th: 10, features: ['Solo or shared pool', 'Live delivery checks', 'Custom stratum support'],
+    sub:  { week: 4.68,  month: 17.00,  year: 170.00 },
+    once: { week: 5.50,  month: 20.00,  year: 200.00 } },
+  { label: 'Popular', th: 50, features: ['Solo or shared pool', 'Live delivery checks', 'Custom stratum support', 'Priority delivery monitor'],
+    sub:  { week: 23.38, month: 85.00,  year: 850.00 },
+    once: { week: 27.50, month: 100.00, year: 1000.00 } },
+  { label: 'Pro', th: 100, features: ['Solo or shared pool', 'Live delivery checks', 'Custom stratum support', 'Priority delivery monitor'],
+    sub:  { week: 46.75, month: 170.00, year: 1700.00 },
+    once: { week: 55.00, month: 200.00, year: 2000.00 } },
+  { label: 'Scale', th: 250, features: ['Solo or shared pool', 'Live delivery checks', 'Custom stratum support', 'Priority delivery monitor', 'Dedicated routing lane'],
+    sub:  { week: 116.88, month: 425.00, year: 4250.00 },
+    once: { week: 137.50, month: 500.00, year: 5000.00 } }
+];
+
 function renderTiers() {
  const mode = window._priceMode || 'sub';
  $('tierGrid').innerHTML = TIERS.map((t) => {
