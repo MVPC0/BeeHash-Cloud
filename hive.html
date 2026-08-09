@@ -198,33 +198,31 @@ button,a,select,input{min-height:44px;min-width:44px}
 <div class="container" id="gateView">
  <div class="gate-card">
     <h1>Enter the Hive</h1>
-    <p><strong style="color:var(--text-primary)">Step 1:</strong> Choose BTC or BCH.<br>
-    <strong style="color:var(--text-primary)">Step 2:</strong> Paste a <strong style="color:var(--text-primary)">valid</strong> payout address, then tap <strong style="color:var(--gold)">Enter Hive</strong>.<br>
-    <strong style="color:var(--text-primary)">Step 3:</strong> Open the <strong style="color:var(--gold)">Beta</strong> tab and enter your invite code to lock a BCH address and get a miner slot.<br>
-    Dashboard does not open until the address is valid. BeeHash never holds coins.</p>
+    <p>Choose <strong style="color:var(--text-primary)">BTC or BCH</strong>, paste your payout address, then enter.
+    BeeHash only provides hashrate — the pool pays your address on-chain.</p>
 
- <div class="chain-select">
- <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
- <span class="sym">₿</span>BTC
- </button>
- <button type="button" class="chain-btn" id="btnBch" onclick="setChain('bch')">
- <span class="sym">₿</span>BCH
- </button>
- </div>
+    <div class="chain-select">
+      <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
+        <span class="sym">₿</span>BTC
+      </button>
+      <button type="button" class="chain-btn" id="btnBch" onclick="setChain('bch')">
+        <span class="sym">₿</span>BCH
+      </button>
+    </div>
 
- <div class="field">
- <label for="walletInput" id="walletLabel">BTC payout address</label>
- <input class="wallet-input" id="walletInput" placeholder="bc1q… or 1… or 3…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left" oninput="clearErr()">
- </div>
+    <div class="field">
+      <label for="walletInput" id="walletLabel">BTC payout address</label>
+      <input class="wallet-input" id="walletInput" placeholder="bc1q… or 1… or 3…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left" oninput="clearErr()">
+    </div>
 
- <div class="notice" id="walletHint" style="font-size:.75rem">
- Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
- </div>
+    <div class="notice" id="walletHint" style="font-size:.75rem">
+      Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
+    </div>
 
- <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
+    <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
 
- <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">Beta seats are full. Explore the UI anytime. Hashrate delivery stays 0 unless you have a seat. Entering an address does not create a BeeHash balance. Invalid addresses are blocked.</p>
- </div>
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">After you enter, open the <strong style="color:var(--gold)">Beta code</strong> tab if you have an invite code.</p>
+  </div>
 </div>
 
 <div class="container" id="dashView" style="display:none">
@@ -276,7 +274,7 @@ button,a,select,input{min-height:44px;min-width:44px}
  <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
  <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
  <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
-    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta code</button>
+    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta code / seat</button>
  </div>
 
  <div class="panel-section on" id="sec-swarm">
@@ -307,44 +305,47 @@ button,a,select,input{min-height:44px;min-width:44px}
  <div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
 </div>
 
+  
   <div class="panel-section" id="sec-beta">
     <div class="beta-flow">
-      <div class="notice" style="margin-bottom:14px">
-        <strong>Beta activation</strong> — Enter the invite code from your invite email, then lock your <strong>BCH</strong> payout address.
-        After lock-in you cannot change that address in this browser.
-      </div>
+      <h2 style="font-family:Orbitron,sans-serif;font-size:1rem;color:var(--gold);margin-bottom:12px;text-align:center">Beta code / seat</h2>
 
       <div class="beta-step" id="betaStepCode">
-        <h3>1 · Invite code</h3>
-        <p>Format: <code>BH-XXXX-XXXX-XXXX</code></p>
+        <h3>1 · Paste your invite code</h3>
+        <p>From your BeeHash invite email. Looks like <code>BH-XXXX-XXXX-XXXX</code></p>
         <div class="field">
-          <label for="betaCodeInput">Invite code</label>
-          <input class="wallet-input beta-code" id="betaCodeInput" placeholder="BH-····-····-····" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+          <label for="betaCodeInput">Beta invite code</label>
+          <input class="wallet-input beta-code" id="betaCodeInput" placeholder="BH-····-····-····" style="width:100%;text-align:left;font-size:1.1rem;padding:14px" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:8px" id="btnValidateCode" onclick="validateBetaCode()">Validate code</button>
+        <button type="button" class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" id="btnValidateCode" onclick="validateBetaCode()">Continue</button>
         <div id="betaCodeMsg" style="margin-top:10px"></div>
       </div>
 
-      <div class="beta-step" id="betaStepAddr" style="opacity:.45;pointer-events:none">
-        <h3>2 · Lock BCH address</h3>
-        <p>Unlocks after a valid code. Type the same address twice. <strong>Cannot change after lock.</strong></p>
+      <div class="beta-step" id="betaStepAddr" style="display:none">
+        <h3>2 · Lock your BCH address</h3>
+        <div class="notice err" style="margin-bottom:12px">
+          <strong>Important — read before locking</strong><br>
+          • Use a <strong>valid BCH address you control</strong> (wallet app / your own wallet).<br>
+          • <strong>Do not use an exchange deposit address</strong> (Coinbase, Binance, etc.). If a solo block is found, the pool pays this address on-chain. Exchange addresses can delay, reject, or make funds hard to recover.<br>
+          • Double-check every character. After lock, <strong>you cannot change it</strong> on this device.
+        </div>
         <div class="field">
           <label for="betaBchInput">BCH payout address</label>
-          <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+          <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left;font-size:1rem;padding:12px" autocomplete="off" spellcheck="false">
         </div>
         <div class="field">
-          <label for="betaBchConfirm">Confirm BCH address</label>
-          <input class="wallet-input" id="betaBchConfirm" placeholder="Type address again" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+          <label for="betaBchConfirm">Type the same BCH address again</label>
+          <input class="wallet-input" id="betaBchConfirm" placeholder="Confirm address" style="width:100%;text-align:left;font-size:1rem;padding:12px" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:8px" id="btnLockAddr" onclick="lockBetaAddress()">Lock address &amp; assign miner</button>
+        <button type="button" class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" id="btnLockAddr" onclick="lockBetaAddress()">Lock BCH address &amp; assign miner</button>
         <div id="betaLockMsg" style="margin-top:10px"></div>
       </div>
 
       <div class="beta-step locked" id="betaStepDone" style="display:none">
-        <h3>3 · Seat active <span class="lock-badge">Locked</span></h3>
-        <p>BCH address locked. Miner slot assigned. Hosted TH stays 0 until hashrate is routed.</p>
+        <h3>Seat locked <span class="lock-badge">Locked</span></h3>
+        <p>Miner assigned. Hosted TH stays 0 until BeeHash routes hashrate to your seat. Payouts (if any) go on-chain to your locked BCH address — not through BeeHash.</p>
         <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">LOCKED BCH ADDRESS</div>
-        <div style="font-family:monospace;font-size:.8rem;color:var(--gold);word-break:break-all" id="betaLockedAddr">—</div>
+        <div style="font-family:monospace;font-size:.85rem;color:var(--gold);word-break:break-all;margin-bottom:10px" id="betaLockedAddr">—</div>
         <div class="miner-assign">
           <div>
             <div style="font-size:.65rem;color:var(--text-muted);text-transform:uppercase">Assigned miner</div>
@@ -352,15 +353,14 @@ button,a,select,input{min-height:44px;min-width:44px}
           </div>
           <div style="font-size:.75rem;color:var(--text-secondary);line-height:1.4">
             Code: <span id="betaUsedCode">—</span><br>
-            Chain: BCH · Status: <span id="betaSeatStatus">Awaiting hashrate</span>
+            Status: <span id="betaSeatStatus">Awaiting hashrate</span>
           </div>
         </div>
-        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">Need a different address? Contact support@beehash.cloud for a new seat.</p>
+        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">Wrong address? Contact support@beehash.cloud — do not mine to an exchange deposit if you can avoid it.</p>
       </div>
     </div>
   </div>
 
-  </div>
 <div class="panel-section" id="sec-miners">
  <div class="panel">
  <div class="panel-title">Base plan preference</div>
@@ -712,11 +712,14 @@ function validateBetaCode(){
   if(existing&&existing.code!==raw){msg.innerHTML='<div class="notice err"><strong>This device already locked a different seat.</strong></div>';return}
   if(existing&&existing.code===raw){renderBetaSeat(existing);msg.innerHTML='<div class="notice ok"><strong>Seat already locked on this device.</strong></div>';return}
   betaCodeOk=raw;
-  msg.innerHTML='<div class="notice ok"><strong>Code valid.</strong> Slot <strong>'+entry.slot+'</strong> · ~'+entry.th+' TH/s when routed. Continue to lock your BCH address.</div>';
+  msg.innerHTML='<div class="notice ok"><strong>Code valid.</strong> Slot <strong>'+entry.slot+'</strong> · ~'+entry.th+' TH/s when routed.</div>';
   $('betaStepCode').classList.add('done');
+  $('betaStepCode').style.display='none';
   const step=$('betaStepAddr');
+  step.style.display='block';
   step.style.opacity='1';
   step.style.pointerEvents='auto';
+  setTimeout(function(){if($('betaBchInput'))$('betaBchInput').focus()},200);
 }
 
 function lockBetaAddress(){
@@ -726,7 +729,7 @@ function lockBetaAddress(){
   if(a!==b){$('betaLockMsg').innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
   const result=validateAddress(a,'bch');
   if(!result.valid){$('betaLockMsg').innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
-  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nYou cannot change it after this.'))return;
+  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nMake sure this is NOT an exchange deposit address.\nYou cannot change it after this.'))return;
   const entry=BETA_CODES[betaCodeOk];
   const seat={code:betaCodeOk,address:a,slot:entry.slot,th:entry.th,lockedAt:Date.now(),chain:'bch'};
   localStorage.setItem(BETA_KEY,JSON.stringify(seat));
