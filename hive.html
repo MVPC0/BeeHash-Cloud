@@ -208,9 +208,6 @@ button,a,select,input{min-height:44px;min-width:44px}
       <button type="button" class="chain-btn" id="btnBch" onclick="setChain('bch')">
         <span class="sym">₿</span>BCH
       </button>
-      <button type="button" class="chain-btn" id="btnBeta" onclick="setChain('beta')">
-        <span class="sym">🐝</span>BETA
-      </button>
     </div>
 
     <div id="normalGateFlow">
@@ -224,42 +221,16 @@ button,a,select,input{min-height:44px;min-width:44px}
   <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
 </div>
 
-<div id="betaGateFlow" style="display:none">
-  <div id="betaGateCodeStep">
-    <div class="field">
-      <label for="gateBetaCode">Beta invite code</label>
-      <input class="wallet-input beta-code" id="gateBetaCode" placeholder="BH-····-····-····" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="notice" style="font-size:.75rem">Codes are issued by BeeHash for beta seats. Format: <code>BH-XXXX-XXXX-XXXX</code></div>
-    <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="gateValidateBetaCode()">Validate code</button>
-    <div id="gateBetaCodeMsg"></div>
-  </div>
 
-  <div id="betaGateAddrStep" style="display:none">
-    <div class="notice" style="font-size:.75rem;border-left-color:var(--red)">
-      <strong>This address cannot be changed after locking.</strong> Do <strong>NOT</strong> use an exchange address (Coinbase, Binance, etc.) — exchanges don't support solo block payouts and you can lose the reward permanently. Use a wallet you personally hold the keys to.
-    </div>
-    <div class="field">
-      <label for="gateBetaAddr">BCH payout address</label>
-      <input class="wallet-input" id="gateBetaAddr" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="field">
-      <label for="gateBetaAddrConfirm">Type address again to confirm</label>
-      <input class="wallet-input" id="gateBetaAddrConfirm" placeholder="Confirm BCH address" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
-    </div>
-    <button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="gateLockBetaAddress()">Lock address &amp; enter Hive</button>
-    <div id="gateBetaAddrMsg"></div>
-  </div>
-</div>
 
-    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">BTC/BCH: browse with your address. <strong style="color:var(--gold)">BETA</strong>: invite code then lock BCH address.</p>
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">No invite codes. Beta seats are assigned by BeeHash to your wallet address. After entering, open the <strong style="color:var(--gold)">Beta seat</strong> tab.</p>
   </div>
 </div>
 
 <div class="container" id="dashView" style="display:none">
 
   <div id="leaveHiveBar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-    <button type="button" class="btn btn-outline" onclick="gotoTab('beta')">Beta code / seat</button>
+    <button type="button" class="btn btn-outline" onclick="gotoTab('beta')">Beta seat</button>
     <button type="button" class="btn btn-outline" onclick="disconnectHive()">Leave Hive</button>
   </div>
 
@@ -305,7 +276,7 @@ button,a,select,input{min-height:44px;min-width:44px}
  <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
  <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
  <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
-    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta code / seat</button>
+    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta seat</button>
  </div>
 
  <div class="panel-section on" id="sec-swarm">
@@ -337,57 +308,52 @@ button,a,select,input{min-height:44px;min-width:44px}
 </div>
 
   
+  
   <div class="panel-section" id="sec-beta">
     <div class="beta-flow">
-      <h2 style="font-family:Orbitron,sans-serif;font-size:1rem;color:var(--gold);margin-bottom:12px;text-align:center">Beta code / seat</h2>
+      <h2 style="font-family:Orbitron,sans-serif;font-size:1rem;color:var(--gold);margin-bottom:12px;text-align:center">Beta seat</h2>
 
-      <div class="beta-step" id="betaStepCode">
-        <h3>1 · Paste your invite code</h3>
-        <p>From your BeeHash invite email. Looks like <code>BH-XXXX-XXXX-XXXX</code></p>
-        <div class="field">
-          <label for="betaCodeInput">Beta invite code</label>
-          <input class="wallet-input beta-code" id="betaCodeInput" placeholder="BH-····-····-····" style="width:100%;text-align:left;font-size:1.1rem;padding:14px" autocomplete="off" spellcheck="false">
-        </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" id="btnValidateCode" onclick="validateBetaCode()">Continue</button>
-        <div id="betaCodeMsg" style="margin-top:10px"></div>
+      <div class="notice" style="margin-bottom:14px">
+        <strong>No invite codes.</strong> BeeHash assigns beta seats offline using <strong>your wallet address</strong>.
+        Enter that same address on the gate to open the Hive. Use the section below to pin your seat on this device.
       </div>
 
-      <div class="beta-step" id="betaStepAddr" style="display:none">
-        <h3>2 · Lock your BCH address</h3>
+      <div class="beta-step" id="betaStepAddr">
+        <h3>Confirm BCH payout for beta</h3>
         <div class="notice err" style="margin-bottom:12px">
-          <strong>Important — read before locking</strong><br>
-          • Use a <strong>valid BCH address you control</strong> (wallet app / your own wallet).<br>
-          • <strong>Do not use an exchange deposit address</strong> (Coinbase, Binance, etc.). If a solo block is found, the pool pays this address on-chain. Exchange addresses can delay, reject, or make funds hard to recover.<br>
-          • Double-check every character. After lock, <strong>you cannot change it</strong> on this device.
+          <strong>Important</strong><br>
+          • Must be a <strong>valid BCH address you control</strong><br>
+          • <strong>Do not use an exchange deposit</strong> (Coinbase, Binance, etc.) — solo block payouts can be lost or delayed<br>
+          • This should match the address BeeHash assigned for your seat
         </div>
         <div class="field">
           <label for="betaBchInput">BCH payout address</label>
-          <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left;font-size:1rem;padding:12px" autocomplete="off" spellcheck="false">
+          <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left;padding:12px" autocomplete="off" spellcheck="false">
         </div>
         <div class="field">
-          <label for="betaBchConfirm">Type the same BCH address again</label>
-          <input class="wallet-input" id="betaBchConfirm" placeholder="Confirm address" style="width:100%;text-align:left;font-size:1rem;padding:12px" autocomplete="off" spellcheck="false">
+          <label for="betaBchConfirm">Type address again</label>
+          <input class="wallet-input" id="betaBchConfirm" placeholder="Confirm BCH address" style="width:100%;text-align:left;padding:12px" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" id="btnLockAddr" onclick="lockBetaAddress()">Lock BCH address &amp; assign miner</button>
+        <button type="button" class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" onclick="lockBetaAddress()">Pin beta seat on this device</button>
         <div id="betaLockMsg" style="margin-top:10px"></div>
       </div>
 
       <div class="beta-step locked" id="betaStepDone" style="display:none">
-        <h3>Seat locked <span class="lock-badge">Locked</span></h3>
-        <p>Miner assigned. Hosted TH stays 0 until BeeHash routes hashrate to your seat. Payouts (if any) go on-chain to your locked BCH address — not through BeeHash.</p>
-        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">LOCKED BCH ADDRESS</div>
+        <h3>Beta seat pinned <span class="lock-badge">Active</span></h3>
+        <p>This device remembers your BCH payout address. Hashrate is routed by BeeHash when your seat is live. Pool pays this address on-chain — BeeHash never holds coins.</p>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">BCH ADDRESS</div>
         <div style="font-family:monospace;font-size:.85rem;color:var(--gold);word-break:break-all;margin-bottom:10px" id="betaLockedAddr">—</div>
         <div class="miner-assign">
           <div>
-            <div style="font-size:.65rem;color:var(--text-muted);text-transform:uppercase">Assigned miner</div>
-            <div class="slot" id="betaMinerSlot">—</div>
+            <div style="font-size:.65rem;color:var(--text-muted);text-transform:uppercase">Status</div>
+            <div class="slot" id="betaMinerSlot">Operator-assigned</div>
           </div>
           <div style="font-size:.75rem;color:var(--text-secondary);line-height:1.4">
-            Code: <span id="betaUsedCode">—</span><br>
-            Status: <span id="betaSeatStatus">Awaiting hashrate</span>
+            <span id="betaSeatStatus">Awaiting hashrate delivery</span><br>
+            <span id="betaUsedCode" style="display:none"></span>
           </div>
         </div>
-        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">Wrong address? Contact support@beehash.cloud — do not mine to an exchange deposit if you can avoid it.</p>
+        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">Questions: support@beehash.cloud</p>
       </div>
     </div>
   </div>
@@ -510,33 +476,12 @@ function validateAddress(addr,chain){
 
 /* ===== CHAIN SELECTOR ===== */
 function setChain(chain){
+  if(chain==='beta')chain='bch';
   currentChain=chain;
-  document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
-  const btnMap={btc:'btnBtc',bch:'btnBch',beta:'btnBeta'};
-  const btn=$(btnMap[chain]);
+  document.querySelectorAll('#gateView .chain-btn, .chain-select .chain-btn').forEach(function(b){b.classList.remove('on')});
+  var btn=$(chain==='btc'?'btnBtc':'btnBch');
   if(btn)btn.classList.add('on');
-
-  if(chain==='beta'){
-    if($('normalGateFlow'))$('normalGateFlow').style.display='none';
-    if($('betaGateFlow'))$('betaGateFlow').style.display='block';
-    const seat=loadBetaSeat();
-    if(seat){
-      currentWallet=seat.address;
-      currentChain='bch';
-      showDash(seat.address,'bch');
-      return;
-    }
-    if($('betaGateCodeStep'))$('betaGateCodeStep').style.display='block';
-    if($('betaGateAddrStep'))$('betaGateAddrStep').style.display='none';
-    return;
-  }
-
-  if($('normalGateFlow'))$('normalGateFlow').style.display='block';
-  if($('betaGateFlow'))$('betaGateFlow').style.display='none';
-
-  const input=$('walletInput');
-  const label=$('walletLabel');
-  const hint=$('walletHint');
+  var input=$('walletInput'), label=$('walletLabel'), hint=$('walletHint');
   if(!input||!label||!hint)return;
   if(chain==='btc'){
     label.textContent='BTC payout address';
@@ -741,93 +686,35 @@ function applyDashAddress(){
 /* ===== BETA ACTIVATE ===== */
 const BETA_KEY='bh_beta_seat';
 /* Operator-issued codes → miner slot id. Add/remove codes here when inviting. */
-const BETA_CODES={
-  'BH-7K9M-2QPL-X4RN':{slot:'Miner-01',th:'45-50'},
-  'BH-3W8C-9HJT-M2VK':{slot:'Miner-02',th:'45-50'},
-  'BH-5R2N-6YDF-P8QW':{slot:'Miner-03',th:'45-50'},
-  'BH-1A4E-8ZUC-K7BX':{slot:'Miner-04',th:'45-50'},
-  'BH-9T6G-4JLM-W3HS':{slot:'Miner-05',th:'45-50'}
-};
+/* Beta seats assigned offline by operator — no client codes */
 let betaCodeOk=null;
 
 function normalizeBetaCode(c){
   return (c||'').trim().toUpperCase().replace(/\s+/g,'');
 }
 
-function validateBetaCode(){
-  const raw=normalizeBetaCode($('betaCodeInput').value);
-  const msg=$('betaCodeMsg');
-  if(!raw){msg.innerHTML='<div class="notice err"><strong>Enter a code.</strong></div>';return}
-  const entry=BETA_CODES[raw];
-  if(!entry){msg.innerHTML='<div class="notice err"><strong>Invalid or already used code.</strong> Check with your invite email.</div>';betaCodeOk=null;return}
-  const existing=loadBetaSeat();
-  if(existing&&existing.code!==raw){msg.innerHTML='<div class="notice err"><strong>This device already locked a different seat.</strong></div>';return}
-  if(existing&&existing.code===raw){renderBetaSeat(existing);msg.innerHTML='<div class="notice ok"><strong>Seat already locked on this device.</strong></div>';return}
-  betaCodeOk=raw;
-  msg.innerHTML='<div class="notice ok"><strong>Code valid.</strong> Slot <strong>'+entry.slot+'</strong> · ~'+entry.th+' TH/s when routed.</div>';
-  $('betaStepCode').classList.add('done');
-  $('betaStepCode').style.display='none';
-  const step=$('betaStepAddr');
-  step.style.display='block';
-  step.style.opacity='1';
-  step.style.pointerEvents='auto';
-  setTimeout(function(){if($('betaBchInput'))$('betaBchInput').focus()},200);
-}
-
-
-let gateBetaCodeOk=null;
-
-function gateValidateBetaCode(){
-  const raw=normalizeBetaCode($('gateBetaCode').value);
-  const msg=$('gateBetaCodeMsg');
-  if(!raw){msg.innerHTML='<div class="notice err"><strong>Enter a code.</strong></div>';return}
-  const entry=BETA_CODES[raw];
-  if(!entry){msg.innerHTML='<div class="notice err"><strong>Invalid or already used code.</strong> Check your invite email.</div>';gateBetaCodeOk=null;return}
-  gateBetaCodeOk=raw;
-  msg.innerHTML='<div class="notice ok"><strong>Code valid.</strong> Slot '+entry.slot+' · ~'+entry.th+' TH/s when routed. Now lock your BCH address.</div>';
-  $('betaGateCodeStep').style.display='none';
-  $('betaGateAddrStep').style.display='block';
-}
-
-function gateLockBetaAddress(){
-  if(!gateBetaCodeOk){showError('Validate invite code first');return}
-  const a=($('gateBetaAddr').value||'').trim();
-  const b=($('gateBetaAddrConfirm').value||'').trim();
-  const msg=$('gateBetaAddrMsg');
-  if(a!==b){msg.innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
-  const result=validateAddress(a,'bch');
-  if(!result.valid){msg.innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
-  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nDo NOT use an exchange address. You cannot change this after locking.\n\nContinue?'))return;
-  const entry=BETA_CODES[gateBetaCodeOk];
-  const seat={code:gateBetaCodeOk,address:a,slot:entry.slot,th:entry.th,lockedAt:Date.now(),chain:'bch'};
-  localStorage.setItem(BETA_KEY,JSON.stringify(seat));
-  currentWallet=a;currentChain='bch';
-  localStorage.setItem(SESSION_KEY,a);
-  localStorage.setItem(CHAIN_KEY,'bch');
-  showDash(a,'bch');
-  renderBetaSeat(seat);
-  gotoTab('beta');
-}
-
 function lockBetaAddress(){
-  if(!betaCodeOk){showError('Validate invite code first');return}
   const a=($('betaBchInput').value||'').trim();
   const b=($('betaBchConfirm').value||'').trim();
-  if(a!==b){$('betaLockMsg').innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
+  const msg=$('betaLockMsg');
+  if(a!==b){if(msg)msg.innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
   const result=validateAddress(a,'bch');
-  if(!result.valid){$('betaLockMsg').innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
-  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nMake sure this is NOT an exchange deposit address.\nYou cannot change it after this.'))return;
-  const entry=BETA_CODES[betaCodeOk];
-  const seat={code:betaCodeOk,address:a,slot:entry.slot,th:entry.th,lockedAt:Date.now(),chain:'bch'};
+  if(!result.valid){if(msg)msg.innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
+  if(!confirm('Pin this BCH address as your beta seat on this device?
+
+'+a+'
+
+Do NOT use an exchange address.
+BeeHash assigns hashrate offline to this address.'))return;
+  const seat={code:'operator',address:a,slot:'Operator-assigned',th:'45-50',lockedAt:Date.now(),chain:'bch'};
   localStorage.setItem(BETA_KEY,JSON.stringify(seat));
-  // also set session to this BCH address
   currentWallet=a;currentChain='bch';
   localStorage.setItem(SESSION_KEY,a);
   localStorage.setItem(CHAIN_KEY,'bch');
   renderBetaSeat(seat);
   if(typeof dashSetChain==='function')dashSetChain('bch');
   if($('dashAddr'))$('dashAddr').value=a;
-  showError('BCH address locked · '+entry.slot+' assigned');
+  showError('Beta seat pinned on this device');
 }
 
 function loadBetaSeat(){
@@ -836,28 +723,31 @@ function loadBetaSeat(){
 
 function renderBetaSeat(seat){
   if(!seat)return;
-  $('betaStepCode').style.display='none';
-  $('betaStepAddr').style.display='none';
-  $('betaStepDone').style.display='block';
-  $('betaLockedAddr').textContent=seat.address;
-  $('betaMinerSlot').textContent=seat.slot+' · ~'+seat.th+' TH/s';
-  $('betaUsedCode').textContent=seat.code;
-  // freeze dash address field
+  var stepAddr=$('betaStepAddr');
+  if(stepAddr)stepAddr.style.display='none';
+  var done=$('betaStepDone');
+  if(done)done.style.display='block';
+  if($('betaLockedAddr'))$('betaLockedAddr').textContent=seat.address;
+  if($('betaMinerSlot'))$('betaMinerSlot').textContent=seat.slot||'Operator-assigned';
+  if($('betaSeatStatus'))$('betaSeatStatus').textContent='Awaiting hashrate delivery';
   if($('dashAddr')){
     $('dashAddr').value=seat.address;
     $('dashAddr').readOnly=true;
-    $('dashAddr').title='Locked for beta';
   }
-  const applyBtn=document.querySelector('button[onclick="applyDashAddress()"]');
+  var applyBtn=document.querySelector('button[onclick="applyDashAddress()"]');
   if(applyBtn){applyBtn.disabled=true;applyBtn.textContent='Locked';}
-  if($('dashBtnBtc'))$('dashBtnBtc').disabled=true;
-  // keep BCH selected
-  betaCodeOk=seat.code;
 }
 
 function initBetaTab(){
   const seat=loadBetaSeat();
-  if(seat)renderBetaSeat(seat);
+  if(seat){renderBetaSeat(seat);return;}
+  var step=$('betaStepAddr');
+  if(step)step.style.display='block';
+  var done=$('betaStepDone');
+  if(done)done.style.display='none';
+  if(currentWallet&&currentChain==='bch'&&$('betaBchInput')){
+    $('betaBchInput').value=currentWallet;
+  }
 }
 
 
