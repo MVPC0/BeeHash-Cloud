@@ -587,19 +587,19 @@ function showDash(wallet,chain){
  currentWallet=wallet;
  currentChain=chain||'btc';
 
- $('gateView').style.display='none';
- $('dashView').style.display='block';
+ if($('gateView'))$('gateView').style.display='none';
+ if($('dashView'))$('dashView').style.display='block';
  if($('topWallet'))$('topWallet').style.display='flex';
 
  const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
  if($('walletPill'))$('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
- $('payoutAddr').textContent=short;
- $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
- $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
- $('connUser').textContent='beehash.'+wallet.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+ if($('payoutAddr'))$('payoutAddr').textContent=short;
+ if($('chainBadge'))$('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
+ if($('chainText'))$('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
+ if($('connUser'))$('connUser').textContent='beehash.'+wallet.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
 
  // Update price label
- $('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
+ if($('priceLabel'))$('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
   if($('dashAddr'))$('dashAddr').value=wallet;
   document.querySelectorAll('#dashControls .chain-btn').forEach(b=>b.classList.remove('on'));
   const db=$(chain==='bch'?'dashBtnBch':'dashBtnBtc');
@@ -621,6 +621,7 @@ function showDash(wallet,chain){
 
  renderSwarm();
  renderBeeCards();
+  initBetaTab();
  setPriceMode('sub');
  renderBoostTiers();
  onPreset();
@@ -684,9 +685,9 @@ function dashSetChain(chain){
   document.querySelectorAll('#gateView .chain-btn').forEach(b=>b.classList.remove('on'));
   const gb=$(chain==='btc'?'btnBtc':'btnBch');
   if(gb)gb.classList.add('on');
-  $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
-  $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
-  $('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
+  if($('chainBadge'))$('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
+  if($('chainText'))$('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
+  if($('priceLabel'))$('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
   // pool presets
   const poolSelect=$('presetPool');
   if(poolSelect){
@@ -729,7 +730,7 @@ function applyDashAddress(){
   localStorage.setItem(CHAIN_KEY,currentChain);
   const short=addr.length>18?addr.slice(0,10)+'…'+addr.slice(-6):addr;
   if($('walletPill'))$('walletPill').textContent=(currentChain==='bch'?'BCH':'BTC')+' · '+short;
-  if($('payoutAddr'))$('payoutAddr').textContent=short;
+  if($('payoutAddr'))if($('payoutAddr'))$('payoutAddr').textContent=short;
   if($('connUser'))$('connUser').textContent='beehash.'+addr.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
   updateQuickLinks();
   tryFetchLiveData();
@@ -804,7 +805,8 @@ function gateLockBetaAddress(){
   localStorage.setItem(SESSION_KEY,a);
   localStorage.setItem(CHAIN_KEY,'bch');
   showDash(a,'bch');
-  setTimeout(function(){renderBetaSeat(seat);gotoTab('beta');},50);
+  renderBetaSeat(seat);
+  gotoTab('beta');
 }
 
 function lockBetaAddress(){
@@ -878,7 +880,7 @@ function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser
   // Always show gate first — dashboard only after valid address + Enter Hive
   $('gateView').style.display='block';
   $('dashView').style.display='none';
-  if($('topWallet'))if($('topWallet'))$('topWallet').style.display='none';
+  if($('topWallet'))$('topWallet').style.display='none';
 
   const savedChain=localStorage.getItem(CHAIN_KEY)||'btc';
   const savedWallet=localStorage.getItem(SESSION_KEY)||'';
