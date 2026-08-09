@@ -304,44 +304,44 @@ button,a,select,input{min-height:44px;min-width:44px}
  <div class="dashboard-grid">
  <div class="panel"><div class="panel-title">🐝 Bee slots</div><div class="bee-cards-grid" id="beeCards"></div></div>
  <div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
- </div>
- 
+</div>
+
   <div class="panel-section" id="sec-beta">
     <div class="beta-flow">
       <div class="notice" style="margin-bottom:14px">
-        <strong>Beta activation</strong> — Enter the invite code you were given. Then lock a <strong>BCH</strong> payout address.
-        After lock-in, the address <strong>cannot be changed</strong> in this browser. BeeHash only points hashrate; the pool pays that address on-chain.
+        <strong>Beta activation</strong> — Enter the invite code from your invite email, then lock your <strong>BCH</strong> payout address.
+        After lock-in you cannot change that address in this browser.
       </div>
 
       <div class="beta-step" id="betaStepCode">
         <h3>1 · Invite code</h3>
-        <p>Codes are issued by BeeHash for beta seats. Example format: <code>BH-XXXX-XXXX-XXXX</code></p>
+        <p>Format: <code>BH-XXXX-XXXX-XXXX</code></p>
         <div class="field">
           <label for="betaCodeInput">Invite code</label>
           <input class="wallet-input beta-code" id="betaCodeInput" placeholder="BH-····-····-····" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:6px" id="btnValidateCode" onclick="validateBetaCode()">Validate code</button>
-        <div id="betaCodeMsg"></div>
+        <button type="button" class="btn btn-gold" style="width:100%;margin-top:8px" id="btnValidateCode" onclick="validateBetaCode()">Validate code</button>
+        <div id="betaCodeMsg" style="margin-top:10px"></div>
       </div>
 
-      <div class="beta-step" id="betaStepAddr" style="opacity:.5;pointer-events:none">
+      <div class="beta-step" id="betaStepAddr" style="opacity:.45;pointer-events:none">
         <h3>2 · Lock BCH address</h3>
-        <p>This is the address the pool will pay if a block is found. Double-check it. <strong>You cannot change it after locking.</strong></p>
+        <p>Unlocks after a valid code. Type the same address twice. <strong>Cannot change after lock.</strong></p>
         <div class="field">
           <label for="betaBchInput">BCH payout address</label>
           <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
         </div>
         <div class="field">
-          <label for="betaBchConfirm">Type address again to confirm</label>
-          <input class="wallet-input" id="betaBchConfirm" placeholder="Confirm BCH address" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+          <label for="betaBchConfirm">Confirm BCH address</label>
+          <input class="wallet-input" id="betaBchConfirm" placeholder="Type address again" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" class="btn btn-gold" style="width:100%;margin-top:6px" id="btnLockAddr" onclick="lockBetaAddress()">Lock address &amp; assign miner</button>
-        <div id="betaLockMsg"></div>
+        <button type="button" class="btn btn-gold" style="width:100%;margin-top:8px" id="btnLockAddr" onclick="lockBetaAddress()">Lock address &amp; assign miner</button>
+        <div id="betaLockMsg" style="margin-top:10px"></div>
       </div>
 
       <div class="beta-step locked" id="betaStepDone" style="display:none">
         <h3>3 · Seat active <span class="lock-badge">Locked</span></h3>
-        <p>Your BCH payout address is locked for this beta seat. Miner assignment is below. Hosted TH stays 0 until the operator routes hash to your seat.</p>
+        <p>BCH address locked. Miner slot assigned. Hosted TH stays 0 until hashrate is routed.</p>
         <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">LOCKED BCH ADDRESS</div>
         <div style="font-family:monospace;font-size:.8rem;color:var(--gold);word-break:break-all" id="betaLockedAddr">—</div>
         <div class="miner-assign">
@@ -354,20 +354,13 @@ button,a,select,input{min-height:44px;min-width:44px}
             Chain: BCH · Status: <span id="betaSeatStatus">Awaiting hashrate</span>
           </div>
         </div>
-        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">To use a different address you need a new invite code from support (support@beehash.cloud). Clearing browser data will hide this seat on this device only — the operator still has your assignment.</p>
+        <p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">Need a different address? Contact support@beehash.cloud for a new seat.</p>
       </div>
     </div>
   </div>
 
-  <div class="connection-panel">
- <div style="flex:1;min-width:180px"><div class="conn-label">Destination (beta default)</div><div class="conn-value" id="stratumUrl">stratum+tcp://solo.mineshop.eu:3333</div></div>
- <div style="flex:1;min-width:180px"><div class="conn-label">Worker (operator-managed in beta)</div><div class="conn-value" id="connUser">—</div></div>
- <div><div class="conn-label">Pass</div><div class="conn-value">x</div></div>
- <button class="btn btn-outline" style="font-size:.7rem" onclick="copyConn()">Copy</button>
- </div>
- </div>
-
- <div class="panel-section" id="sec-miners">
+  </div>
+<div class="panel-section" id="sec-miners">
  <div class="panel">
  <div class="panel-title">Base plan preference</div>
  <div class="notice">Subscription vs one-time. <strong>Orders closed</strong> in free beta — save preference only.</div>
@@ -424,7 +417,14 @@ button,a,select,input{min-height:44px;min-width:44px}
  </div>
  </div>
 
- <div class="footer">
+ <div class="connection-panel">
+ <div style="flex:1;min-width:180px"><div class="conn-label">Destination (beta default)</div><div class="conn-value" id="stratumUrl">stratum+tcp://solo.mineshop.eu:3333</div></div>
+ <div style="flex:1;min-width:180px"><div class="conn-label">Worker (operator-managed in beta)</div><div class="conn-value" id="connUser">—</div></div>
+ <div><div class="conn-label">Pass</div><div class="conn-value">x</div></div>
+ <button class="btn btn-outline" style="font-size:.7rem" onclick="copyConn()">Copy</button>
+ </div>
+ 
+  <div class="footer">
     <strong style="color:var(--gold)">BeeHash Hive</strong> — zero fake numbers.<br>
     <a href="index.html">Home</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> ·
     <a href="mailto:support@beehash.cloud">support@beehash.cloud</a><br>
@@ -580,7 +580,15 @@ function showDash(wallet,chain){
  if(tab==='boost'||tab==='miners'||tab==='beta')gotoTab(tab);
 }
 
-function gotoTab(name){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));document.querySelectorAll('.panel-section').forEach(p=>p.classList.toggle('on',p.id==='sec-'+name))}
+function gotoTab(name){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  document.querySelectorAll('.panel-section').forEach(function(p){
+    var on=(p.id==='sec-'+name);
+    p.classList.toggle('on',on);
+    p.style.display=on?'block':'none';
+  });
+  if(name==='beta'){var el=$('betaCodeInput');if(el)setTimeout(function(){el.focus()},200);}
+}
 function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
 function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
 
