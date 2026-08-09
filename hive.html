@@ -73,7 +73,7 @@ body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sa
 .connection-panel{background:linear-gradient(90deg,var(--bg-card),var(--bg-panel));border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:16px}
 .conn-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase}
 .conn-value{font-family:Orbitron,sans-serif;font-size:.7rem;color:var(--gold);background:var(--bg-deep);padding:5px 10px;border-radius:5px;border:1px solid var(--border);word-break:break-all}
-.tabs{display:flex;gap:4px;background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
+.tabs{display:flex;position:relative;gap:4px;background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
 .tabs button{flex:1;padding:10px 8px;border:none;border-radius:8px;background:transparent;color:var(--text-secondary);font-family:Rajdhani,sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;text-transform:uppercase}
 .tabs button.on{background:var(--bg-card);color:var(--gold)}
 .panel-section{display:none}.panel-section.on{display:block}
@@ -164,6 +164,9 @@ button,a,select,input{min-height:44px;min-width:44px}
 .miner-assign .slot{font-family:Orbitron,sans-serif;font-size:1.1rem;color:var(--gold);font-weight:700}
 .lock-badge{display:inline-block;font-size:.65rem;background:var(--gold);color:#000;padding:2px 8px;border-radius:4px;font-weight:700;text-transform:uppercase}
 
+
+.tabs{position:sticky;top:52px;z-index:20;background:var(--bg-deep);padding:8px 0;margin-bottom:12px}
+
 </style>
 </head>
 <body>
@@ -226,7 +229,33 @@ button,a,select,input{min-height:44px;min-width:44px}
  <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. On-chain payouts go to <strong id="payoutAddr" style="color:var(--gold)">your address</strong> via the pool — not through BeeHash. <strong>Lottery odds</strong> at these sizes. Your hosted TH stays 0 until a seat is allocated. Network stats below are live public data.</div>
  </div>
 
- <div class="net-stats">
+ 
+  <div class="dash-controls" id="dashControls">
+    <div class="row">
+      <div style="flex:1;min-width:180px">
+        <label>Chain · live network stats</label>
+        <div class="chain-select">
+          <button type="button" class="chain-btn on" id="dashBtnBtc" onclick="dashSetChain('btc')"><span class="sym">₿</span>BTC</button>
+          <button type="button" class="chain-btn" id="dashBtnBch" onclick="dashSetChain('bch')"><span class="sym">₿</span>BCH</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline" onclick="refreshData()" style="align-self:flex-end">Refresh stats</button>
+    </div>
+    <div class="row">
+      <div style="flex:1;min-width:200px;width:100%">
+        <label for="dashAddr">Payout address · check / switch</label>
+        <input class="wallet-input" id="dashAddr" placeholder="Paste address to check" style="width:100%;text-align:left" spellcheck="false" autocomplete="off">
+      </div>
+      <button type="button" class="btn btn-gold" onclick="applyDashAddress()" style="align-self:flex-end">Apply</button>
+    </div>
+    <div class="quick-links" id="quickLinks">
+      <a id="linkExplorer" href="https://mempool.space" target="_blank" rel="noopener">Open in explorer ↗</a>
+      <a id="linkMempool" href="https://mempool.space" target="_blank" rel="noopener">mempool.space ↗</a>
+      <a href="https://solo.mineshop.eu/" target="_blank" rel="noopener">MineShop solo ↗</a>
+    </div>
+  </div>
+
+  <div class="net-stats">
  <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label" id="priceLabel">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
  <div class="net-stat" onclick="refreshData()"><div class="net-val" id="blockHeight">—</div><div class="net-label">Block Height</div><div class="net-source" id="heightSource">—</div></div>
  <div class="net-stat" onclick="refreshData()"><div class="net-val" id="networkHash">—</div><div class="net-label">Network Hashrate</div><div class="net-source" id="hashSource">—</div></div>
