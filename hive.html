@@ -208,20 +208,51 @@ button,a,select,input{min-height:44px;min-width:44px}
       <button type="button" class="chain-btn" id="btnBch" onclick="setChain('bch')">
         <span class="sym">₿</span>BCH
       </button>
+      <button type="button" class="chain-btn" id="btnBeta" onclick="setChain('beta')">
+        <span class="sym">🐝</span>BETA
+      </button>
     </div>
 
+    <div id="normalGateFlow">
+  <div class="field">
+    <label for="walletInput" id="walletLabel">BTC payout address</label>
+    <input class="wallet-input" id="walletInput" placeholder="bc1q… or 1… or 3…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left" oninput="clearErr()">
+  </div>
+  <div class="notice" id="walletHint" style="font-size:.75rem">
+    Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
+  </div>
+  <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
+</div>
+
+<div id="betaGateFlow" style="display:none">
+  <div id="betaGateCodeStep">
     <div class="field">
-      <label for="walletInput" id="walletLabel">BTC payout address</label>
-      <input class="wallet-input" id="walletInput" placeholder="bc1q… or 1… or 3…" autocomplete="off" spellcheck="false" style="width:100%;text-align:left" oninput="clearErr()">
+      <label for="gateBetaCode">Beta invite code</label>
+      <input class="wallet-input beta-code" id="gateBetaCode" placeholder="BH-····-····-····" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
     </div>
+    <div class="notice" style="font-size:.75rem">Codes are issued by BeeHash for beta seats. Format: <code>BH-XXXX-XXXX-XXXX</code></div>
+    <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="gateValidateBetaCode()">Validate code</button>
+    <div id="gateBetaCodeMsg"></div>
+  </div>
 
-    <div class="notice" id="walletHint" style="font-size:.75rem">
-      Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
+  <div id="betaGateAddrStep" style="display:none">
+    <div class="notice" style="font-size:.75rem;border-left-color:var(--red)">
+      <strong>This address cannot be changed after locking.</strong> Do <strong>NOT</strong> use an exchange address (Coinbase, Binance, etc.) — exchanges don't support solo block payouts and you can lose the reward permanently. Use a wallet you personally hold the keys to.
     </div>
+    <div class="field">
+      <label for="gateBetaAddr">BCH payout address</label>
+      <input class="wallet-input" id="gateBetaAddr" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="gateBetaAddrConfirm">Type address again to confirm</label>
+      <input class="wallet-input" id="gateBetaAddrConfirm" placeholder="Confirm BCH address" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="gateLockBetaAddress()">Lock address &amp; enter Hive</button>
+    <div id="gateBetaAddrMsg"></div>
+  </div>
+</div>
 
-    <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
-
-    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">After you enter, open the <strong style="color:var(--gold)">Beta code</strong> tab if you have an invite code.</p>
+    <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">BTC/BCH: browse with your address. <strong style="color:var(--gold)">BETA</strong>: invite code then lock BCH address.</p>
   </div>
 </div>
 
@@ -479,24 +510,44 @@ function validateAddress(addr,chain){
 
 /* ===== CHAIN SELECTOR ===== */
 function setChain(chain){
- currentChain=chain;
- document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
- $(chain==='btc'?'btnBtc':'btnBch').classList.add('on');
+  currentChain=chain;
+  document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
+  const btnMap={btc:'btnBtc',bch:'btnBch',beta:'btnBeta'};
+  const btn=$(btnMap[chain]);
+  if(btn)btn.classList.add('on');
 
- const input=$('walletInput');
- const label=$('walletLabel');
- const hint=$('walletHint');
+  if(chain==='beta'){
+    if($('normalGateFlow'))$('normalGateFlow').style.display='none';
+    if($('betaGateFlow'))$('betaGateFlow').style.display='block';
+    const seat=loadBetaSeat();
+    if(seat){
+      currentWallet=seat.address;
+      currentChain='bch';
+      showDash(seat.address,'bch');
+      return;
+    }
+    if($('betaGateCodeStep'))$('betaGateCodeStep').style.display='block';
+    if($('betaGateAddrStep'))$('betaGateAddrStep').style.display='none';
+    return;
+  }
 
- if(chain==='btc'){
- label.textContent='BTC payout address';
- input.placeholder='bc1q… or 1… or 3…';
- hint.innerHTML='Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).';
- }else{
- label.textContent='BCH payout address';
- input.placeholder='bitcoincash:q… or q…';
- hint.innerHTML='Enter a valid <strong>Bitcoin Cash</strong> address (CashAddr, Simple, or Legacy).';
- }
- input.classList.remove('err');
+  if($('normalGateFlow'))$('normalGateFlow').style.display='block';
+  if($('betaGateFlow'))$('betaGateFlow').style.display='none';
+
+  const input=$('walletInput');
+  const label=$('walletLabel');
+  const hint=$('walletHint');
+  if(!input||!label||!hint)return;
+  if(chain==='btc'){
+    label.textContent='BTC payout address';
+    input.placeholder='bc1q… or 1… or 3…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).';
+  }else{
+    label.textContent='BCH payout address';
+    input.placeholder='bitcoincash:q… or q…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin Cash</strong> address (CashAddr, Simple, or Legacy).';
+  }
+  input.classList.remove('err');
 }
 function clearErr(){$('walletInput').classList.remove('err')}
 
@@ -720,6 +771,40 @@ function validateBetaCode(){
   step.style.opacity='1';
   step.style.pointerEvents='auto';
   setTimeout(function(){if($('betaBchInput'))$('betaBchInput').focus()},200);
+}
+
+
+let gateBetaCodeOk=null;
+
+function gateValidateBetaCode(){
+  const raw=normalizeBetaCode($('gateBetaCode').value);
+  const msg=$('gateBetaCodeMsg');
+  if(!raw){msg.innerHTML='<div class="notice err"><strong>Enter a code.</strong></div>';return}
+  const entry=BETA_CODES[raw];
+  if(!entry){msg.innerHTML='<div class="notice err"><strong>Invalid or already used code.</strong> Check your invite email.</div>';gateBetaCodeOk=null;return}
+  gateBetaCodeOk=raw;
+  msg.innerHTML='<div class="notice ok"><strong>Code valid.</strong> Slot '+entry.slot+' · ~'+entry.th+' TH/s when routed. Now lock your BCH address.</div>';
+  $('betaGateCodeStep').style.display='none';
+  $('betaGateAddrStep').style.display='block';
+}
+
+function gateLockBetaAddress(){
+  if(!gateBetaCodeOk){showError('Validate invite code first');return}
+  const a=($('gateBetaAddr').value||'').trim();
+  const b=($('gateBetaAddrConfirm').value||'').trim();
+  const msg=$('gateBetaAddrMsg');
+  if(a!==b){msg.innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
+  const result=validateAddress(a,'bch');
+  if(!result.valid){msg.innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
+  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nDo NOT use an exchange address. You cannot change this after locking.\n\nContinue?'))return;
+  const entry=BETA_CODES[gateBetaCodeOk];
+  const seat={code:gateBetaCodeOk,address:a,slot:entry.slot,th:entry.th,lockedAt:Date.now(),chain:'bch'};
+  localStorage.setItem(BETA_KEY,JSON.stringify(seat));
+  currentWallet=a;currentChain='bch';
+  localStorage.setItem(SESSION_KEY,a);
+  localStorage.setItem(CHAIN_KEY,'bch');
+  showDash(a,'bch');
+  setTimeout(function(){renderBetaSeat(seat);gotoTab('beta');},50);
 }
 
 function lockBetaAddress(){
