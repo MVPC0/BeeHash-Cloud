@@ -21,21 +21,57 @@ ul{padding-left:1.2rem;margin-bottom:12px}
 a{color:var(--honey)}
 .tag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:2px 6px}
 footer{border-top:1px solid var(--line);padding:20px;font-size:12px;color:var(--muted);text-align:center;margin-top:32px}
+
+/* === BeeHash site nav (product-style) === */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
+.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
+.site-brand .badge{font-family:var(--mono,monospace);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim,#a97c1d);color:var(--honey,#f7b32b);border-radius:3px;padding:2px 5px}
+.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.site-nav a{text-decoration:none;color:var(--muted,#8b939e);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+.site-nav a:hover{color:var(--text,#e8eaed);background:rgba(255,255,255,.04)}
+.site-nav a.here{color:var(--honey,#f7b32b);background:rgba(247,179,43,.1)}
+.site-nav a.cta-nav{background:var(--honey,#f7b32b);color:#141414!important}
+.site-nav a.cta-nav:hover{filter:brightness(1.05)}
+.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line,#242a31)}
+.nav-sub a{font-size:11px;color:var(--muted,#8b939e);text-decoration:none;font-family:var(--mono,monospace)}
+.nav-sub a:hover{color:var(--honey,#f7b32b)}
+.you-are{font-size:11px;color:var(--muted,#8b939e);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono,monospace)}
+.you-are b{color:var(--text,#e8eaed)}
+.mobile-dock{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,14,16,.96);border-top:1px solid var(--line,#242a31);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.mobile-dock a{flex:1;text-align:center;text-decoration:none;color:var(--muted,#8b939e);font-size:10px;font-weight:700;padding:8px 4px;border-radius:8px;text-transform:uppercase}
+.mobile-dock a.here{color:var(--honey,#f7b32b)}
+@media(max-width:720px){
+  .site-nav .hide-sm{display:none}
+  .mobile-dock{display:flex;gap:2px}
+  body{padding-bottom:64px}
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
- <a class="logo" href="index.html">BeeHash Cloud</a>
- <span class="tag">PRE-LAUNCH</span>
- <div class="hnav">
- <a href="index.html">Home</a>
- <a href="hive.html">Hive</a>
- <a href="rent.html">Rent</a>
- <a href="terms.html">Terms</a>
- <a href="privacy.html">Privacy</a>
- </div>
+<header class="site-header">
+  <div class="inner">
+    <a class="site-brand" href="index.html">BeeHash <span class="badge">CLOUD</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="hive.html" class="cta-nav">Hive</a>
+      <a href="rent.html">Rent</a>
+      <a href="app.html">Tools</a>
+      <a class="hide-sm" href="bch.html">BCH</a>
+      <a class="hide-sm" href="index.html#how">How it works</a>
+    </nav>
+  </div>
+  <div class="nav-sub">
+    <a href="index.html#beta">Beta status</a>
+    <a href="index.html#waitlist">Waitlist</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:support@beehash.cloud">Support</a>
+  </div>
 </header>
+<div class="you-are">You are here: <b>Privacy</b></div>
 <h1>Privacy Policy</h1>
 <p style="font-size:12px;font-family:var(--mono)">Last updated: August 7, 2026</p>
 

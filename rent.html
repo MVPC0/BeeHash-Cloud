@@ -119,24 +119,57 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:18px 16px 32px;f
 footer a{color:var(--muted)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:90%}
 .toast.show{opacity:1;transform:translateX(-50%)}
+
+/* === BeeHash site nav (product-style) === */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
+.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
+.site-brand .badge{font-family:var(--mono,monospace);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim,#a97c1d);color:var(--honey,#f7b32b);border-radius:3px;padding:2px 5px}
+.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.site-nav a{text-decoration:none;color:var(--muted,#8b939e);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+.site-nav a:hover{color:var(--text,#e8eaed);background:rgba(255,255,255,.04)}
+.site-nav a.here{color:var(--honey,#f7b32b);background:rgba(247,179,43,.1)}
+.site-nav a.cta-nav{background:var(--honey,#f7b32b);color:#141414!important}
+.site-nav a.cta-nav:hover{filter:brightness(1.05)}
+.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line,#242a31)}
+.nav-sub a{font-size:11px;color:var(--muted,#8b939e);text-decoration:none;font-family:var(--mono,monospace)}
+.nav-sub a:hover{color:var(--honey,#f7b32b)}
+.you-are{font-size:11px;color:var(--muted,#8b939e);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono,monospace)}
+.you-are b{color:var(--text,#e8eaed)}
+.mobile-dock{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,14,16,.96);border-top:1px solid var(--line,#242a31);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.mobile-dock a{flex:1;text-align:center;text-decoration:none;color:var(--muted,#8b939e);font-size:10px;font-weight:700;padding:8px 4px;border-radius:8px;text-transform:uppercase}
+.mobile-dock a.here{color:var(--honey,#f7b32b)}
+@media(max-width:720px){
+  .site-nav .hide-sm{display:none}
+  .mobile-dock{display:flex;gap:2px}
+  body{padding-bottom:64px}
+}
+
 </style>
 </head>
 <body>
 
-<header>
- <div class="logo"><a href="index.html">
- <svg class="hex" viewBox="0 0 24 24" fill="none"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#f7b32b" stroke-width="1.6"/><path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#f7b32b" opacity=".35"/></svg>
- BeeHash</a>
- </div>
- <span class="tag">PRE-LAUNCH</span>
- <nav class="hnav">
- <a href="index.html">Home</a>
- <a href="app.html">App</a>
- <a href="bch.html">BCH</a>
- <a href="rent.html" class="on">Rent</a>
- <a href="dashboard.html">Dashboard</a>
- </nav>
+<header class="site-header">
+  <div class="inner">
+    <a class="site-brand" href="index.html">BeeHash <span class="badge">CLOUD</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="hive.html" class="cta-nav">Hive</a>
+      <a href="rent.html" class="here">Rent</a>
+      <a href="app.html">Tools</a>
+      <a class="hide-sm" href="bch.html">BCH</a>
+      <a class="hide-sm" href="index.html#how">How it works</a>
+    </nav>
+  </div>
+  <div class="nav-sub">
+    <a href="index.html#beta">Beta status</a>
+    <a href="index.html#waitlist">Waitlist</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:support@beehash.cloud">Support</a>
+  </div>
 </header>
+<div class="you-are">You are here: <b>Rent · Product info</b></div>
 
 <main>
 

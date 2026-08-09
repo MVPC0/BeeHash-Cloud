@@ -116,31 +116,63 @@ select.wallet-input{cursor:pointer;width:100%}
 }
 /* Touch-friendly */
 button,a,select,input{min-height:44px;min-width:44px}
+
+/* === BeeHash site nav (product-style) === */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
+.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
+.site-brand .badge{font-family:var(--mono,monospace);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim,#a97c1d);color:var(--honey,#f7b32b);border-radius:3px;padding:2px 5px}
+.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.site-nav a{text-decoration:none;color:var(--muted,#8b939e);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+.site-nav a:hover{color:var(--text,#e8eaed);background:rgba(255,255,255,.04)}
+.site-nav a.here{color:var(--honey,#f7b32b);background:rgba(247,179,43,.1)}
+.site-nav a.cta-nav{background:var(--honey,#f7b32b);color:#141414!important}
+.site-nav a.cta-nav:hover{filter:brightness(1.05)}
+.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line,#242a31)}
+.nav-sub a{font-size:11px;color:var(--muted,#8b939e);text-decoration:none;font-family:var(--mono,monospace)}
+.nav-sub a:hover{color:var(--honey,#f7b32b)}
+.you-are{font-size:11px;color:var(--muted,#8b939e);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono,monospace)}
+.you-are b{color:var(--text,#e8eaed)}
+.mobile-dock{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,14,16,.96);border-top:1px solid var(--line,#242a31);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.mobile-dock a{flex:1;text-align:center;text-decoration:none;color:var(--muted,#8b939e);font-size:10px;font-weight:700;padding:8px 4px;border-radius:8px;text-transform:uppercase}
+.mobile-dock a.here{color:var(--honey,#f7b32b)}
+@media(max-width:720px){
+  .site-nav .hide-sm{display:none}
+  .mobile-dock{display:flex;gap:2px}
+  body{padding-bottom:64px}
+}
+
 </style>
 </head>
 <body>
 <div class="bg-honeycomb"></div>
 <div class="error-toast" id="errorToast"></div>
 
-<div class="topbar">
- <a class="logo" href="index.html"><div class="logo-icon">🐝</div><span>BEEHASH <span style="color:var(--text-secondary);font-size:.7rem">HIVE</span></span></a>
- <span class="tag">BETA · FULL</span>
- <div class="nav-links">
- <a href="index.html">Home</a>
- <a href="hive.html">Hive</a>
- <a href="rent.html">Rent</a>
- <a href="app.html">Tools</a>
- </div>
- <div id="topWallet" style="display:none;align-items:center;gap:8px">
- <span style="font-size:.75rem;color:var(--text-muted);font-family:monospace" id="walletPill"></span>
- <button class="btn btn-outline" onclick="disconnectHive()">Leave</button>
- </div>
-</div>
-
+<header class="site-header">
+  <div class="inner">
+    <a class="site-brand" href="index.html">BeeHash <span class="badge">CLOUD</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="hive.html" class="here">Hive</a>
+      <a href="rent.html">Rent</a>
+      <a href="app.html">Tools</a>
+      <a class="hide-sm" href="bch.html">BCH</a>
+      <a class="hide-sm" href="index.html#how">How it works</a>
+    </nav>
+  </div>
+  <div class="nav-sub">
+    <a href="index.html#beta">Beta status</a>
+    <a href="index.html#waitlist">Waitlist</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="mailto:support@beehash.cloud">Support</a>
+  </div>
+</header>
+<div class="you-are">You are here: <b>Hive · Dashboard</b></div>
 <div class="container" id="gateView">
  <div class="gate-card">
  <h1>Enter the Hive</h1>
- <p>Step 1: choose <strong style="color:var(--text-primary)">BTC or BCH</strong>. Step 2: paste <strong style="color:var(--text-primary)">your</strong> wallet. Solo blocks pay that address directly — BeeHash does not hold rewards.</p>
+ <p>Step 1: choose <strong style="color:var(--text-primary)">BTC or BCH</strong>. Step 2: paste <strong style="color:var(--text-primary)">your</strong> wallet. Solo blocks pay that address directly — BeeHash never holds coins or private keys — only hashrate.</p>
 
  <div class="chain-select">
  <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
@@ -162,14 +194,14 @@ button,a,select,input{min-height:44px;min-width:44px}
 
  <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
 
- <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">Beta seats are full. You can still explore the Hive UI. Hosted TH stays 0 unless you were assigned a seat. Invalid addresses are blocked.</p>
+ <p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">Beta seats are full. Explore the UI anytime. Hashrate delivery stays 0 unless you have a seat. Entering an address does not create a BeeHash balance. Invalid addresses are blocked.</p>
  </div>
 </div>
 
 <div class="container" id="dashView" style="display:none">
  <div class="honest-banner">
  <div class="badge" id="chainBadge">BTC</div>
- <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. Rewards go to <strong id="payoutAddr" style="color:var(--gold)">your wallet</strong>. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
+ <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. On-chain payouts go to <strong id="payoutAddr" style="color:var(--gold)">your address</strong> via the pool — not through BeeHash. <strong>Lottery odds</strong> at these sizes. UI shows zeros until fleet proof is public.</div>
  </div>
 
  <div class="net-stats">
