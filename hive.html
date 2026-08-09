@@ -196,8 +196,11 @@ button,a,select,input{min-height:44px;min-width:44px}
 <div class="you-are">You are here: <b>Hive · Dashboard</b></div>
 <div class="container" id="gateView">
  <div class="gate-card">
- <h1>Enter the Hive</h1>
- <p>Step 1: choose <strong style="color:var(--text-primary)">BTC or BCH</strong>. Step 2: paste <strong style="color:var(--text-primary)">your</strong> wallet. Solo blocks pay that address directly — BeeHash never holds coins or private keys — only hashrate.</p>
+    <h1>Enter the Hive</h1>
+    <p><strong style="color:var(--text-primary)">Step 1:</strong> Choose BTC or BCH.<br>
+    <strong style="color:var(--text-primary)">Step 2:</strong> Paste a <strong style="color:var(--text-primary)">valid</strong> payout address, then tap <strong style="color:var(--gold)">Enter Hive</strong>.<br>
+    <strong style="color:var(--text-primary)">Step 3:</strong> Open the <strong style="color:var(--gold)">Beta</strong> tab and enter your invite code to lock a BCH address and get a miner slot.<br>
+    Dashboard does not open until the address is valid. BeeHash never holds coins.</p>
 
  <div class="chain-select">
  <button type="button" class="chain-btn on" id="btnBtc" onclick="setChain('btc')">
@@ -224,6 +227,12 @@ button,a,select,input{min-height:44px;min-width:44px}
 </div>
 
 <div class="container" id="dashView" style="display:none">
+
+  <div id="leaveHiveBar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <button type="button" class="btn btn-outline" onclick="gotoTab('beta')">Beta code / seat</button>
+    <button type="button" class="btn btn-outline" onclick="disconnectHive()">Leave Hive</button>
+  </div>
+
  <div class="honest-banner">
  <div class="badge" id="chainBadge">BTC</div>
  <div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. On-chain payouts go to <strong id="payoutAddr" style="color:var(--gold)">your address</strong> via the pool — not through BeeHash. <strong>Lottery odds</strong> at these sizes. Your hosted TH stays 0 until a seat is allocated. Network stats below are live public data.</div>
@@ -266,7 +275,7 @@ button,a,select,input{min-height:44px;min-width:44px}
  <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
  <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
  <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
-    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta</button>
+    <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta code</button>
  </div>
 
  <div class="panel-section on" id="sec-swarm">
@@ -769,21 +778,22 @@ function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser
 
 /* ===== INIT ===== */
 (function init(){
- const savedWallet=localStorage.getItem(SESSION_KEY);
- const savedChain=localStorage.getItem(CHAIN_KEY);
- if(savedWallet){
- // Re-validate on load
- const result=validateAddress(savedWallet,savedChain||'btc');
- if(result.valid){
- showDash(savedWallet,savedChain||'btc');
- }else{
- localStorage.removeItem(SESSION_KEY);
- localStorage.removeItem(CHAIN_KEY);
- setChain(savedChain||'btc');
- }
- }else{
- setChain(savedChain||'btc');
- }
+  // Always show gate first — dashboard only after valid address + Enter Hive
+  $('gateView').style.display='block';
+  $('dashView').style.display='none';
+  if($('topWallet'))$('topWallet').style.display='none';
+
+  const savedChain=localStorage.getItem(CHAIN_KEY)||'btc';
+  const savedWallet=localStorage.getItem(SESSION_KEY)||'';
+  setChain(savedChain);
+  if(savedWallet&&$('walletInput')){
+    $('walletInput').value=savedWallet;
+    const hint=$('walletHint');
+    if(hint)hint.innerHTML=hint.innerHTML+' <span style="color:var(--gold)">Saved address pre-filled — verify, then tap Enter Hive.</span>';
+  }
+  // Prefill beta code field only if present
+  const seat=typeof loadBetaSeat==='function'?loadBetaSeat():null;
+  if(seat&&$('betaCodeInput'))$('betaCodeInput').value=seat.code;
 })();
 </script>
 </body>
