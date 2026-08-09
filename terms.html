@@ -3,54 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terms of Service — BeeHash Cloud</title>
-<meta name="description" content="BeeHash Cloud terms of service. Pre-launch hashrate hosting.">
+<title>Terms — BeeHash Cloud (Pre-Launch)</title>
+<meta name="description" content="BeeHash Cloud terms of service — pre-launch draft, pending legal review.">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0c0e10;--panel:#14171b;--line:#242a31;--honey:#f7b32b;--honey-dim:#a97c1d;--live:#3ddc84;--text:#e8eaed;--muted:#8b939e;--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Space Grotesk',system-ui,sans-serif}
-*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--disp);line-height:1.65}
-.wrap{max-width:720px;margin:0 auto;padding:0 20px 48px}
-header{display:flex;align-items:center;gap:12px;padding:18px 0;flex-wrap:wrap}
-.logo{font-weight:700;color:var(--honey);text-decoration:none}
-.hnav{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap;font-size:13px;font-weight:700}
-.hnav a{color:var(--muted);text-decoration:none}.hnav a:hover{color:var(--honey)}
-h1{font-size:1.5rem;margin:12px 0 8px;color:var(--honey)}
-h2{font-size:1.05rem;margin:22px 0 8px;color:var(--text)}
-p,li{font-size:14px;color:var(--muted);margin-bottom:10px}
-ul{padding-left:1.2rem;margin-bottom:12px}
-a{color:var(--honey)}
-.tag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:2px 6px}
-footer{border-top:1px solid var(--line);padding:20px;font-size:12px;color:var(--muted);text-align:center;margin-top:32px}
-
-/* === BeeHash site nav (product-style) === */
-.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
-.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
-.site-brand .badge{font-family:var(--mono,monospace);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim,#a97c1d);color:var(--honey,#f7b32b);border-radius:3px;padding:2px 5px}
-.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
-.site-nav a{text-decoration:none;color:var(--muted,#8b939e);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
-.site-nav a:hover{color:var(--text,#e8eaed);background:rgba(255,255,255,.04)}
-.site-nav a.here{color:var(--honey,#f7b32b);background:rgba(247,179,43,.1)}
-.site-nav a.cta-nav{background:var(--honey,#f7b32b);color:#141414!important}
-.site-nav a.cta-nav:hover{filter:brightness(1.05)}
-.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line,#242a31)}
-.nav-sub a{font-size:11px;color:var(--muted,#8b939e);text-decoration:none;font-family:var(--mono,monospace)}
-.nav-sub a:hover{color:var(--honey,#f7b32b)}
-.you-are{font-size:11px;color:var(--muted,#8b939e);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono,monospace)}
-.you-are b{color:var(--text,#e8eaed)}
-.mobile-dock{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,14,16,.96);border-top:1px solid var(--line,#242a31);padding:6px 8px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
-.mobile-dock a{flex:1;text-align:center;text-decoration:none;color:var(--muted,#8b939e);font-size:10px;font-weight:700;padding:8px 4px;border-radius:8px;text-transform:uppercase}
-.mobile-dock a.here{color:var(--honey,#f7b32b)}
-@media(max-width:720px){
-  .site-nav .hide-sm{display:none}
-  .mobile-dock{display:flex;gap:2px}
-  body{padding-bottom:64px}
+:root{
+  --bg:#0c0e10; --panel:#14171b; --line:#242a31;
+  --honey:#f7b32b; --honey-dim:#a97c1d;
+  --text:#e8eaed; --muted:#8b939e;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
 }
-
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 60px}
+.site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey);font-weight:700;font-size:15px}
+.site-brand .badge{font-family:var(--mono);font-size:8px;letter-spacing:.1em;border:1px solid var(--honey-dim);color:var(--honey);border-radius:3px;padding:2px 5px}
+.site-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.site-nav a{text-decoration:none;color:var(--muted);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+.site-nav a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.site-nav a.here{color:var(--honey);background:rgba(247,179,43,.1)}
+.site-nav a.cta-nav{background:var(--honey);color:#141414!important}
+.nav-sub{max-width:960px;margin:0 auto;padding:6px 16px 10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.nav-sub a{font-size:11px;color:var(--muted);text-decoration:none;font-family:var(--mono)}
+.nav-sub a:hover{color:var(--honey)}
+.you-are{font-size:11px;color:var(--muted);padding:8px 16px;max-width:960px;margin:0 auto;font-family:var(--mono)}
+.you-are b{color:var(--text)}
+h1{font-size:clamp(24px,6vw,32px);margin:32px 0 8px;letter-spacing:-.01em}
+.draft-badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--honey);border:1px solid var(--honey-dim);border-radius:4px;padding:3px 8px;margin-bottom:20px}
+h2{font-size:16px;margin:28px 0 8px;color:var(--honey)}
+p,li{font-size:14px;color:var(--muted);line-height:1.65}
+p b, li b{color:var(--text)}
+ul{margin:8px 0 8px 20px}
+.notice{border:1px solid var(--line);border-left:3px solid var(--honey);background:var(--panel);border-radius:8px;padding:14px 16px;font-size:13px;color:var(--muted);margin:20px 0;line-height:1.6}
+.notice b{color:var(--text)}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0;font-size:11.5px;color:var(--muted)}
+footer a{color:var(--honey);text-decoration:none}
 </style>
 </head>
 <body>
-<div class="wrap">
 <header class="site-header">
   <div class="inner">
     <a class="site-brand" href="index.html">BeeHash <span class="badge">CLOUD</span></a>
@@ -60,59 +54,51 @@ footer{border-top:1px solid var(--line);padding:20px;font-size:12px;color:var(--
       <a href="rent.html">Rent</a>
       <a href="app.html">Tools</a>
       <a class="hide-sm" href="bch.html">BCH</a>
-      <a class="hide-sm" href="index.html#how">How it works</a>
     </nav>
   </div>
   <div class="nav-sub">
     <a href="index.html#beta">Beta status</a>
     <a href="index.html#waitlist">Waitlist</a>
-    <a href="terms.html">Terms</a>
+    <a href="terms.html" class="here">Terms</a>
     <a href="privacy.html">Privacy</a>
     <a href="mailto:support@beehash.cloud">Support</a>
   </div>
 </header>
 <div class="you-are">You are here: <b>Terms</b></div>
-<h1>Terms of Service</h1>
-<p style="font-size:12px;font-family:var(--mono)">Last updated: August 7, 2026 · Simple pre-launch terms. Not legal advice.</p>
 
-<h2>1. What BeeHash is</h2>
-<p>BeeHash Cloud provides information about SHA-256 hashrate hosting and related tools. During pre-launch and free beta, nothing on the site is an offer to sell hashrate unless explicitly stated and paid for through an official checkout (when enabled).</p>
+<div class="wrap">
+  <div class="draft-badge">DRAFT · PRE-LEGAL-REVIEW</div>
+  <h1>Terms of Service</h1>
 
-<h2>2. Solo mining and risk</h2>
-<p>Solo mining is a probabilistic process (“lottery”). Hashrate does not guarantee block rewards, income, or profit. Network difficulty, luck, pool behavior, and hardware downtime can reduce or eliminate rewards.</p>
+  <div class="notice">
+    <b>This is not a finished legal document.</b> BeeHash Cloud is pre-launch and this page exists so the site
+    doesn't link to a 404 — it is a placeholder, not a binding agreement, and hasn't been reviewed by a lawyer.
+    A real Terms of Service will replace this before any payment is collected or hashrate is sold, per the
+    launch checklist on the <a href="index.html#roadmap" style="color:var(--honey)">Home roadmap</a>.
+  </div>
 
-<h2>3. Beta</h2>
-<ul>
- <li>Beta may be free, limited, and invite-only.</li>
- <li>When a seat is allocated, you provide a valid payout address. Solo finds (if any) are paid by the destination pool to that address on the blockchain. BeeHash provides hashrate only and does not custody coins, keys, or balances.</li>
- <li>BeeHash may change, pause, or end beta at any time.</li>
-</ul>
+  <h2>What BeeHash Cloud is, today</h2>
+  <p>BeeHash provides SHA-256 hashrate hosting. During beta, seats are invite-only, free, and limited to
+  ~45–50 TH/s for 7 days. <b>You supply your own BTC or BCH payout address.</b> Solo pool payouts go directly
+  to that address on-chain — BeeHash never takes custody of coins and cannot intercept a payout.</p>
 
-<h2>4. Your responsibilities</h2>
-<ul>
- <li>Provide accurate contact and payout information when required.</li>
- <li>You are responsible for your wallet security and for verifying pool stats independently.</li>
- <li>Do not use the service for unlawful activity.</li>
-</ul>
+  <h2>No guarantees</h2>
+  <ul>
+    <li>Solo mining is a lottery. Small hashrate means rare block finds — most seats will find nothing during the beta window.</li>
+    <li>Nothing on this site is investment advice.</li>
+    <li>Beta hashrate figures, uptime, and delivery are not guaranteed and may change without notice.</li>
+  </ul>
 
-<h2>5. No warranties</h2>
-<p>The site, dashboards, and any beta access are provided “as is.” We do not warrant uninterrupted uptime, exact hashrate delivery at all times, or any financial result.</p>
+  <h2>What's not live yet</h2>
+  <p>No payments are collected on this site. No hosting plan is purchasable. Anything shown as a price
+  or tier is indicative only until the roadmap items on the <a href="index.html#roadmap" style="color:var(--honey)">Home page</a> are marked done.</p>
 
-<h2>6. Limitation of liability</h2>
-<p>To the maximum extent permitted by law, BeeHash Cloud and its operators are not liable for lost profits, lost rewards, indirect damages, or losses arising from mining luck, third-party pools, network conditions, or your wallet/key management.</p>
-
-<h2>7. Third parties</h2>
-<p>Public pool pages, price APIs, and similar services are third-party. Their terms and availability are outside our control.</p>
-
-<h2>8. Paid service (when enabled)</h2>
-<p>Paid rentals will only open after public capacity proof and further legal review. Additional terms may apply at checkout.</p>
-
-<h2>9. Contact</h2>
-<p>Support: <a href="mailto:support@beehash.cloud">support@beehash.cloud</a></p>
-
-<footer>
-  <a href="index.html">Home</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:support@beehash.cloud">Support</a>
-</footer>
+  <h2>Contact</h2>
+  <p>Questions: <a href="mailto:support@beehash.cloud" style="color:var(--honey)">support@beehash.cloud</a></p>
 </div>
+
+<footer><div class="wrap" style="padding:0">
+  © 2026 BeeHash Cloud · <a href="index.html">Home</a> · <a href="privacy.html">Privacy</a>
+</div></footer>
 </body>
 </html>
