@@ -309,10 +309,10 @@ button,a,select,input{min-height:44px;min-width:44px}
  <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Base</div></div>
  <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Boost</div></div>
  <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Total</div></div>
- <div class="stat-box"><div class="stat-val">3%</div><div class="stat-label">Target fee*</div></div>
+ <div class="stat-box"><div class="stat-val">0%</div><div class="stat-label">Target fee*</div></div>
  </div>
  </div>
- <p style="font-size:.65rem;color:var(--text-muted);text-align:center">* Design target — not charged in free beta.</p>
+ <p style="font-size:.65rem;color:var(--text-muted);text-align:center">* No fee in beta.</p>
  </div>
  </div>
  <div class="dashboard-grid">
@@ -603,6 +603,11 @@ function gotoTab(name){
 function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
 function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
 
+
+function fetchGlobalBlocks(){
+  /* optional global block feed — no-op unless wired to an API */
+}
+
 function tryFetchLiveData(){
  const chain=currentChain||localStorage.getItem(CHAIN_KEY)||'btc';
  const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
@@ -658,7 +663,7 @@ function dashSetChain(chain){
   }
   updateQuickLinks();
   tryFetchLiveData();
-  if(currentChain==='btc'){fetchGlobalBlocks&&fetchGlobalBlocks();}
+  if(currentChain==='btc'&&typeof fetchGlobalBlocks==='function'){fetchGlobalBlocks();}
 }
 
 function updateQuickLinks(){
