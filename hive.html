@@ -21,7 +21,7 @@ body{background:var(--bg-deep);color:var(--text-primary);font-family:Rajdhani,sa
 .wallet-input.err{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
 .btn{padding:8px 16px;border-radius:8px;border:none;font-family:Rajdhani,sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}.btn-outline:hover{border-color:var(--gold);color:var(--gold)}.btn:disabled{opacity:.45;cursor:not-allowed}
-.chain-select{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.chain-select{position:relative;z-index:5;display:flex;gap:8px;justify-content:center;margin-bottom:14px}
 .chain-btn{flex:1;padding:10px 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-secondary);font-family:Orbitron,sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;text-transform:uppercase;transition:all .15s}
 .chain-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(245,184,0,.08)}
 .chain-btn .sym{font-size:1.1rem;display:block;margin-bottom:2px}
@@ -287,13 +287,12 @@ button,a,select,input{min-height:44px;min-width:44px}
  </div>
 
  <div class="tabs">
- <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
- <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
- <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
     <button type="button" data-tab="beta" onclick="gotoTab('beta')">Beta seat</button>
- </div>
-
- <div class="panel-section on" id="sec-swarm">
+    <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
+    <button type="button" data-tab="miners" onclick="gotoTab('miners')">Miners</button>
+    <button type="button" data-tab="boost" onclick="gotoTab('boost')">Boost</button>
+  </div>
+  <div class="panel-section on" id="sec-swarm">
  <div class="dashboard-grid">
  <div class="panel">
  <div class="panel-title"><span class="live-dot off"></span> Swarm Pulse</div>
@@ -714,12 +713,7 @@ function lockBetaAddress(){
   if(a!==b){if(msg)msg.innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
   const result=validateAddress(a,'bch');
   if(!result.valid){if(msg)msg.innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
-  if(!confirm('Pin this BCH address as your beta seat on this device?
-
-'+a+'
-
-Do NOT use an exchange address.
-BeeHash assigns hashrate offline to this address.'))return;
+  if(!confirm('Pin this BCH address as your beta seat on this device?\n\n'+a+'\n\nDo NOT use an exchange address.\nBeeHash assigns hashrate offline to this address.'))return;
   const seat={code:'operator',address:a,slot:'Operator-assigned',th:'45-50',lockedAt:Date.now(),chain:'bch'};
   localStorage.setItem(BETA_KEY,JSON.stringify(seat));
   currentWallet=a;currentChain='bch';
