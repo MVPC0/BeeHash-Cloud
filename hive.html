@@ -179,7 +179,7 @@ body{padding-bottom:64px}
 <a class="hide-sm" href="index.html#how">How it works</a>
 </nav>
 <!-- FIX: real elements for #topWallet / #walletPill so showDash()/disconnectHive() stop throwing -->
-<div class="wallet-pill-wrap" id="topWallet">
+<div class="wallet-pill-wrap" id="topWallet" style="display:none">
 <span class="pill" id="walletPill">—</span>
 <button type="button" class="btn btn-outline disc-btn" onclick="disconnectHive()">Disconnect</button>
 </div>
@@ -274,10 +274,10 @@ Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
 <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Base</div></div>
 <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Boost</div></div>
 <div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Total</div></div>
-<div class="stat-box"><div class="stat-val">3%</div><div class="stat-label">Target fee*</div></div>
+<div class="stat-box"><div class="stat-val">0%</div><div class="stat-label">Target fee*</div></div>
 </div>
 </div>
-<p style="font-size:.65rem;color:var(--text-muted);text-align:center">* Design target — not charged in free beta.</p>
+<p style="font-size:.65rem;color:var(--text-muted);text-align:center">* BeeHash takes 0% — pool fees (if any) are on the destination pool only.</p>
 </div>
 </div>
 <div class="dashboard-grid">
@@ -474,8 +474,8 @@ localStorage.removeItem(SESSION_KEY);
 localStorage.removeItem(CHAIN_KEY);
 currentWallet='';
 currentChain='btc';
-$('dashView').style.display='none';
-$('gateView').style.display='block';
+if($('dashView'))$('dashView').style.display='none';
+if($('gateView'))$('gateView').style.display='block';
 if($('topWallet'))$('topWallet').style.display='none';
 setChain('btc');
 $('walletInput').value='';
@@ -484,8 +484,8 @@ $('walletInput').classList.remove('err');
 function showDash(wallet,chain){
 currentWallet=wallet;
 currentChain=chain||'btc';
-$('gateView').style.display='none';
-$('dashView').style.display='block';
+if($('gateView'))$('gateView').style.display='none';
+if($('dashView'))$('dashView').style.display='block';
 /* FIX: topWallet/walletPill now exist in the header markup; still null-guarded for safety */
 if($('topWallet'))$('topWallet').style.display='flex';
 const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
