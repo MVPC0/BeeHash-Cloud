@@ -89,7 +89,6 @@ select.wallet-input{cursor:pointer;width:100%}
 .notice.ok{border-left-color:var(--green)}.notice.err{border-left-color:var(--red)}.notice strong{color:var(--text-primary)}
 .footer{text-align:center;padding:28px 12px 40px;color:var(--text-muted);font-size:.75rem;line-height:1.6}.footer a{color:var(--gold);text-decoration:none}
 .error-toast{position:fixed;bottom:20px;right:20px;background:var(--bg-card);border:1px solid var(--red);border-radius:10px;padding:12px 16px;color:var(--red);font-size:.8rem;z-index:200;max-width:300px;display:none}.error-toast.show{display:block}
-/* ===== MOBILE RESPONSIVE ===== */
 @media(max-width:640px){
 .topbar{padding:10px 14px}
 .nav-links{gap:8px;font-size:.75rem;margin-left:0;width:100%;justify-content:center;padding-top:4px;border-top:1px solid var(--border)}
@@ -113,9 +112,7 @@ select.wallet-input{cursor:pointer;width:100%}
 .net-stats{grid-template-columns:1fr}
 .honeycomb-grid{grid-template-columns:repeat(3,1fr)}
 }
-/* Touch-friendly */
 button,a,select,input{min-height:44px;min-width:44px}
-/* === BeeHash site nav (product-style) === */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(12,14,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line,#242a31)}
 .site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .site-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--honey,#f7b32b);font-weight:700;font-size:15px}
@@ -158,10 +155,8 @@ body{padding-bottom:64px}
 .miner-assign .slot{font-family:Orbitron,sans-serif;font-size:1.1rem;color:var(--gold);font-weight:700}
 .lock-badge{display:inline-block;font-size:.65rem;background:var(--gold);color:#000;padding:2px 8px;border-radius:4px;font-weight:700;text-transform:uppercase}
 .tabs{position:sticky;top:52px;z-index:20;background:var(--bg-deep);padding:8px 0;margin-bottom:12px}
-/* FIX: wallet pill in header — previously referenced by JS (#topWallet/#walletPill) but never existed in markup */
-.wallet-pill-wrap{display:none;align-items:center;gap:8px;margin-left:8px}
-.wallet-pill-wrap .pill{font-family:Orbitron,sans-serif;font-size:.65rem;color:var(--gold);background:rgba(245,184,0,.08);border:1px solid rgba(245,184,0,.3);border-radius:20px;padding:6px 12px}
-.wallet-pill-wrap .disc-btn{font-size:.65rem;padding:6px 10px;min-height:auto;min-width:auto}
+.wallet-pill{display:none;align-items:center;gap:8px;font-family:Orbitron,sans-serif;font-size:.7rem;color:var(--gold);background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:6px 12px}
+.wallet-pill.show{display:flex}
 </style>
 </head>
 <body>
@@ -178,11 +173,7 @@ body{padding-bottom:64px}
 <a class="hide-sm" href="bch.html">BCH</a>
 <a class="hide-sm" href="index.html#how">How it works</a>
 </nav>
-<!-- FIX: real elements for #topWallet / #walletPill so showDash()/disconnectHive() stop throwing -->
-<div class="wallet-pill-wrap" id="topWallet" style="display:none">
-<span class="pill" id="walletPill">—</span>
-<button type="button" class="btn btn-outline disc-btn" onclick="disconnectHive()">Disconnect</button>
-</div>
+<div class="wallet-pill" id="topWallet"><span id="walletPill">—</span><button type="button" class="btn btn-outline" style="padding:4px 10px;font-size:.65rem" onclick="disconnectHive()">Disconnect</button></div>
 </div>
 <div class="nav-sub">
 <a href="index.html#beta">Beta status</a>
@@ -213,13 +204,13 @@ body{padding-bottom:64px}
 Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
 </div>
 <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="enterHive()" id="enterBtn">Enter Hive</button>
-<p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">Beta seats are full. Explore the UI anytime. Hashrate delivery stays 0 unless you have a seat. Entering an address does not create a BeeHash balance. Invalid addresses are blocked.</p>
+<p style="margin-top:14px;font-size:.75rem;color:var(--text-muted)">Beta seats are full. Explore the UI anytime. Hashrate delivery stays 0 unless pool reports live hash for your address. Entering an address does not create a BeeHash balance. Invalid addresses are blocked.</p>
 </div>
 </div>
 <div class="container" id="dashView" style="display:none">
 <div class="honest-banner">
 <div class="badge" id="chainBadge">BTC</div>
-<div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. On-chain payouts go to <strong id="payoutAddr" style="color:var(--gold)">your address</strong> via the pool — not through BeeHash. <strong>Lottery odds</strong> at these sizes. Your hosted TH stays 0 until a seat is allocated. Network stats below are live public data.</div>
+<div><strong>BeeHash is hashrate hosting — not a money machine.</strong> Beta: invite only · ~45–50 TH/s when allocated · 7 days · no payments. <strong id="chainText">Bitcoin</strong> solo pool. On-chain payouts go to <strong id="payoutAddr" style="color:var(--gold)">your address</strong> via the pool — not through BeeHash. <strong>Lottery odds</strong> at these sizes. <strong>Your Hosted Hash</strong> is read live from the destination pool public API (MineShop BTC / 2Miners BCH). Network stats below are live public data.</div>
 </div>
 <div class="dash-controls" id="dashControls">
 <div class="row">
@@ -242,14 +233,14 @@ Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
 <div class="quick-links" id="quickLinks">
 <a id="linkExplorer" href="https://mempool.space" target="_blank" rel="noopener">Open in explorer ↗</a>
 <a id="linkMempool" href="https://mempool.space" target="_blank" rel="noopener">mempool.space ↗</a>
-<a href="https://solo.mineshop.eu/" target="_blank" rel="noopener">MineShop solo ↗</a>
+<a id="linkPoolDash" href="https://solo.mineshop.eu/" target="_blank" rel="noopener">Pool miner dashboard ↗</a>
 </div>
 </div>
 <div class="net-stats">
 <div class="net-stat" onclick="refreshData()"><div class="net-val" id="btcPrice">—</div><div class="net-label" id="priceLabel">BTC Price</div><div class="net-source" id="priceSource">—</div></div>
 <div class="net-stat" onclick="refreshData()"><div class="net-val" id="blockHeight">—</div><div class="net-label">Block Height</div><div class="net-source" id="heightSource">—</div></div>
 <div class="net-stat" onclick="refreshData()"><div class="net-val" id="networkHash">—</div><div class="net-label">Network Hashrate</div><div class="net-source" id="hashSource">—</div></div>
-<div class="net-stat"><div class="net-val" id="hostedHash">0 TH/s</div><div class="net-label">Your Hosted Hash</div><div class="net-source">Honest zero</div></div>
+<div class="net-stat" onclick="refreshData()"><div class="net-val" id="hostedHash">0 TH/s</div><div class="net-label">Your Hosted Hash</div><div class="net-source" id="hostedSource">pool live · honest zero</div></div>
 </div>
 <div class="tabs">
 <button type="button" class="on" data-tab="swarm" onclick="gotoTab('swarm')">Swarm</button>
@@ -260,39 +251,39 @@ Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).
 <div class="panel-section on" id="sec-swarm">
 <div class="dashboard-grid">
 <div class="panel">
-<div class="panel-title"><span class="live-dot off"></span> Swarm Pulse</div>
+<div class="panel-title"><span class="live-dot off" id="swarmLiveDot"></span> Swarm Pulse</div>
 <div class="honeycomb-grid" id="swarmGrid"></div>
-<p style="font-size:.7rem;color:var(--text-muted);margin-top:10px">Slots stay offline until public pool proof + your beta allocation.</p>
+<p style="font-size:.7rem;color:var(--text-muted);margin-top:10px" id="swarmNote">Slots stay offline until the destination pool reports live hashrate for your address.</p>
 </div>
 <div class="panel">
 <div class="panel-title">🍯 Nectar (delivery)</div>
 <div class="nectar-container">
 <div class="nectar-jar"><div class="jar-neck"></div><div class="jar-body"><div class="jar-honey" id="jarHoney" style="height:0%"></div></div></div>
-<div class="nectar-pct">0%</div>
-<div class="nectar-label">No active delivery yet<br>(honest empty jar)</div>
+<div class="nectar-pct" id="nectarPct">0%</div>
+<div class="nectar-label" id="nectarLabel">No active delivery yet<br>(honest empty jar)</div>
 <div class="nectar-stats">
-<div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Base</div></div>
-<div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Boost</div></div>
-<div class="stat-box"><div class="stat-val">0 TH</div><div class="stat-label">Total</div></div>
-<div class="stat-box"><div class="stat-val">0%</div><div class="stat-label">Target fee*</div></div>
+<div class="stat-box"><div class="stat-val" id="statBase">0 TH</div><div class="stat-label">Live hash</div></div>
+<div class="stat-box"><div class="stat-val" id="statBoost">0 TH</div><div class="stat-label">Boost</div></div>
+<div class="stat-box"><div class="stat-val" id="statTotal">0 TH</div><div class="stat-label">Total</div></div>
+<div class="stat-box"><div class="stat-val">3%</div><div class="stat-label">Target fee*</div></div>
 </div>
 </div>
-<p style="font-size:.65rem;color:var(--text-muted);text-align:center">* BeeHash takes 0% — pool fees (if any) are on the destination pool only.</p>
+<p style="font-size:.65rem;color:var(--text-muted);text-align:center">* Design target — not charged in free beta. Hashrate from pool API only.</p>
 </div>
 </div>
 <div class="dashboard-grid">
 <div class="panel"><div class="panel-title">🐝 Bee slots</div><div class="bee-cards-grid" id="beeCards"></div></div>
-<div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
+<div class="panel"><div class="panel-title">🍯 Honey drops</div><div class="drop-empty" id="honeyDrops">No blocks attributed yet.<br>When allocated, finds show on the <strong style="color:var(--text-secondary)">destination pool public page</strong> — not invented here.</div></div>
 </div>
 <div class="panel-section" id="sec-beta">
 <div class="beta-flow">
 <div class="notice" style="margin-bottom:14px">
 <strong>Beta activation</strong> — Lock a <strong>BCH</strong> payout address to claim a seat.
-After lock-in, the address <strong>cannot be changed</strong> in this browser. BeeHash only points hashrate; the pool pays that address on-chain.
+After lock-in, the address <strong>cannot be changed</strong> in this browser. BeeHash only points hashrate; the pool pays that address on-chain. Hosted TH updates from the live 2Miners solo API for that address.
 </div>
 <div class="beta-step" id="betaStepAddr">
-<h3>Lock BCH address</h3>
-<p>This is the address the pool will pay if a block is found. Double-check it. <strong>You cannot change it after locking.</strong></p>
+<h3>1 · Lock BCH address</h3>
+<p>This is the address the pool will pay if a block is found. Double-check it. <strong>You cannot change it after locking.</strong> Your miner slot is assigned automatically from this address.</p>
 <div class="field">
 <label for="betaBchInput">BCH payout address</label>
 <input class="wallet-input" id="betaBchInput" placeholder="bitcoincash:q… or q…" style="width:100%;text-align:left" autocomplete="off" spellcheck="false">
@@ -305,8 +296,8 @@ After lock-in, the address <strong>cannot be changed</strong> in this browser. B
 <div id="betaLockMsg"></div>
 </div>
 <div class="beta-step locked" id="betaStepDone" style="display:none">
-<h3>Seat active <span class="lock-badge">Locked</span></h3>
-<p>Your BCH payout address is locked for this beta seat. Miner assignment is below. Hosted TH stays 0 until the operator routes hash to your seat.</p>
+<h3>2 · Seat active <span class="lock-badge">Locked</span></h3>
+<p>Your BCH payout address is locked for this beta seat. Miner assignment is below. Hosted TH is read live from the pool.</p>
 <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">LOCKED BCH ADDRESS</div>
 <div style="font-family:monospace;font-size:.8rem;color:var(--gold);word-break:break-all" id="betaLockedAddr">—</div>
 <div class="miner-assign">
@@ -318,7 +309,7 @@ After lock-in, the address <strong>cannot be changed</strong> in this browser. B
 Chain: BCH · Status: <span id="betaSeatStatus">Awaiting hashrate</span>
 </div>
 </div>
-<p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">To use a different address you need a new invite code from support (support@beehash.cloud). Clearing browser data will hide this seat on this device only — the operator still has your assignment.</p>
+<p style="margin-top:12px;font-size:.75rem;color:var(--text-muted)">To use a different address, contact support (support@beehash.cloud). Clearing browser data will hide this seat on this device only — the operator still has your assignment.</p>
 </div>
 </div>
 </div>
@@ -385,7 +376,7 @@ Chain: BCH · Status: <span id="betaSeatStatus">Awaiting hashrate</span>
 </div>
 </div>
 <div class="footer">
-<strong style="color:var(--gold)">BeeHash Hive</strong> — zero fake numbers.<br>
+<strong style="color:var(--gold)">BeeHash Hive</strong> — zero fake numbers. Hosted hash is polled from public pool APIs every 30s.<br>
 <a href="index.html">Home</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> ·
 <a href="mailto:support@beehash.cloud">support@beehash.cloud</a><br>
 Solo mining is a lottery. Nothing here is investment advice.
@@ -404,266 +395,474 @@ const TIERS=[
 ];
 const BOOST_SIZES=[1,5,10,25,50,100];
 const workers=[{name:'Slot-01'},{name:'Slot-02'},{name:'Slot-03'},{name:'Slot-04'},{name:'Slot-05'},{name:'Slot-06'}];
+
+/* Live hashrate state — updated only from public pool APIs */
+let liveHash={th:0,workersOnline:0,source:'—',updatedAt:0,raw:null};
+let pollTimer=null;
 let priceMode='sub',selectedMinerTh=null,selectedBoostTh=null,currentWallet='',currentChain='btc';
 const $=id=>document.getElementById(id);
+
+function normalizeAddr(addr){return (addr||'').trim()}
+function normalizeBchForApi(addr){
+  addr=normalizeAddr(addr);
+  if(/^bitcoincash:/i.test(addr))return addr;
+  if(/^[qp][a-z0-9]{25,}$/i.test(addr))return 'bitcoincash:'+addr.toLowerCase();
+  return addr;
+}
+
+/* Parse MineShop style "68.2G", "9.78T", "1.2P", "0" → TH/s number */
+function parseHashrateString(s){
+  if(s==null||s===''||s==='0')return 0;
+  if(typeof s==='number')return s/1e12; /* assume H/s */
+  const m=String(s).trim().match(/^([\d.]+)\s*([KMGTP]?)/i);
+  if(!m)return 0;
+  const n=parseFloat(m[1]);
+  if(isNaN(n))return 0;
+  const u=(m[2]||'').toUpperCase();
+  const mult={K:1e-9,M:1e-6,G:1e-3,T:1,P:1e3,'':1e-12};
+  return n*(mult[u]!==undefined?mult[u]:1);
+}
+
+function formatTh(th){
+  if(th<=0)return '0';
+  if(th>=100)return th.toFixed(0);
+  if(th>=10)return th.toFixed(1);
+  if(th>=1)return th.toFixed(2);
+  return th.toFixed(3);
+}
+
+/* ===== LIVE POOL HASHRATE (no simulation) ===== */
+async function fetchLiveHashrate(wallet,chain){
+  wallet=normalizeAddr(wallet);
+  if(!wallet)return {th:0,workersOnline:0,source:'no address',raw:null};
+  try{
+    if(chain==='bch'){
+      const id=normalizeBchForApi(wallet);
+      /* 2Miners BCH solo public account API */
+      const r=await fetch('https://solo-bch.2miners.com/api/accounts/'+encodeURIComponent(id),{cache:'no-store'});
+      if(!r.ok){
+        /* try without bitcoincash: prefix */
+        const bare=id.replace(/^bitcoincash:/i,'');
+        const r2=await fetch('https://solo-bch.2miners.com/api/accounts/'+encodeURIComponent(bare),{cache:'no-store'});
+        if(!r2.ok)return {th:0,workersOnline:0,source:'2miners · offline/empty',raw:null};
+        const d2=await r2.json();
+        return parse2Miners(d2);
+      }
+      const d=await r.json();
+      return parse2Miners(d);
+    }else{
+      /* MineShop BTC solo public miner API */
+      const r=await fetch('https://solo.mineshop.eu/api/miner.php?wallet='+encodeURIComponent(wallet),{cache:'no-store'});
+      if(!r.ok)return {th:0,workersOnline:0,source:'mineshop · unavailable',raw:null};
+      const d=await r.json();
+      return parseMineShop(d);
+    }
+  }catch(e){
+    return {th:0,workersOnline:0,source:'pool fetch failed',raw:null};
+  }
+}
+
+function parse2Miners(d){
+  if(!d)return {th:0,workersOnline:0,source:'2miners · empty',raw:null};
+  const hs=Number(d.currentHashrate||d.hashrate||0); /* H/s */
+  const th=hs/1e12;
+  const online=Number(d.workersOnline||0);
+  return {
+    th:th,
+    workersOnline:online,
+    source:'2miners BCH solo',
+    raw:d,
+    workers:d.workers||{}
+  };
+}
+
+function parseMineShop(d){
+  if(!d)return {th:0,workersOnline:0,source:'mineshop · empty',raw:null};
+  /* Prefer 5m, then 1m, then 1hr */
+  let th=parseHashrateString(d.hashrate5m);
+  if(th<=0)th=parseHashrateString(d.hashrate1m);
+  if(th<=0)th=parseHashrateString(d.hashrate1hr);
+  const online=Number(d.workers||0);
+  return {
+    th:th,
+    workersOnline:online,
+    source:'mineshop BTC solo',
+    raw:d,
+    workers:d.worker||[]
+  };
+}
+
+async function refreshHostedDisplay(){
+  if(!currentWallet){
+    liveHash={th:0,workersOnline:0,source:'—',updatedAt:0,raw:null};
+    applyLiveHashToUI();
+    return;
+  }
+  const result=await fetchLiveHashrate(currentWallet,currentChain);
+  liveHash={...result,updatedAt:Date.now()};
+  applyLiveHashToUI();
+  /* update beta status if locked */
+  const seat=loadBetaSeat();
+  if(seat&&$('betaSeatStatus')){
+    $('betaSeatStatus').textContent=liveHash.th>0
+      ?(formatTh(liveHash.th)+' TH/s live from pool')
+      :'Awaiting hashrate (pool reports 0)';
+  }
+  if(seat&&$('betaMinerSlot')){
+    const slot=seat.slot||slotForAddress(seat.address);
+    $('betaMinerSlot').textContent=liveHash.th>0
+      ?slot+' · '+formatTh(liveHash.th)+' TH/s live'
+      :slot+' · ~'+(seat.th||'45-50')+' TH/s target';
+  }
+}
+
+function applyLiveHashToUI(){
+  const th=liveHash.th||0;
+  const total=th;
+  const base=th;
+  const boost=0; /* boost tracked separately when orders exist; live pool shows total for wallet */
+
+  if($('hostedHash'))$('hostedHash').textContent=formatTh(total)+' TH/s';
+  if($('hostedSource')){
+    const ago=liveHash.updatedAt?Math.round((Date.now()-liveHash.updatedAt)/1000):'—';
+    $('hostedSource').textContent=th>0
+      ?(liveHash.source+' · '+ago+'s ago')
+      :(liveHash.source||'pool live · honest zero');
+  }
+  if($('statBase'))$('statBase').textContent=formatTh(base)+' TH';
+  if($('statBoost'))$('statBoost').textContent=formatTh(boost)+' TH';
+  if($('statTotal'))$('statTotal').textContent=formatTh(total)+' TH';
+
+  /* Nectar jar: fill relative to ~50 TH beta target, cap 100% */
+  const target=50;
+  const pct=total>0?Math.min(100,Math.round((total/target)*100)):0;
+  if($('jarHoney'))$('jarHoney').style.height=pct+'%';
+  if($('nectarPct'))$('nectarPct').textContent=pct+'%';
+  if($('nectarLabel'))$('nectarLabel').innerHTML=total>0
+    ?('Live pool delivery<br>'+formatTh(total)+' TH/s · '+liveHash.source)
+    :'No active delivery yet<br>(honest empty jar)';
+
+  renderSwarm();
+  renderBeeCards();
+}
+
+function startLivePolling(){
+  stopLivePolling();
+  refreshHostedDisplay();
+  pollTimer=setInterval(()=>{
+    tryFetchLiveData();
+    refreshHostedDisplay();
+  },30000);
+}
+
+function stopLivePolling(){
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null}
+}
+
 /* ===== WALLET VALIDATION ===== */
 function isValidBTC(addr){
-if(!addr||addr.length<26)return false;
-const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
-const bech32=/^bc1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
-const taproot=/^bc1p[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
-return legacy.test(addr)||bech32.test(addr)||taproot.test(addr);
+  if(!addr||addr.length<26)return false;
+  const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  const bech32=/^bc1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  const taproot=/^bc1p[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  return legacy.test(addr)||bech32.test(addr)||taproot.test(addr);
 }
 function isValidBCH(addr){
-if(!addr||addr.length<25)return false;
-const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
-const cashaddr=/^bitcoincash:[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
-const simple=/^[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
-return legacy.test(addr)||cashaddr.test(addr)||simple.test(addr);
+  if(!addr||addr.length<25)return false;
+  const legacy=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  const cashaddr=/^bitcoincash:[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  const simple=/^[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{11,87}$/i;
+  return legacy.test(addr)||cashaddr.test(addr)||simple.test(addr);
 }
 function validateAddress(addr,chain){
-addr=(addr||'').trim();
-if(!addr)return{valid:false,msg:'Enter a wallet address'};
-if(chain==='btc'){
-if(isValidBTC(addr))return{valid:true,msg:'Valid BTC address'};
-return{valid:false,msg:'Invalid BTC address. Use Legacy (1/3…), SegWit (bc1q…), or Taproot (bc1p…)'}
+  addr=(addr||'').trim();
+  if(!addr)return{valid:false,msg:'Enter a wallet address'};
+  if(chain==='btc'){
+    if(isValidBTC(addr))return{valid:true,msg:'Valid BTC address'};
+    return{valid:false,msg:'Invalid BTC address. Use Legacy (1/3…), SegWit (bc1q…), or Taproot (bc1p…)'}
+  }
+  if(chain==='bch'){
+    if(isValidBCH(addr))return{valid:true,msg:'Valid BCH address'};
+    return{valid:false,msg:'Invalid BCH address. Use CashAddr (bitcoincash:q…), Simple (q…), or Legacy (1…)'}
+  }
+  return{valid:false,msg:'Select a chain'};
 }
-if(chain==='bch'){
-if(isValidBCH(addr))return{valid:true,msg:'Valid BCH address'};
-return{valid:false,msg:'Invalid BCH address. Use CashAddr (bitcoincash:q…), Simple (q…), or Legacy (1…)'}
-}
-return{valid:false,msg:'Select a chain'};
-}
+
 /* ===== CHAIN SELECTOR ===== */
 function setChain(chain){
-currentChain=chain;
-document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
-$(chain==='btc'?'btnBtc':'btnBch').classList.add('on');
-const input=$('walletInput');
-const label=$('walletLabel');
-const hint=$('walletHint');
-if(chain==='btc'){
-label.textContent='BTC payout address';
-input.placeholder='bc1q… or 1… or 3…';
-hint.innerHTML='Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).';
-}else{
-label.textContent='BCH payout address';
-input.placeholder='bitcoincash:q… or q…';
-hint.innerHTML='Enter a valid <strong>Bitcoin Cash</strong> address (CashAddr, Simple, or Legacy).';
-}
-input.classList.remove('err');
+  currentChain=chain;
+  document.querySelectorAll('.chain-btn').forEach(b=>b.classList.remove('on'));
+  $(chain==='btc'?'btnBtc':'btnBch').classList.add('on');
+  const input=$('walletInput');
+  const label=$('walletLabel');
+  const hint=$('walletHint');
+  if(chain==='btc'){
+    label.textContent='BTC payout address';
+    input.placeholder='bc1q… or 1… or 3…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin</strong> address (Legacy, SegWit, or Taproot).';
+  }else{
+    label.textContent='BCH payout address';
+    input.placeholder='bitcoincash:q… or q…';
+    hint.innerHTML='Enter a valid <strong>Bitcoin Cash</strong> address (CashAddr, Simple, or Legacy).';
+  }
+  input.classList.remove('err');
 }
 function clearErr(){$('walletInput').classList.remove('err')}
+
 /* ===== GATE / DASHBOARD ===== */
 function showError(m){const t=$('errorToast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000)}
 function enterHive(){
-const addr=($('walletInput').value||'').trim();
-const result=validateAddress(addr,currentChain);
-if(!result.valid){
-$('walletInput').classList.add('err');
-showError(result.msg);
-return;
-}
-currentWallet=addr;
-localStorage.setItem(SESSION_KEY,addr);
-localStorage.setItem(CHAIN_KEY,currentChain);
-showDash(addr,currentChain);
+  const addr=($('walletInput').value||'').trim();
+  const result=validateAddress(addr,currentChain);
+  if(!result.valid){
+    $('walletInput').classList.add('err');
+    showError(result.msg);
+    return;
+  }
+  currentWallet=addr;
+  localStorage.setItem(SESSION_KEY,addr);
+  localStorage.setItem(CHAIN_KEY,currentChain);
+  showDash(addr,currentChain);
 }
 function disconnectHive(){
-localStorage.removeItem(SESSION_KEY);
-localStorage.removeItem(CHAIN_KEY);
-currentWallet='';
-currentChain='btc';
-if($('dashView'))$('dashView').style.display='none';
-if($('gateView'))$('gateView').style.display='block';
-if($('topWallet'))$('topWallet').style.display='none';
-setChain('btc');
-$('walletInput').value='';
-$('walletInput').classList.remove('err');
+  stopLivePolling();
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(CHAIN_KEY);
+  currentWallet='';
+  currentChain='btc';
+  liveHash={th:0,workersOnline:0,source:'—',updatedAt:0,raw:null};
+  $('dashView').style.display='none';
+  $('gateView').style.display='block';
+  $('topWallet').classList.remove('show');
+  setChain('btc');
+  $('walletInput').value='';
+  $('walletInput').classList.remove('err');
 }
 function showDash(wallet,chain){
-currentWallet=wallet;
-currentChain=chain||'btc';
-if($('gateView'))$('gateView').style.display='none';
-if($('dashView'))$('dashView').style.display='block';
-/* FIX: topWallet/walletPill now exist in the header markup; still null-guarded for safety */
-if($('topWallet'))$('topWallet').style.display='flex';
-const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
-if($('walletPill'))$('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
-$('payoutAddr').textContent=short;
-$('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
-$('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
-$('connUser').textContent='beehash.'+wallet.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
-// Update price label
-$('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
-if($('dashAddr'))$('dashAddr').value=wallet;
-document.querySelectorAll('#dashControls .chain-btn').forEach(b=>b.classList.remove('on'));
-const db=$(chain==='bch'?'dashBtnBch':'dashBtnBtc');
-if(db)db.classList.add('on');
-updateQuickLinks();
-// Update preset pools based on chain
-const poolSelect=$('presetPool');
-if(poolSelect){
-if(chain==='bch'){
-poolSelect.innerHTML='<option value="2miners-bch">Solo · 2Miners BCH</option><option value="mole-bch">Solo · MolePool BCH</option><option value="hmpool-bch">Shared · HashedMax BCH</option>';
-}else{
-poolSelect.innerHTML='<option value="mineshop-btc">Solo · MineShop BTC</option><option value="ckpool-btc">Solo · CKPool BTC</option>';
-}
-}
-if($('presetWorker'))$('presetWorker').placeholder='Your '+chain.toUpperCase()+' wallet address';
-renderSwarm();
-renderBeeCards();
-setPriceMode('sub');
-renderBoostTiers();
-onPreset();
-onDestMode();
-loadPrefs();
-tryFetchLiveData();
-initBetaTab();
-const tab=new URLSearchParams(location.search).get('tab');
-if(tab==='boost'||tab==='miners'||tab==='beta')gotoTab(tab);
+  currentWallet=wallet;
+  currentChain=chain||'btc';
+  $('gateView').style.display='none';
+  $('dashView').style.display='block';
+  $('topWallet').classList.add('show');
+  const short=wallet.length>18?wallet.slice(0,10)+'…'+wallet.slice(-6):wallet;
+  $('walletPill').textContent=(chain==='bch'?'BCH':'BTC')+' · '+short;
+  $('payoutAddr').textContent=short;
+  $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
+  $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
+  $('connUser').textContent='beehash.'+wallet.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+  $('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
+  if($('dashAddr'))$('dashAddr').value=wallet;
+  document.querySelectorAll('#dashControls .chain-btn').forEach(b=>b.classList.remove('on'));
+  const db=$(chain==='bch'?'dashBtnBch':'dashBtnBtc');
+  if(db)db.classList.add('on');
+  updateQuickLinks();
+  const poolSelect=$('presetPool');
+  if(poolSelect){
+    if(chain==='bch'){
+      poolSelect.innerHTML='<option value="2miners-bch">Solo · 2Miners BCH</option><option value="mole-bch">Solo · MolePool BCH</option><option value="hmpool-bch">Shared · HashedMax BCH</option>';
+      if($('stratumUrl'))$('stratumUrl').textContent='stratum+tcp://solo-bch.2miners.com:9393';
+    }else{
+      poolSelect.innerHTML='<option value="mineshop-btc">Solo · MineShop BTC</option><option value="ckpool-btc">Solo · CKPool BTC</option>';
+      if($('stratumUrl'))$('stratumUrl').textContent='stratum+tcp://solo.mineshop.eu:3333';
+    }
+  }
+  if($('presetWorker'))$('presetWorker').placeholder='Your '+chain.toUpperCase()+' wallet address';
+  setPriceMode('sub');
+  renderBoostTiers();
+  onPreset();
+  onDestMode();
+  loadPrefs();
+  initBetaTab();
+  tryFetchLiveData();
+  startLivePolling();
+  const tab=new URLSearchParams(location.search).get('tab');
+  if(tab==='boost'||tab==='miners'||tab==='beta')gotoTab(tab);
 }
 function gotoTab(name){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));document.querySelectorAll('.panel-section').forEach(p=>p.classList.toggle('on',p.id==='sec-'+name))}
-function renderSwarm(){$('swarmGrid').innerHTML=workers.map(w=>'<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>').join('')}
-function renderBeeCards(){$('beeCards').innerHTML=workers.map(w=>'<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting allocation</div></div>').join('')}
+
+function renderSwarm(){
+  const th=liveHash.th||0;
+  const online=th>0;
+  const onlineSlot=online?slotForAddress(currentWallet):null;
+  $('swarmGrid').innerHTML=workers.map(w=>{
+    const slotName=w.name.replace('Slot-','Miner-');
+    if(online&&slotName===onlineSlot){
+      return '<div class="hex-cell"><div class="hex-name">'+w.name+'</div><div class="hex-hash">'+formatTh(th)+'</div><div class="hex-status" style="color:var(--green)">LIVE</div></div>';
+    }
+    return '<div class="hex-cell offline"><div class="hex-name">'+w.name+'</div><div class="hex-hash">—</div><div class="hex-status">OFF</div></div>';
+  }).join('');
+  if($('swarmLiveDot'))$('swarmLiveDot').classList.toggle('off',!online);
+  if($('swarmNote'))$('swarmNote').textContent=online
+    ?('Slot '+onlineSlot+' LIVE · '+formatTh(th)+' TH/s from '+liveHash.source)
+    :'Slots stay offline until the destination pool reports live hashrate for your address.';
+}
+function renderBeeCards(){
+  const th=liveHash.th||0;
+  const online=th>0;
+  const onlineSlot=online?slotForAddress(currentWallet):null;
+  $('beeCards').innerHTML=workers.map(w=>{
+    const slotName=w.name.replace('Slot-','Miner-');
+    if(online&&slotName===onlineSlot){
+      return '<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status" style="background:var(--green)"></span></div><div class="card-hash">'+formatTh(th)+' <span class="card-unit">TH/s</span></div><div class="card-meta">Live from '+liveHash.source+'</div></div>';
+    }
+    return '<div class="bee-card"><div class="card-header"><span class="card-name">'+w.name+'</span><span class="card-status"></span></div><div class="card-hash">0 <span class="card-unit">TH/s</span></div><div class="card-meta">Awaiting pool hashrate</div></div>';
+  }).join('');
+}
+
 function tryFetchLiveData(){
-const chain=currentChain||localStorage.getItem(CHAIN_KEY)||'btc';
-const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
-if(chain==='bch'){
-/* FIX: was 3 separate identical fetches to the same endpoint — now fetched once and reused */
-fetch('https://api.blockchair.com/bitcoin-cash/stats').then(r=>r.json()).then(d=>{
-const data=d&&d.data;
-if(data&&data.market_price_usd)$('btcPrice').textContent='$'+Number(data.market_price_usd).toLocaleString();
-s('priceSource','blockchair.com');
-if(data&&data.blocks)$('blockHeight').textContent=Number(data.blocks).toLocaleString();
-s('heightSource','blockchair.com');
-if(data&&data.hashrate_24h){
-const h=data.hashrate_24h;
-const txt=h>=1e18?(h/1e18).toFixed(2)+' EH/s':(h/1e15).toFixed(2)+' PH/s';
-$('networkHash').textContent=txt;
+  const chain=currentChain||localStorage.getItem(CHAIN_KEY)||'btc';
+  const s=(id,t)=>{const e=$(id);if(e)e.textContent=t};
+  if(chain==='bch'){
+    fetch('https://api.blockchair.com/bitcoin-cash/stats').then(r=>r.json()).then(d=>{
+      if(d.data&&d.data.market_price_usd)$('btcPrice').textContent='$'+Number(d.data.market_price_usd).toLocaleString();
+      s('priceSource','blockchair.com');
+      if(d.data&&d.data.blocks)$('blockHeight').textContent=Number(d.data.blocks).toLocaleString();
+      s('heightSource','blockchair.com');
+      if(d.data&&d.data.hashrate_24h){
+        const h=d.data.hashrate_24h;
+        const txt=h>=1e18?(h/1e18).toFixed(2)+' EH/s':(h/1e15).toFixed(2)+' PH/s';
+        $('networkHash').textContent=txt;
+      }
+      s('hashSource','blockchair.com');
+    }).catch(()=>{s('priceSource','unavailable');s('heightSource','unavailable');s('hashSource','unavailable')});
+  }else{
+    fetch('https://mempool.space/api/v1/prices').then(r=>r.json()).then(d=>{$('btcPrice').textContent='$'+Number(d.USD).toLocaleString();s('priceSource','mempool.space')}).catch(()=>s('priceSource','unavailable'));
+    fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text()).then(h=>{$('blockHeight').textContent=Number(h).toLocaleString();s('heightSource','mempool.space')}).catch(()=>s('heightSource','unavailable'));
+    fetch('https://mempool.space/api/v1/mining/hashrate/3d').then(r=>r.json()).then(d=>{if(d.hashrates&&d.hashrates.length){const hps=d.hashrates[d.hashrates.length-1].avgHashrate;const txt=hps>=1e18?(hps/1e18).toFixed(2)+' EH/s':(hps/1e15).toFixed(2)+' PH/s';$('networkHash').textContent=txt;s('hashSource','mempool.space')}}).catch(()=>s('hashSource','unavailable'));
+  }
 }
-s('hashSource','blockchair.com');
-}).catch(()=>{s('priceSource','unavailable');s('heightSource','unavailable');s('hashSource','unavailable')});
-}else{
-// BTC data from mempool.space
-fetch('https://mempool.space/api/v1/prices').then(r=>r.json()).then(d=>{$('btcPrice').textContent='$'+Number(d.USD).toLocaleString();s('priceSource','mempool.space')}).catch(()=>s('priceSource','unavailable'));
-fetch('https://mempool.space/api/blocks/tip/height').then(r=>r.text()).then(h=>{$('blockHeight').textContent=Number(h).toLocaleString();s('heightSource','mempool.space')}).catch(()=>s('heightSource','unavailable'));
-fetch('https://mempool.space/api/v1/mining/hashrate/3d').then(r=>r.json()).then(d=>{if(d.hashrates&&d.hashrates.length){const hps=d.hashrates[d.hashrates.length-1].avgHashrate;const txt=hps>=1e18?(hps/1e18).toFixed(2)+' EH/s':(hps/1e15).toFixed(2)+' PH/s';$('networkHash').textContent=txt;s('hashSource','mempool.space')}}).catch(()=>s('hashSource','unavailable'));
-}
-}
+
 function dashSetChain(chain){
-currentChain=chain;
-localStorage.setItem(CHAIN_KEY,chain);
-document.querySelectorAll('#dashControls .chain-btn').forEach(b=>b.classList.remove('on'));
-const btn=$(chain==='btc'?'dashBtnBtc':'dashBtnBch');
-if(btn)btn.classList.add('on');
-// sync gate buttons if present
-document.querySelectorAll('#gateView .chain-btn').forEach(b=>b.classList.remove('on'));
-const gb=$(chain==='btc'?'btnBtc':'btnBch');
-if(gb)gb.classList.add('on');
-$('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
-$('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
-$('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
-// pool presets
-const poolSelect=$('presetPool');
-if(poolSelect){
-if(chain==='bch'){
-poolSelect.innerHTML='<option value="2miners-bch">Solo · 2Miners BCH</option><option value="mole-bch">Solo · MolePool BCH</option><option value="hmpool-bch">Shared · HashedMax BCH</option>';
-}else{
-poolSelect.innerHTML='<option value="mineshop-btc">Solo · MineShop BTC</option><option value="ckpool-btc">Solo · CKPool BTC</option>';
+  currentChain=chain;
+  localStorage.setItem(CHAIN_KEY,chain);
+  document.querySelectorAll('#dashControls .chain-btn').forEach(b=>b.classList.remove('on'));
+  const btn=$(chain==='btc'?'dashBtnBtc':'dashBtnBch');
+  if(btn)btn.classList.add('on');
+  document.querySelectorAll('#gateView .chain-btn').forEach(b=>b.classList.remove('on'));
+  const gb=$(chain==='btc'?'btnBtc':'btnBch');
+  if(gb)gb.classList.add('on');
+  $('chainBadge').textContent=chain==='bch'?'BCH':'BTC';
+  $('chainText').textContent=chain==='bch'?'Bitcoin Cash':'Bitcoin';
+  $('priceLabel').textContent=(chain==='bch'?'BCH':'BTC')+' Price';
+  const poolSelect=$('presetPool');
+  if(poolSelect){
+    if(chain==='bch'){
+      poolSelect.innerHTML='<option value="2miners-bch">Solo · 2Miners BCH</option><option value="mole-bch">Solo · MolePool BCH</option><option value="hmpool-bch">Shared · HashedMax BCH</option>';
+      if($('stratumUrl'))$('stratumUrl').textContent='stratum+tcp://solo-bch.2miners.com:9393';
+    }else{
+      poolSelect.innerHTML='<option value="mineshop-btc">Solo · MineShop BTC</option><option value="ckpool-btc">Solo · CKPool BTC</option>';
+      if($('stratumUrl'))$('stratumUrl').textContent='stratum+tcp://solo.mineshop.eu:3333';
+    }
+    onPreset();
+  }
+  updateQuickLinks();
+  tryFetchLiveData();
+  refreshHostedDisplay();
 }
-onPreset();
-}
-updateQuickLinks();
-tryFetchLiveData();
-/* FIX: fetchGlobalBlocks was never defined anywhere — bare reference threw ReferenceError
-   and broke every switch back to BTC. Removed the dead call. */
-}
+
 function updateQuickLinks(){
-const addr=($('dashAddr')&&$('dashAddr').value)||currentWallet||'';
-const exp=$('linkExplorer');
-const mem=$('linkMempool');
-if(!exp)return;
-if(currentChain==='bch'){
-exp.href=addr?('https://www.blockchain.com/explorer/addresses/bch/'+encodeURIComponent(addr.replace(/^bitcoincash:/i,''))):'https://blockchair.com/bitcoin-cash';
-exp.textContent='BCH explorer ↗';
-if(mem){mem.href='https://blockchair.com/bitcoin-cash';mem.textContent='blockchair BCH ↗';}
-}else{
-exp.href=addr?('https://mempool.space/address/'+encodeURIComponent(addr)):'https://mempool.space';
-exp.textContent=addr?'Address on mempool ↗':'mempool.space ↗';
-if(mem){mem.href='https://mempool.space';mem.textContent='mempool.space ↗';}
+  const addr=($('dashAddr')&&$('dashAddr').value)||currentWallet||'';
+  const exp=$('linkExplorer');
+  const mem=$('linkMempool');
+  const poolDash=$('linkPoolDash');
+  if(!exp)return;
+  if(currentChain==='bch'){
+    exp.href=addr?('https://www.blockchain.com/explorer/addresses/bch/'+encodeURIComponent(addr.replace(/^bitcoincash:/i,''))):'https://blockchair.com/bitcoin-cash';
+    exp.textContent='BCH explorer ↗';
+    if(mem){mem.href='https://blockchair.com/bitcoin-cash';mem.textContent='blockchair BCH ↗';}
+    if(poolDash){
+      poolDash.href=addr?('https://solo-bch.2miners.com/account/'+encodeURIComponent(normalizeBchForApi(addr))):'https://solo-bch.2miners.com/';
+      poolDash.textContent='2Miners account ↗';
+    }
+  }else{
+    exp.href=addr?('https://mempool.space/address/'+encodeURIComponent(addr)):'https://mempool.space';
+    exp.textContent=addr?'Address on mempool ↗':'mempool.space ↗';
+    if(mem){mem.href='https://mempool.space';mem.textContent='mempool.space ↗';}
+    if(poolDash){
+      poolDash.href=addr?('https://solo.mineshop.eu/miner/?addr='+encodeURIComponent(addr)):'https://solo.mineshop.eu/miner/';
+      poolDash.textContent='MineShop miner dash ↗';
+    }
+  }
 }
-}
+
 function applyDashAddress(){
-const seat=loadBetaSeat();
-if(seat){showError('Beta BCH address is locked. Contact support for a new seat.');return;}
-const addr=($('dashAddr').value||'').trim();
-const result=validateAddress(addr,currentChain);
-if(!result.valid){showError(result.msg);return;}
-currentWallet=addr;
-localStorage.setItem(SESSION_KEY,addr);
-localStorage.setItem(CHAIN_KEY,currentChain);
-const short=addr.length>18?addr.slice(0,10)+'…'+addr.slice(-6):addr;
-if($('walletPill'))$('walletPill').textContent=(currentChain==='bch'?'BCH':'BTC')+' · '+short;
-if($('payoutAddr'))$('payoutAddr').textContent=short;
-if($('connUser'))$('connUser').textContent='beehash.'+addr.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
-updateQuickLinks();
-tryFetchLiveData();
-showError('Address applied · chain stats refreshed');
+  const seat=loadBetaSeat();
+  if(seat){showError('Beta BCH address is locked. Contact support for a new seat.');return;}
+  const addr=($('dashAddr').value||'').trim();
+  const result=validateAddress(addr,currentChain);
+  if(!result.valid){showError(result.msg);return;}
+  currentWallet=addr;
+  localStorage.setItem(SESSION_KEY,addr);
+  localStorage.setItem(CHAIN_KEY,currentChain);
+  const short=addr.length>18?addr.slice(0,10)+'…'+addr.slice(-6):addr;
+  if($('walletPill'))$('walletPill').textContent=(currentChain==='bch'?'BCH':'BTC')+' · '+short;
+  if($('payoutAddr'))$('payoutAddr').textContent=short;
+  if($('connUser'))$('connUser').textContent='beehash.'+addr.slice(0,12).replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+  updateQuickLinks();
+  tryFetchLiveData();
+  refreshHostedDisplay();
+  showError('Address applied · live hash refreshing');
 }
+
 /* ===== BETA ACTIVATE ===== */
 const BETA_KEY='bh_beta_seat';
-/* Slot assignment is derived deterministically from the wallet address itself (pure hash → mod
-   slot count), not a local counter or a fabricated random pick. Same address always maps to the
-   same slot, on any device, with no backend required. */
+const BETA_TH='45-50';
 function slotForAddress(addr){
-let h=0;
-for(let i=0;i<addr.length;i++){h=(h*31+addr.charCodeAt(i))>>>0}
-const idx=h%workers.length;
-return workers[idx].name;
+  const norm=(addr||'').trim().toLowerCase();
+  let h=0x811c9dc5;
+  for(let i=0;i<norm.length;i++){
+    h^=norm.charCodeAt(i);
+    h=Math.imul(h,0x01000193);
+  }
+  const idx=(h>>>0)%workers.length;
+  return workers[idx].name.replace('Slot-','Miner-');
 }
 function lockBetaAddress(){
-const a=($('betaBchInput').value||'').trim();
-const b=($('betaBchConfirm').value||'').trim();
-if(a!==b){$('betaLockMsg').innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
-const result=validateAddress(a,'bch');
-if(!result.valid){$('betaLockMsg').innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
-if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nYou cannot change it after this.'))return;
-const seat={address:a,slot:slotForAddress(a),th:'45-50',lockedAt:Date.now(),chain:'bch'};
-localStorage.setItem(BETA_KEY,JSON.stringify(seat));
-// also set session to this BCH address
-currentWallet=a;currentChain='bch';
-localStorage.setItem(SESSION_KEY,a);
-localStorage.setItem(CHAIN_KEY,'bch');
-renderBetaSeat(seat);
-if(typeof dashSetChain==='function')dashSetChain('bch');
-if($('dashAddr'))$('dashAddr').value=a;
-showError('BCH address locked · '+seat.slot+' assigned');
+  const a=($('betaBchInput').value||'').trim();
+  const b=($('betaBchConfirm').value||'').trim();
+  if(a!==b){$('betaLockMsg').innerHTML='<div class="notice err"><strong>Addresses do not match.</strong></div>';return}
+  const result=validateAddress(a,'bch');
+  if(!result.valid){$('betaLockMsg').innerHTML='<div class="notice err"><strong>'+result.msg+'</strong></div>';return}
+  if(!confirm('Lock this BCH address permanently for beta?\n\n'+a+'\n\nYou cannot change it after this.'))return;
+  const slot=slotForAddress(a);
+  const seat={address:a,slot:slot,th:BETA_TH,lockedAt:Date.now(),chain:'bch'};
+  localStorage.setItem(BETA_KEY,JSON.stringify(seat));
+  currentWallet=a;currentChain='bch';
+  localStorage.setItem(SESSION_KEY,a);
+  localStorage.setItem(CHAIN_KEY,'bch');
+  renderBetaSeat(seat);
+  if(typeof dashSetChain==='function')dashSetChain('bch');
+  if($('dashAddr'))$('dashAddr').value=a;
+  refreshHostedDisplay();
+  showError('BCH address locked · '+slot+' assigned · live hash polling');
 }
 function loadBetaSeat(){
-try{return JSON.parse(localStorage.getItem(BETA_KEY)||'null')}catch(e){return null}
+  try{return JSON.parse(localStorage.getItem(BETA_KEY)||'null')}catch(e){return null}
 }
 function renderBetaSeat(seat){
-if(!seat)return;
-$('betaStepAddr').style.display='none';
-$('betaStepDone').style.display='block';
-$('betaLockedAddr').textContent=seat.address;
-$('betaMinerSlot').textContent=seat.slot+' · ~'+seat.th+' TH/s';
-// freeze dash address field
-if($('dashAddr')){
-$('dashAddr').value=seat.address;
-$('dashAddr').readOnly=true;
-$('dashAddr').title='Locked for beta';
-}
-const applyBtn=document.querySelector('button[onclick="applyDashAddress()"]');
-if(applyBtn){applyBtn.disabled=true;applyBtn.textContent='Locked';}
-if($('dashBtnBtc'))$('dashBtnBtc').disabled=true;
+  if(!seat)return;
+  $('betaStepAddr').style.display='none';
+  $('betaStepDone').style.display='block';
+  $('betaLockedAddr').textContent=seat.address;
+  const slot=seat.slot||slotForAddress(seat.address);
+  $('betaMinerSlot').textContent=liveHash.th>0
+    ?slot+' · '+formatTh(liveHash.th)+' TH/s live'
+    :slot+' · ~'+seat.th+' TH/s target';
+  if($('betaSeatStatus'))$('betaSeatStatus').textContent=liveHash.th>0?'Hashrate live from pool':'Awaiting hashrate';
+  if($('dashAddr')){
+    $('dashAddr').value=seat.address;
+    $('dashAddr').readOnly=true;
+    $('dashAddr').title='Locked for beta';
+  }
+  const applyBtn=document.querySelector('button[onclick="applyDashAddress()"]');
+  if(applyBtn){applyBtn.disabled=true;applyBtn.textContent='Locked';}
+  if($('dashBtnBtc'))$('dashBtnBtc').disabled=true;
 }
 function initBetaTab(){
-const seat=loadBetaSeat();
-if(seat)renderBetaSeat(seat);
+  const seat=loadBetaSeat();
+  if(seat)renderBetaSeat(seat);
 }
-function refreshData(){tryFetchLiveData();updateQuickLinks()}
+function refreshData(){tryFetchLiveData();updateQuickLinks();refreshHostedDisplay()}
 function setPriceMode(mode){priceMode=mode;$('btnSub').className=mode==='sub'?'btn btn-gold':'btn btn-outline';$('btnOnce').className=mode==='once'?'btn btn-gold':'btn btn-outline';$('minerTiers').innerHTML=TIERS.map(t=>{const p=t[mode];return '<div class="tier'+(selectedMinerTh===t.th?' on':'')+'" onclick="selectMiner('+t.th+')"><div class="tn">'+t.label+'</div><div class="th">'+t.th+'</div><div class="tp">$'+p.month.toFixed(0)+'/mo</div></div>'}).join('');updateMinerSummary()}
 function selectMiner(th){selectedMinerTh=th;setPriceMode(priceMode)}
 function updateMinerSummary(){if(!selectedMinerTh){$('minerSummary').innerHTML='<strong>Select a size.</strong>';return}const t=TIERS.find(x=>x.th===selectedMinerTh);const term=$('termPick').value;const price=t[priceMode][term];const kind=priceMode==='sub'?'Subscription':'One-time';$('minerSummary').innerHTML='<strong>'+t.label+' · '+t.th+' TH</strong> · '+kind+' · '+term+'<br>List: <strong style="color:var(--gold)">$'+price.toFixed(2)+'</strong> · not for sale in beta'}
@@ -675,23 +874,23 @@ function onPreset(){const id=$('presetPool').value;const p=PRESETS[id];if(!p)ret
 function saveBoostPref(){if(!selectedBoostTh){$('boostMsg').innerHTML='<div class="notice err"><strong>Pick a boost size first.</strong></div>';return}localStorage.setItem(BOOST_KEY,JSON.stringify({th:selectedBoostTh,pool:$('presetPool').value,mode:$('destMode').value}));$('boostMsg').innerHTML='<div class="notice ok"><strong>Boost preference saved.</strong> Not an order.</div>'}
 function loadPrefs(){const m=localStorage.getItem(MINER_KEY);if(m){try{const o=JSON.parse(m);selectedMinerTh=o.th;priceMode=o.mode||'sub';$('termPick').value=o.term||'month';setPriceMode(priceMode)}catch(e){}}const b=localStorage.getItem(BOOST_KEY);if(b){try{const o=JSON.parse(b);selectedBoostTh=o.th;renderBoostTiers()}catch(e){}}const pp=localStorage.getItem('bh_preset_pool');if(pp&&$('presetPool'))$('presetPool').value=pp;onPreset()}
 function copyConn(){const url=$('stratumUrl').textContent;const user=$('connUser').textContent;navigator.clipboard.writeText(url+' · '+user+' · x').then(()=>showError('Copied to clipboard')).catch(()=>showError('Copy failed'))}
+
 /* ===== INIT ===== */
 (function init(){
-const savedWallet=localStorage.getItem(SESSION_KEY);
-const savedChain=localStorage.getItem(CHAIN_KEY);
-if(savedWallet){
-// Re-validate on load
-const result=validateAddress(savedWallet,savedChain||'btc');
-if(result.valid){
-showDash(savedWallet,savedChain||'btc');
-}else{
-localStorage.removeItem(SESSION_KEY);
-localStorage.removeItem(CHAIN_KEY);
-setChain(savedChain||'btc');
-}
-}else{
-setChain(savedChain||'btc');
-}
+  const savedWallet=localStorage.getItem(SESSION_KEY);
+  const savedChain=localStorage.getItem(CHAIN_KEY);
+  if(savedWallet){
+    const result=validateAddress(savedWallet,savedChain||'btc');
+    if(result.valid){
+      showDash(savedWallet,savedChain||'btc');
+    }else{
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(CHAIN_KEY);
+      setChain(savedChain||'btc');
+    }
+  }else{
+    setChain(savedChain||'btc');
+  }
 })();
 </script>
 </body>
